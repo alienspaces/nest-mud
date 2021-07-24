@@ -7,6 +7,7 @@ cp .env.development .env
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/environment" || exit $?
 
+# shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/db-start" || exit $?
 
 yarn start:dev

@@ -1,5 +1,13 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-./db-start || exit $?
+# development
+cp .env.development .env
 
-./db-migrate-up || exit $?
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/environment" || exit $?
+
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}//db-start" || exit $?
+
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/db-migrate-up" || exit $?
