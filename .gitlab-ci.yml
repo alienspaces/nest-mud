@@ -9,4 +9,5 @@ test_server:
     - npm i -g @nestjs/cli
   script:
     - cd server
+    - yarn
     - yarn test
