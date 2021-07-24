@@ -7,6 +7,7 @@ test_server:
   stage: test
   before_script:
     - cd server
-    - ./script/setup
+    - npm install --global yarn
+    - npm i -g @nestjs/cli
   script:
     - yarn test
