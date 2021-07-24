@@ -4,13 +4,18 @@ A M.U.D (multi user dungeon) with a back end API built with nestjs and a front e
 
 ## Setup
 
+📝 _Look at what these scripts actually do before running them!_
+
+Attempts to install `nvm`, `node`, `yarn`, `nestjs` and `package.json` defined dependencies.
+
 ```bash
-./script/setup-node
+cd server
+./script/setup
 ```
 
 ## Server
 
-Start database and API server
+Starts a `postgres` database in a `docker` container, runs database migrations with `db-migrate` and starts the `nestsjs` API server.
 
 ```bash
 cd server

@@ -1,47 +1,6 @@
 #!/usr/bin/env sh
 
-echo "=> Checking server dependencies 🤔"
-
+# Server side setup
 cd server || exit
-
-# nvm
-echo "=> Checking nvm.."
-if ! [ -s "$HOME/.nvm/nvm.sh" ]; then 
-    echo "=> Installing nvm"
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-fi
-
-export NVM_DIR="$HOME/.nvm"
-# shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# shellcheck disable=SC1091
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# node
-echo "=> Checking node.."
-if [ "$(nvm version)" != "v14.17.3" ]; then
-    echo "=> Installing node"
-    nvm install v14.17.3
-    nvm use v14.17.3
-fi
-
-# yarn
-echo "=> Checking yarn.."
-if [ -z "$(yarn --version)" ]; then
-    echo "=> Installing yarn"
-    npm install --global yarn
-fi
-
-# nest
-echo "=> Checking nestjs.."
-if [ -z "$(nest --version)" ]; then
-    echo "=> Installing nestjs"
-    npm i -g @nestjs/cli
-fi
-
-# install server dependencies
-echo "=> Installing server dependencies.."
-yarn install
-cd .. || exit
-
-echo "=> All done 👍"
+./script/setup
+cd - || exit
