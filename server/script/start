@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# development
+cp .env.development .env
+
+# environment
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/environment" || exit $?
+
+source "${BASH_SOURCE%/*}/db-start" || exit $?
+
+yarn start:dev
