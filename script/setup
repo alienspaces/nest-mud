@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-# Server side setup
-cd server || exit
-./script/setup
-cd - || exit

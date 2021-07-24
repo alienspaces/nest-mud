@@ -1,0 +1,12 @@
+image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.11
+
+stages:
+  - test
+
+test_server:
+  stage: test
+  before_script:
+    - cd server
+    - ./script/setup
+  script:
+    - yarn test

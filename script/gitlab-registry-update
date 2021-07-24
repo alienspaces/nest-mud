@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Update gitlab container registry with dependent images
+docker login registry.gitlab.com -u alienspaces@gmail.com -p "$GITLAB_PERSONAL_TOKEN"
+
+IMAGE="node:14.17.3-alpine3.11"
+docker pull $IMAGE || exit $?
+docker tag $IMAGE registry.gitlab.com/alienspaces/nest-mud/$IMAGE
+docker push registry.gitlab.com/alienspaces/nest-mud/$IMAGE
