@@ -18,8 +18,6 @@ source "${BASH_SOURCE%/*}/db-stop" || exit $?
 # start database
 echo "=> Start database"
 
-echo "=> Start database - docker service"
-
 docker run --hostname postgres --name "${APP_SERVER_NAME}-database" \
     -e POSTGRES_USER="$APP_SERVER_DB_USER" \
     -e POSTGRES_PASSWORD="$APP_SERVER_DB_PASSWORD" \

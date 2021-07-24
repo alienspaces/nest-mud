@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 # Opens a psql session to the database specified in current APP environment
-# \l              - list schemas
-# \c hrm-template - connect to schema
+# \l          - list schemas
+# \c [schema] - connect to schema
+# \d          - show objects
+# \dt         - show tables
+# \q          - quit
 
 # development
 cp .env.development .env
