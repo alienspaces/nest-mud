@@ -7,5 +7,5 @@ cp .env.development .env
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/environment" || exit $?
 
-node node_modules/db-migrate/bin/db-migrate create -m ./database "$@"
+node node_modules/db-migrate/bin/db-migrate create --sql-file=true "$@"
  

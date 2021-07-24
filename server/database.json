@@ -6,5 +6,6 @@
         "host": { "ENV": "APP_SERVER_DB_HOST" },
         "database": { "ENV": "APP_SERVER_DB_NAME" },
         "port": { "ENV": "APP_SERVER_DB_PORT" }
-    }
+    },
+    "sql-file" : true
 }
