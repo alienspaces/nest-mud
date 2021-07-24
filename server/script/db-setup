@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+./db-start || exit $?
+
+./db-migrate-up || exit $?

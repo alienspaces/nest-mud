@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Opens a psql session to the database specified in current APP environment
+# \l              - list schemas
+# \c hrm-template - connect to schema
+
+# development
+cp .env.development .env
+
+# environment
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/environment" || exit $?
+
+export PGPASSWORD="$APP_SERVER_DB_PASSWORD"
+psql --host="$APP_SERVER_DB_HOST" \
+     --port="$APP_SERVER_DB_PORT" \
+     --username="$APP_SERVER_DB_USER" \
+     "$APP_SERVER_DB_NAME"

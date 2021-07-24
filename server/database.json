@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "driver": "pg",
+        "user": { "ENV": "APP_SERVER_DB_USER" },
+        "password": { "ENV": "APP_SERVER_DB_PASSWORD" },
+        "host": { "ENV": "APP_SERVER_DB_HOST" },
+        "database": { "ENV": "APP_SERVER_DB_NAME" },
+        "port": { "ENV": "APP_SERVER_DB_PORT" }
+    }
+}

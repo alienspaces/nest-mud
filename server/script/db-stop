@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# development
+cp .env.development .env
+
+# environment
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/environment" || exit $?
+
+# retry
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/retry" || exit $?
+
+# stop database
+echo "=> Stopping database";
+
+# shellcheck disable=SC2154,SC2016,SC2143
+if [ "$(docker ps | grep "${APP_SERVER_NAME}"-database)" ]; then
+    docker stop "${APP_SERVER_NAME}-database" 
+    docker rm "${APP_SERVER_NAME}-database" 
+fi
