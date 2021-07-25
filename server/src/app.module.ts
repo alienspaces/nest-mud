@@ -9,6 +9,9 @@ import { ActionsController } from './controllers/actions/actions.controller';
 import { LocationsService } from './services/locations/locations.service';
 import { ActionsService } from './services/actions/actions.service';
 import { CharactersService } from './services/characters/characters.service';
+import { LocationService } from './repositories/location/location.service';
+import { CharacterService } from './repositories/character/character.service';
+import { DatabaseService } from './common/database/database.service';
 
 @Module({
     imports: [],
@@ -24,6 +27,9 @@ import { CharactersService } from './services/characters/characters.service';
         CharactersService,
         ActionsService,
         CharactersService,
+        LocationService,
+        CharacterService,
+        DatabaseService,
     ],
 })
 export class AppModule {}

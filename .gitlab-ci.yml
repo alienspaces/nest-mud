@@ -6,8 +6,11 @@ stages:
 test_server:
   stage: test
   before_script:
+    - apk add bash
     - npm i -g @nestjs/cli
   script:
     - cd server
+    - cp .env.ci .env
+    - source .env
     - yarn
     - yarn test
