@@ -1,10 +1,16 @@
-image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.11
+image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
 
 stages:
   - test
 
 test_server:
   stage: test
+  variables:
+    POSTGRES_DB: nest-mud
+    POSTGRES_USER: nest-mud-user
+    POSTGRES_PASSWORD: nest-mud-pass
+  services:
+    - registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
   before_script:
     - apk add bash
     - npm i -g @nestjs/cli
