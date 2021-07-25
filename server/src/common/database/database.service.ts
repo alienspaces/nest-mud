@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Pool, PoolClient } from 'pg';
@@ -6,7 +6,7 @@ import { Pool, PoolClient } from 'pg';
 // Global
 let pool: Pool;
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class DatabaseService {
     private client: PoolClient;
 
@@ -16,7 +16,6 @@ export class DatabaseService {
         if (pool != null) {
             return;
         }
-        console.log('Creating pool');
         const dbUser = config.get<string>('APP_SERVER_DB_USER');
         const dbPassword = config.get<string>('APP_SERVER_DB_PASSWORD');
         const dbHost = config.get<string>('APP_SERVER_DB_HOST');
@@ -40,10 +39,9 @@ export class DatabaseService {
 
     async connect(): Promise<PoolClient> {
         DatabaseService.poolBegin(this.configService);
-        if (this.client != null) {
-            console.log(`Database client defined ${this.client}`);
+        if (this.client == null) {
+            this.client = await pool.connect();
         }
-        this.client = await pool.connect();
         return this.client;
     }
 

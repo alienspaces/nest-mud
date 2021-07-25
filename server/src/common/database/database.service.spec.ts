@@ -15,6 +15,7 @@ describe('DatabaseService', () => {
             providers: [DatabaseService, ConfigService],
         }).compile();
 
+        // NOTE: Request scoped service is async resolved
         service = await module.resolve<DatabaseService>(DatabaseService);
     });
 
