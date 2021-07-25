@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 // Application
 import { LocationsController } from './locations.controller';
+import { LocationResponseDto } from './dto/location-response.dto';
 import { LocationsService } from '@/services/locations/locations.service';
 
 describe('LocationsController', () => {
@@ -18,5 +19,12 @@ describe('LocationsController', () => {
 
     it('should be defined', () => {
         expect(controller).toBeDefined();
+    });
+
+    describe('getMany', () => {
+        it('should return many', async () => {
+            let response = await controller.getMany();
+            expect(response.data).toBeTruthy();
+        });
     });
 });

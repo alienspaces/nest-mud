@@ -22,6 +22,10 @@ export class LocationsController {
 
 function convertToDto(collection: Location[]): LocationDto[] {
     const returnData: LocationDto[] = [];
+    if (!collection) {
+        return returnData;
+    }
+
     collection.forEach((data) => {
         returnData.push({
             id: data.id,
