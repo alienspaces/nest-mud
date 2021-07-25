@@ -23,3 +23,11 @@ Starts a [`postgres`](https://www.postgresql.org/) database in a [`docker`](http
 cd server
 ./script/start
 ```
+
+## TODO
+
+Lots to do, lots to do..
+
+- Server repositories
+- Service services
+- Server test data management
