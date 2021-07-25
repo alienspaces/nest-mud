@@ -10,7 +10,8 @@ test_server:
     POSTGRES_USER: nest-mud-user
     POSTGRES_PASSWORD: nest-mud-pass
   services:
-    - registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
+    - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
+      alias: postgres
   before_script:
     - apk add bash
     - npm i -g @nestjs/cli
