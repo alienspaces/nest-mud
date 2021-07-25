@@ -5,7 +5,6 @@ import { Location } from '@/interfaces/location.interface';
 
 @Injectable()
 export class LocationsService {
-
     getMany(): Location[] {
         return null;
     }
