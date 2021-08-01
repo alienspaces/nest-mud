@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 // Application
 import { DatabaseService } from './database.service';
-import { doesNotMatch } from 'assert';
 
 describe('DatabaseService', () => {
     let service: DatabaseService;
@@ -11,7 +10,7 @@ describe('DatabaseService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ConfigModule.forRoot({ ignoreEnvFile: true })],
+            imports: [ConfigModule.forRoot({ ignoreEnvFile: false })],
             providers: [DatabaseService, ConfigService],
         }).compile();
 

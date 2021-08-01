@@ -9,9 +9,10 @@ import { ActionsController } from './controllers/actions/actions.controller';
 import { LocationsService } from './services/locations/locations.service';
 import { ActionsService } from './services/actions/actions.service';
 import { CharactersService } from './services/characters/characters.service';
-import { LocationService } from './repositories/location/location.service';
-import { CharacterService } from './repositories/character/character.service';
-import { DatabaseService } from './common/database/database.service';
+// import { LocationService } from './repositories/location/location.service';
+// import { CharacterService } from './repositories/character/character.service';
+import { DatabaseService } from './core/database/database.service';
+import { LoggerModule } from './core/logger/logger.module';
 
 @Module({
     imports: [],
@@ -26,10 +27,8 @@ import { DatabaseService } from './common/database/database.service';
         LocationsService,
         CharactersService,
         ActionsService,
-        CharactersService,
-        LocationService,
-        CharacterService,
         DatabaseService,
+        LoggerModule,
     ],
 })
 export class AppModule {}
