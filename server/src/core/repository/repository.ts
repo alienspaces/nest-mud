@@ -1,5 +1,3 @@
-import { timeStamp } from 'console';
-
 // Application
 import { DatabaseService } from '@/core';
 
@@ -15,7 +13,7 @@ export enum Operator {
 export interface Parameter {
     column: string;
     value: any;
-    operator: Operator;
+    operator?: Operator;
 }
 
 export interface ColumnConfig {
@@ -60,16 +58,10 @@ export abstract class Repository<TRecord> {
             },
             [],
         );
-
-        console.log('Primary column names');
-        console.log(this.primaryColumnNames);
-
-        console.log('All column names');
-        console.log(this.columnNames);
     }
 
     buildSelectSQL(args: {
-        parameters: Parameter[];
+        parameters?: Parameter[];
         forUpdate?: boolean;
         offset?: number;
         limit?: number;
@@ -85,6 +77,7 @@ export abstract class Repository<TRecord> {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
+                // TODO: Implement parameter operators
                 sql += `${parameter.column} = $${parameterCount}`;
             });
             sql += ' AND deleted_at IS NULL';
@@ -107,7 +100,7 @@ export abstract class Repository<TRecord> {
         return sql;
     }
 
-    buildUpdateSQL(args: { parameters: Parameter[] }): string {
+    buildUpdateSQL(args: { parameters?: Parameter[] }): string {
         let sql = `UPDATE ${this.table} SET `;
         let valueCount = 0;
         this.columnNames.forEach((columnName) => {
@@ -120,6 +113,7 @@ export abstract class Repository<TRecord> {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
+                // TODO: Implement parameter operators
                 sql += `${parameter.column} = $${parameterCount}`;
             });
         }
@@ -127,31 +121,54 @@ export abstract class Repository<TRecord> {
         return sql;
     }
 
-    // getOne - Returns one or null records, requires *only* primary key column names as parameters.
-    getOne(args: { parameters: Parameter[] }): TRecord {
-        // TODO: Implement
-        return {} as TRecord;
+    // getOne - Returns one record or null, requires *at least* primary key columns as parameters.
+    async getOne(args: {
+        parameters: Parameter[];
+        forUpdate?: boolean;
+    }): Promise<TRecord> {
+        if (
+            // TODO: Parameters contains primary key(s)
+            args.parameters.filter((parameter) => parameter.column === 'id')
+                .length != 1
+        ) {
+            // TODO: Data layer exception type
+            throw new Error('Missing primary key');
+        }
+        const client = await this.databaseService.connect();
+        const sql = this.buildSelectSQL({
+            parameters: args.parameters,
+            forUpdate: args.forUpdate,
+        });
+        const values = args.parameters.map(
+            (parameter: Parameter) => parameter.value,
+        );
+        const result = await client.query(sql, values);
+        if (result.rows.length != 1) {
+            // TODO: Data layer exception type
+            throw new Error('Record does not exist');
+        }
+        return result.rows[0] as TRecord;
     }
 
-    // getOne - Returns many or null records, allows *any* valid column names as parameters
-    getMany(args: { parameters: Parameter[] }): TRecord[] {
+    // getOne - Returns many records or null, optional *any* valid columns as parameters
+    getMany(args: { parameters?: Parameter[] }): TRecord[] {
         // TODO: Implement
         return [] as TRecord[];
     }
 
-    // updateOne - Updates 1 record, returning the updated record. Requires a record with primary key column values set.
+    // updateOne - Updates one record, returning the updated record. Requires a record with primary key column values set.
     updateOne(args: { record: TRecord }): TRecord {
         // TODO: Implement
         return {} as TRecord;
     }
 
-    // insertOne - Inserts 1 record, returning the inserted record. Requires a record with primary key column values set.
+    // insertOne - Inserts one record, returning the inserted record. Requires a record with primary key column values set.
     insertOne(args: { record: TRecord }): TRecord {
         // TODO: Implement
         return {} as TRecord;
     }
 
-    // deleteOne - Deletes 1 record, requires *only* primary key column names as parameters.
+    // deleteOne - Deletes one record, requires *at least* primary key columns as parameters.
     deleteOne(args: { parameters: Parameter[] }): void {
         // TODO: Implement
         return;
