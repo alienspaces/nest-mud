@@ -7,19 +7,19 @@ import { ConfigService } from '@nestjs/config';
 
 // Application
 import { DatabaseService } from '@/core/database/database.service';
-import { Character, CharacterRepository } from './character.repository';
+import { Location, LocationRepository } from './location.repository';
 
-describe('CharacterRepository', () => {
-    let repository: CharacterRepository;
+describe('LocationRepository', () => {
+    let repository: LocationRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ConfigService, DatabaseService, CharacterRepository],
+            providers: [ConfigService, DatabaseService, LocationRepository],
         }).compile();
 
         // NOTE: Must await.resolve as we have request scoped dependencies
-        repository = await module.resolve<CharacterRepository>(
-            CharacterRepository,
+        repository = await module.resolve<LocationRepository>(
+            LocationRepository,
         );
     });
 

@@ -7,32 +7,33 @@ import { Injectable } from '@nestjs/common';
 // Application
 import { DatabaseService, Repository, ColumnConfig } from '@/core';
 
-export interface Character {
+export interface Location {
     id?: string;
-    location_id: string;
     name: string;
-    strength?: number;
-    dexterity?: number;
-    intelligence?: number;
-    coin?: number;
-    experience?: number;
+    description: string;
+    default?: boolean;
+    north?: boolean;
+    northeast?: boolean;
+    east?: boolean;
+    southeast?: boolean;
+    south?: boolean;
+    southwest?: boolean;
+    west?: boolean;
+    northwest?: boolean;
+    up?: boolean;
+    down?: boolean;
     created_at?: Date;
     updated_at: Date | null;
     deleted_at: Date | null;
 }
 
 @Injectable()
-export class CharacterRepository extends Repository<Character> {
+export class LocationRepository extends Repository<Location> {
     constructor(databaseService: DatabaseService) {
-        super(databaseService, 'character', [
+        super(databaseService, 'location', [
             {
                 name: 'id',
                 isPrimary: true,
-                isNullable: false,
-            },
-            {
-                name: 'location_id',
-                isPrimary: false,
                 isNullable: false,
             },
             {
@@ -41,27 +42,62 @@ export class CharacterRepository extends Repository<Character> {
                 isNullable: false,
             },
             {
-                name: 'strength',
+                name: 'description',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'dexterity',
+                name: 'default',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'intelligence',
+                name: 'north',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'coin',
+                name: 'northeast',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'experience',
+                name: 'east',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'southeast',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'south',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'southwest',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'west',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'northwest',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'up',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'down',
                 isPrimary: false,
                 isNullable: false,
             },

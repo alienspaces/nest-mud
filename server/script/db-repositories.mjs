@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-import '../dist/src/cli/db-repositories/index.js';
+import '../dist/core/repository/cli/index.js';

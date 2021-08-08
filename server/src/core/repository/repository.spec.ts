@@ -1,13 +1,26 @@
+import { Injectable } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
+
+// Application
+import { DatabaseModule } from '@/core';
 import { Repository, Operator } from './repository';
+import { TestRepository } from './test.repository';
 
 describe('Repository', () => {
-    let repository: Repository;
+    let repository: TestRepository;
 
     beforeEach(async () => {
-        repository = new Repository('test', {
-            id: '',
-            name: '',
-        });
+        const module: TestingModule = await Test.createTestingModule({
+            imports: [
+                ConfigModule.forRoot({ ignoreEnvFile: false }),
+                DatabaseModule,
+            ],
+            providers: [TestRepository],
+        }).compile();
+
+        // NOTE: Must await.resolve as we have request scoped dependencies
+        repository = await module.resolve<TestRepository>(TestRepository);
     });
 
     it('should be defined', () => {
@@ -25,14 +38,18 @@ describe('Repository', () => {
                     },
                 ],
             });
-            expect(sql).toEqual('SELECT id, name FROM test WHERE id = $1');
+            expect(sql).toEqual(
+                'SELECT id, name, age FROM test WHERE id = $1 AND deleted_at IS NULL',
+            );
         });
     });
 
     describe('buildInsertSQL', () => {
         it('should build insert SQL', () => {
             const sql = repository.buildInsertSQL();
-            expect(sql).toEqual('INSERT INTO test (id, name) VALUES ($1, $2)');
+            expect(sql).toEqual(
+                'INSERT INTO test (id, name, age) VALUES ($1, $2, $3)',
+            );
         });
     });
 
@@ -48,7 +65,7 @@ describe('Repository', () => {
                 ],
             });
             expect(sql).toEqual(
-                'UPDATE test SET id = $1, name = $2 WHERE id = $1',
+                'UPDATE test SET id = $1, name = $2, age = $3 WHERE id = $1 AND deleted_at IS NULL',
             );
         });
     });

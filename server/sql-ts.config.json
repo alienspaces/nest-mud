@@ -1,0 +1,15 @@
+{
+    "client": "pg",
+    "connection": {
+        "host": "localhost",
+        "user": "nest-mud-user",
+        "password": "nest-mud-pass",
+        "database": "nest-mud"
+    },
+    "template": "sql-ts.template.hbs",
+    "folder": "src/core/repository",
+    "filename": "tables.generated",
+    "interfaceNameFormat": "${table}",
+    "tableNameCasing": "pascal",
+    "excludedTables": ["public.migrations"]
+}
