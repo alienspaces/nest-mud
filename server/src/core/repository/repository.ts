@@ -151,9 +151,21 @@ export abstract class Repository<TRecord> {
     }
 
     // getOne - Returns many records or null, optional *any* valid columns as parameters
-    getMany(args: { parameters?: Parameter[] }): TRecord[] {
-        // TODO: Implement
-        return [] as TRecord[];
+    async getMany(args: {
+        parameters?: Parameter[];
+        forUpdate?: boolean;
+    }): Promise<TRecord[]> {
+        const client = await this.databaseService.connect();
+        const sql = this.buildSelectSQL({
+            parameters: args.parameters,
+            forUpdate: args.forUpdate,
+        });
+        const values = args.parameters.map(
+            (parameter: Parameter) => parameter.value,
+        );
+        const result = await client.query(sql, values);
+
+        return result.rows as TRecord[];
     }
 
     // updateOne - Updates one record, returning the updated record. Requires a record with primary key column values set.
