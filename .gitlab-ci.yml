@@ -19,5 +19,6 @@ test_server:
     - cd server
     - cp .env.ci .env
     - source .env
-    - yarn
+    - yarn install
+    - ./script/db-migrate-up
     - yarn test

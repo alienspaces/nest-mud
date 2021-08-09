@@ -1,3 +1,6 @@
+-- pgcrypto
+CREATE EXTENSION pgcrypto;
+
 -- table location
 CREATE TABLE "location" (
   "id"           uuid CONSTRAINT location_pk PRIMARY KEY DEFAULT gen_random_uuid(),
