@@ -4,14 +4,14 @@ import { Injectable } from '@nestjs/common';
 import { Repository, ColumnConfig } from './repository';
 import { DatabaseService } from '@/core';
 
-interface Test {
+export interface TestRecord {
     id?: string;
     name: string;
     age?: number;
 }
 
 @Injectable()
-export class TestRepository extends Repository<Test> {
+export class TestRepository extends Repository<TestRecord> {
     constructor(databaseService: DatabaseService) {
         super(databaseService, 'test', [
             {

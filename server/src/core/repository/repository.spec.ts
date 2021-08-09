@@ -5,8 +5,14 @@ import { ContextIdFactory } from '@nestjs/core';
 
 // Application
 import { DatabaseModule, DatabaseService } from '@/core';
-import { Repository, Operator } from './repository';
-import { TestRepository } from './test.repository';
+import { Operator } from './repository';
+import { TestRepository, TestRecord } from './test.repository';
+
+const record: TestRecord = {
+    id: 'da9c5169-17ad-471c-8c04-1b70078aef79',
+    name: 'Sir Barricade of the Wall',
+    age: 49,
+};
 
 describe('Repository', () => {
     let repository: TestRepository;
@@ -54,7 +60,7 @@ CREATE TABLE IF NOT EXISTS "test" (
     beforeEach(async () => {
         const client = await databaseService.connect();
         await client.query(`
-INSERT INTO test (name, age) VALUES ('Sir Barricade of the Wall', 49);
+INSERT INTO test (id, name, age) VALUES ('${record.id}', '${record.name}', ${record.age});
         `);
     });
 
@@ -113,7 +119,7 @@ DELETE FROM test;
         });
     });
 
-    describe('queryOne', () => {
+    describe('getOne', () => {
         it('should throw when missing primary key column parameters', async () => {
             await expect(
                 repository.getOne({
@@ -136,6 +142,20 @@ DELETE FROM test;
                     ],
                 }),
             ).rejects.toThrow('Record does not exist');
+        });
+
+        it('should return expected record', async () => {
+            let resultRecord: TestRecord;
+            resultRecord = await repository.getOne({
+                parameters: [
+                    {
+                        column: 'id',
+                        value: `${record.id}`,
+                        operator: Operator.Equal,
+                    },
+                ],
+            });
+            expect(resultRecord).toEqual(record);
         });
     });
 });
