@@ -20,7 +20,7 @@ describe('DatabaseService', () => {
 
     afterEach(() => {
         if (service != null) {
-            service.release();
+            service.end();
             DatabaseService.poolEnd();
         }
     });

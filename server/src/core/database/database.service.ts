@@ -9,6 +9,8 @@ let pool: Pool;
 // TODO: Add to ConfigService whether pooled connections are enabled or not
 // and internally manage whether connect returns a PoolClient or Client..
 
+// TODO: Add commit and rollback functionality
+
 @Injectable({ scope: Scope.REQUEST })
 export class DatabaseService {
     private pooledClient: PoolClient;
