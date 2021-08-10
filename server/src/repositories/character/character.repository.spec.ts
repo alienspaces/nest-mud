@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 // Application
 import { DatabaseService } from '@/core/database/database.service';
-import { Character, CharacterRepository } from './character.repository';
+import { CharacterRecord, CharacterRepository } from './character.repository';
 
 describe('CharacterRepository', () => {
     let repository: CharacterRepository;
@@ -17,7 +17,6 @@ describe('CharacterRepository', () => {
             providers: [ConfigService, DatabaseService, CharacterRepository],
         }).compile();
 
-        // NOTE: Must await.resolve as we have request scoped dependencies
         repository = await module.resolve<CharacterRepository>(
             CharacterRepository,
         );
@@ -30,6 +29,7 @@ describe('CharacterRepository', () => {
     describe('buildInserSQL', () => {
         it('should return SQL', () => {
             const sql = repository.buildInsertSQL();
+            expect(sql).toBeTruthy();
         });
     });
 });

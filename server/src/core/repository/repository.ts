@@ -1,6 +1,12 @@
 // Application
 import { DatabaseService } from '@/core';
 
+export interface ColumnConfig {
+    name: string;
+    isPrimary: boolean;
+    isNullable: boolean;
+}
+
 export enum Operator {
     Equal,
     NotEqual,
@@ -10,28 +16,10 @@ export enum Operator {
     GreaterThanEqual,
 }
 
-export interface Parameter<TRecord> {
-    column: keyof TRecord;
+export interface Parameter<T> {
+    column: keyof T;
     value: any;
     operator?: Operator;
-}
-
-export interface ColumnConfig {
-    name: string;
-    primary: boolean;
-    type: any;
-    defaultValue: () => any;
-}
-
-export interface TableConfig {
-    name: string;
-    columns: ColumnConfig[];
-}
-
-export interface ColumnConfig {
-    name: string;
-    isPrimary: boolean;
-    isNullable: boolean;
 }
 
 export abstract class Repository<TRecord> {

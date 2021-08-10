@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 // Application
 import { DatabaseService, Repository, ColumnConfig } from '@/core';
 
-export interface {{interfaceName}} {{#if extends}}extends {{extends}} {{/if}}{
+export interface {{interfaceName}}Record {
   {{#each additionalProperties as |prop|}}
   {{prop}}
   {{/each}}
@@ -15,7 +15,7 @@ export interface {{interfaceName}} {{#if extends}}extends {{extends}} {{/if}}{
 }
 
 @Injectable()
-export class {{interfaceName}}Repository extends Repository<{{interfaceName}}> {
+export class {{interfaceName}}Repository extends Repository<{{interfaceName}}Record> {
     constructor(databaseService: DatabaseService) {
         super(databaseService, '{{name}}', [
         {{#each columns as |column|}}

@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 // Application
 import { DatabaseService, Repository, ColumnConfig } from '@/core';
 
-export interface Character {
+export interface CharacterRecord {
     id?: string;
     location_id: string;
     name: string;
@@ -22,7 +22,7 @@ export interface Character {
 }
 
 @Injectable()
-export class CharacterRepository extends Repository<Character> {
+export class CharacterRepository extends Repository<CharacterRecord> {
     constructor(databaseService: DatabaseService) {
         super(databaseService, 'character', [
             {

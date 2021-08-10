@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 
 // Application
 import { DatabaseService } from '@/core/database/database.service';
-import { {{interfaceName}}, {{interfaceName}}Repository } from './{{name}}.repository';
+import { {{interfaceName}}Record, {{interfaceName}}Repository } from './{{name}}.repository';
 
 describe('{{interfaceName}}Repository', () => {
     let repository: {{interfaceName}}Repository;
@@ -18,7 +18,6 @@ describe('{{interfaceName}}Repository', () => {
             providers: [ConfigService, DatabaseService, {{interfaceName}}Repository],
         }).compile();
 
-        // NOTE: Must await.resolve as we have request scoped dependencies
         repository = await module.resolve<{{interfaceName}}Repository>(
             {{interfaceName}}Repository,
         );
@@ -31,6 +30,7 @@ describe('{{interfaceName}}Repository', () => {
     describe('buildInserSQL', () => {
         it('should return SQL', () => {
             const sql = repository.buildInsertSQL();
+            expect(sql).toBeTruthy();
         });
     });
 });
