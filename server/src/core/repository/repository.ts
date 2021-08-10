@@ -10,8 +10,8 @@ export enum Operator {
     GreaterThanEqual,
 }
 
-export interface Parameter {
-    column: string;
+export interface Parameter<TRecord> {
+    column: keyof TRecord;
     value: any;
     operator?: Operator;
 }
@@ -37,8 +37,8 @@ export interface ColumnConfig {
 export abstract class Repository<TRecord> {
     table: string;
     columns: any;
-    primaryColumnNames: string[];
-    columnNames: string[];
+    private primaryColumnNames: string[];
+    private columnNames: string[];
 
     constructor(
         private databaseService: DatabaseService,
@@ -60,8 +60,8 @@ export abstract class Repository<TRecord> {
         );
     }
 
-    buildSelectSQL(args: {
-        parameters?: Parameter[];
+    buildSelectSQL<TRecord>(args: {
+        parameters?: Parameter<TRecord>[];
         forUpdate?: boolean;
         offset?: number;
         limit?: number;
@@ -100,7 +100,9 @@ export abstract class Repository<TRecord> {
         return sql;
     }
 
-    buildUpdateSQL(args: { parameters?: Parameter[] }): string {
+    buildUpdateSQL<TRecord>(args: {
+        parameters?: Parameter<TRecord>[];
+    }): string {
         let sql = `UPDATE ${this.table} SET `;
         let valueCount = 0;
         this.columnNames.forEach((columnName) => {
@@ -123,7 +125,7 @@ export abstract class Repository<TRecord> {
 
     // getOne - Returns one record or null, requires *at least* primary key columns as parameters.
     async getOne(args: {
-        parameters: Parameter[];
+        parameters: Parameter<TRecord>[];
         forUpdate?: boolean;
     }): Promise<TRecord> {
         if (
@@ -140,7 +142,7 @@ export abstract class Repository<TRecord> {
             forUpdate: args.forUpdate,
         });
         const values = args.parameters.map(
-            (parameter: Parameter) => parameter.value,
+            (parameter: Parameter<TRecord>) => parameter.value,
         );
         const result = await client.query(sql, values);
         if (result.rows.length != 1) {
@@ -152,7 +154,7 @@ export abstract class Repository<TRecord> {
 
     // getOne - Returns many records or null, optional *any* valid columns as parameters
     async getMany(args: {
-        parameters?: Parameter[];
+        parameters?: Parameter<TRecord>[];
         forUpdate?: boolean;
     }): Promise<TRecord[]> {
         const client = await this.databaseService.connect();
@@ -161,7 +163,7 @@ export abstract class Repository<TRecord> {
             forUpdate: args.forUpdate,
         });
         const values = args.parameters.map(
-            (parameter: Parameter) => parameter.value,
+            (parameter: Parameter<TRecord>) => parameter.value,
         );
         const result = await client.query(sql, values);
 
@@ -181,7 +183,7 @@ export abstract class Repository<TRecord> {
     }
 
     // deleteOne - Deletes one record, requires *at least* primary key columns as parameters.
-    deleteOne(args: { parameters: Parameter[] }): void {
+    deleteOne(args: { parameters: Parameter<TRecord>[] }): void {
         // TODO: Implement
         return;
     }

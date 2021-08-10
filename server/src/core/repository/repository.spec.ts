@@ -158,4 +158,15 @@ DELETE FROM test;
             expect(resultRecord).toEqual(record);
         });
     });
+
+    describe('getMany', () => {
+        it('should return no records', async () => {
+            let resultRecords = await repository.getMany({
+                parameters: [
+                    { column: 'age', value: 14, operator: Operator.Equal },
+                ],
+            });
+            expect(resultRecords.length).toEqual(0);
+        });
+    });
 });
