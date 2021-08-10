@@ -85,6 +85,12 @@ export abstract class Repository<TRecord> {
         sql = sql.substring(0, sql.length - 2);
         values = values.substring(0, values.length - 2);
         sql += `) VALUES (${values})`;
+        sql += ' RETURNING ';
+        this.columnNames.forEach((columnName) => {
+            valueCount++;
+            sql += `${columnName}, `;
+        });
+        sql = sql.substring(0, sql.length - 2);
         return sql;
     }
 
@@ -108,6 +114,12 @@ export abstract class Repository<TRecord> {
             });
         }
         sql += ' AND deleted_at IS NULL';
+        sql += ' RETURNING ';
+        this.columnNames.forEach((columnName) => {
+            valueCount++;
+            sql += `${columnName}, `;
+        });
+        sql = sql.substring(0, sql.length - 2);
         return sql;
     }
 
@@ -159,15 +171,45 @@ export abstract class Repository<TRecord> {
     }
 
     // updateOne - Updates one record, returning the updated record. Requires a record with primary key column values set.
-    updateOne(args: { record: TRecord }): TRecord {
-        // TODO: Implement
-        return {} as TRecord;
+    async updateOne(args: { record: TRecord }): Promise<TRecord> {
+        const client = await this.databaseService.connect();
+        const parameters = this.primaryColumnNames.map((primaryColumnName) => {
+            return {
+                column: primaryColumnName,
+                value: args.record[primaryColumnName],
+                operator: Operator.Equal,
+            };
+        });
+        const sql = this.buildUpdateSQL({
+            parameters: parameters,
+        });
+        const values = this.columnNames.map(
+            (columnName: string) => args.record[columnName],
+        );
+        const result = await client.query(sql, values);
+        if (result.rows.length != 1) {
+            // TODO: Data layer exception type
+            throw new Error('Failed returning record from update');
+        }
+        return result.rows[0] as TRecord;
     }
 
     // insertOne - Inserts one record, returning the inserted record. Requires a record with primary key column values set.
-    insertOne(args: { record: TRecord }): TRecord {
-        // TODO: Implement
-        return {} as TRecord;
+    async insertOne(args: { record: TRecord }): Promise<TRecord> {
+        const client = await this.databaseService.connect();
+
+        // TODO: Only include non null record properties in insert SQL column list and values
+
+        const sql = this.buildInsertSQL();
+        const values = this.columnNames.map(
+            (columnName: string) => args.record[columnName],
+        );
+        const result = await client.query(sql, values);
+        if (result.rows.length != 1) {
+            // TODO: Data layer exception type
+            throw new Error('Failed returning record from insert');
+        }
+        return result.rows[0] as TRecord;
     }
 
     // deleteOne - Deletes one record, requires *at least* primary key columns as parameters.

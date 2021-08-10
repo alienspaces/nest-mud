@@ -97,7 +97,7 @@ DELETE FROM test;
         it('should build insert SQL', () => {
             const sql = repository.buildInsertSQL();
             expect(sql).toEqual(
-                'INSERT INTO test (id, name, age) VALUES ($1, $2, $3)',
+                'INSERT INTO test (id, name, age) VALUES ($1, $2, $3) RETURNING id, name, age',
             );
         });
     });
@@ -114,7 +114,7 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'UPDATE test SET id = $1, name = $2, age = $3 WHERE id = $1 AND deleted_at IS NULL',
+                'UPDATE test SET id = $1, name = $2, age = $3 WHERE id = $1 AND deleted_at IS NULL RETURNING id, name, age',
             );
         });
     });
@@ -137,7 +137,6 @@ DELETE FROM test;
                         {
                             column: 'id',
                             value: '9da58182-76d6-4a2b-a7dd-8eaba788cb24',
-                            operator: Operator.Equal,
                         },
                     ],
                 }),
@@ -151,7 +150,6 @@ DELETE FROM test;
                     {
                         column: 'id',
                         value: `${record.id}`,
-                        operator: Operator.Equal,
                     },
                 ],
             });
@@ -168,5 +166,31 @@ DELETE FROM test;
             });
             expect(resultRecords.length).toEqual(0);
         });
+        it('should return expected records', async () => {
+            let resultRecords = await repository.getMany({
+                parameters: [
+                    {
+                        column: 'age',
+                        value: record.age,
+                        operator: Operator.Equal,
+                    },
+                ],
+            });
+            expect(resultRecords.length).toEqual(1);
+        });
+    });
+
+    describe('insertOne', () => {
+        it('should create a record', async () => {
+            let insertRecord: TestRecord = {
+                id: '4cde6ad0-52c8-47af-8782-794ef2da3908',
+                name: 'Legislate Law',
+                age: 49,
+            };
+            await repository.insertOne({ record: insertRecord });
+            expect(insertRecord.id).toBeTruthy();
+        });
+
+        // TODO: Test default values applied as expected
     });
 });
