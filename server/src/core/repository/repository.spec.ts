@@ -11,6 +11,7 @@ const record: TestRecord = {
     id: 'da9c5169-17ad-471c-8c04-1b70078aef79',
     name: 'Sir Barricade of the Wall',
     age: 49,
+    created_at: new Date(new Date().toUTCString()),
 };
 
 describe('Repository', () => {
@@ -59,7 +60,9 @@ CREATE TABLE IF NOT EXISTS "test" (
     beforeEach(async () => {
         const client = await databaseService.connect();
         await client.query(`
-INSERT INTO test (id, name, age) VALUES ('${record.id}', '${record.name}', ${record.age});
+INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
+            record.name
+        }', ${record.age}, '${record.created_at.toISOString()}');
         `);
     });
 
@@ -87,7 +90,7 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'SELECT id, name, age FROM test WHERE id = $1 AND deleted_at IS NULL',
+                'SELECT id, name, age, created_at, updated_at, deleted_at FROM test WHERE id = $1 AND deleted_at IS NULL',
             );
         });
     });
@@ -96,7 +99,7 @@ DELETE FROM test;
         it('should build insert SQL', () => {
             const sql = repository.buildInsertSQL();
             expect(sql).toEqual(
-                'INSERT INTO test (id, name, age) VALUES ($1, $2, $3) RETURNING id, name, age',
+                'INSERT INTO test (id, name, age, created_at, updated_at, deleted_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, age, created_at, updated_at, deleted_at',
             );
         });
     });
@@ -113,7 +116,7 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'UPDATE test SET id = $1, name = $2, age = $3 WHERE id = $1 AND deleted_at IS NULL RETURNING id, name, age',
+                'UPDATE test SET id = $1, name = $2, age = $3, created_at = $4, updated_at = $5, deleted_at = $6 WHERE id = $1 AND deleted_at IS NULL RETURNING id, name, age, created_at, updated_at, deleted_at',
             );
         });
     });
@@ -152,7 +155,10 @@ DELETE FROM test;
                     },
                 ],
             });
-            expect(resultRecord).toEqual(record);
+            expect(resultRecord.id).toEqual(record.id);
+            expect(resultRecord.name).toEqual(record.name);
+            expect(resultRecord.age).toEqual(record.age);
+            expect(resultRecord.created_at).toBeTruthy();
         });
     });
 

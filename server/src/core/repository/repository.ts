@@ -5,10 +5,12 @@ import { DatabaseService } from '@/core';
 
 export interface ColumnConfig {
     name: string;
+    type: string;
     isPrimary: boolean;
     isNullable: boolean;
 }
 
+// Repository requires that record types extend the Record interface
 export interface Record {
     id?: string;
     created_at?: Date;
@@ -46,7 +48,7 @@ export abstract class Repository<TRecord extends Record> {
         this.table = table;
         this.columns = columns;
         this.columnNames = this.columns.map(
-            (column: ColumnConfig) => column.name,
+            (column: ColumnConfig) => column.name as keyof TRecord,
         );
         this.primaryColumnNames = this.columns.reduce(
             (primaryColumnNames: string[], column: ColumnConfig) => {
