@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 import { ContextIdFactory } from '@nestjs/core';
@@ -183,12 +182,26 @@ DELETE FROM test;
     describe('insertOne', () => {
         it('should create a record', async () => {
             let insertRecord: TestRecord = {
-                id: '4cde6ad0-52c8-47af-8782-794ef2da3908',
                 name: 'Legislate Law',
                 age: 49,
             };
             await repository.insertOne({ record: insertRecord });
             expect(insertRecord.id).toBeTruthy();
+            expect(insertRecord.created_at).toBeTruthy();
+            expect(insertRecord.updated_at).toBeFalsy();
+            expect(insertRecord.deleted_at).toBeFalsy();
+        });
+
+        // TODO: Test default values applied as expected
+    });
+
+    describe('updateOne', () => {
+        it('should update a record', async () => {
+            record.age = 50;
+            await repository.updateOne({ record: record });
+            expect(record.age).toEqual(50);
+            expect(record.updated_at).toBeTruthy();
+            expect(record.deleted_at).toBeFalsy();
         });
 
         // TODO: Test default values applied as expected

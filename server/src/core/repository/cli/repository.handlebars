@@ -10,7 +10,7 @@ export interface {{interfaceName}}Record {
   {{prop}}
   {{/each}}
   {{#each columns}}
-    {{propertyName}}{{#if optional}}?{{/if}}: {{propertyType}}{{#if nullable}} | null{{/if}};
+    {{propertyName}}{{#if optional}}?{{/if}}{{#if nullable}}?{{/if}}: {{propertyType}};
   {{/each}}
 }
 

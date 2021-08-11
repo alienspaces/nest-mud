@@ -8,6 +8,9 @@ export interface TestRecord {
     id?: string;
     name: string;
     age?: number;
+    created_at?: Date;
+    updated_at?: Date | null;
+    deleted_at?: Date | null;
 }
 
 @Injectable()

@@ -17,8 +17,8 @@ export interface CharacterRecord {
     coin?: number;
     experience?: number;
     created_at?: Date;
-    updated_at: Date | null;
-    deleted_at: Date | null;
+    updated_at?: Date | null;
+    deleted_at?: Date | null;
 }
 
 @Injectable()

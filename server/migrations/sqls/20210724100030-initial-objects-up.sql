@@ -17,9 +17,9 @@ CREATE TABLE "location" (
   "northwest"    boolean NOT NULL DEFAULT FALSE,
   "up"           boolean NOT NULL DEFAULT FALSE,
   "down"         boolean NOT NULL DEFAULT FALSE,
-  "created_at"   timestamp NOT NULL DEFAULT (current_timestamp),
-  "updated_at"   timestamp DEFAULT null,
-  "deleted_at"   timestamp DEFAULT null
+  "created_at"   timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"   timestamp WITH TIME ZONE,
+  "deleted_at"   timestamp WITH TIME ZONE
 );
 
 -- table character
@@ -32,9 +32,9 @@ CREATE TABLE "character" (
   "intelligence" integer NOT NULL DEFAULT 10,
   "coin"         integer NOT NULL DEFAULT 0,
   "experience"   integer NOT NULL DEFAULT 0,
-  "created_at"   timestamp NOT NULL DEFAULT (current_timestamp),
-  "updated_at"   timestamp DEFAULT null,
-  "deleted_at"   timestamp DEFAULT null
+  "created_at"   timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"   timestamp WITH TIME ZONE,
+  "deleted_at"   timestamp WITH TIME ZONE
 );
 
 ALTER TABLE "character" ADD CONSTRAINT "character_location_id_fk" 

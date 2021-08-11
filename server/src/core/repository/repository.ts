@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 // Application
 import { DatabaseService } from '@/core';
 
@@ -5,6 +7,13 @@ export interface ColumnConfig {
     name: string;
     isPrimary: boolean;
     isNullable: boolean;
+}
+
+export interface Record {
+    id?: string;
+    created_at?: Date;
+    updated_at?: Date | null;
+    deleted_at?: Date | null;
 }
 
 export enum Operator {
@@ -22,7 +31,7 @@ export interface Parameter<T> {
     operator?: Operator;
 }
 
-export abstract class Repository<TRecord> {
+export abstract class Repository<TRecord extends Record> {
     table: string;
     columns: any;
     private primaryColumnNames: string[];
@@ -183,6 +192,9 @@ export abstract class Repository<TRecord> {
         const sql = this.buildUpdateSQL({
             parameters: parameters,
         });
+
+        args.record.updated_at = new Date(new Date().toUTCString());
+
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
@@ -201,6 +213,12 @@ export abstract class Repository<TRecord> {
         // TODO: Only include non null record properties in insert SQL column list and values
 
         const sql = this.buildInsertSQL();
+
+        if (!args.record.id) {
+            args.record.id = crypto.randomUUID();
+        }
+        args.record.created_at = new Date(new Date().toUTCString());
+
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );

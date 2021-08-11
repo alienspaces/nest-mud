@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# development
+# Development
 cp .env.development .env
 
-# environment
+# Environment
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/environment" || exit $?
 
-# retry
+# Retry
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/retry" || exit $?
 
-# stop database
+# Stop database
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/db-stop" || exit $?
 
-# start database
+# Start database
 echo "=> Start database"
 
 docker run --hostname postgres --name "${APP_SERVER_NAME}-database" \
@@ -25,12 +25,13 @@ docker run --hostname postgres --name "${APP_SERVER_NAME}-database" \
     -p "${APP_SERVER_DB_PORT}:5432" -d \
     postgres:10.4-alpine || exit $?
 
-# pgcrypto for uuids
+# Wait for connection to be available
 export PGPASSWORD="$APP_SERVER_DB_PASSWORD"
 retry_cmd psql --host="$APP_SERVER_DB_HOST" \
      --port="$APP_SERVER_DB_PORT" \
 	 --username="$APP_SERVER_DB_USER" \
-     --command="CREATE EXTENSION pgcrypto;" \
+     --command="SELECT 1" \
      "$APP_SERVER_DB_NAME"
+
 
 echo "=> Start database - running on ${APP_SERVER_DB_HOST}:${APP_SERVER_DB_PORT}"
