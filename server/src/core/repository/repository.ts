@@ -5,7 +5,6 @@ import { DatabaseService } from '@/core';
 
 export interface ColumnConfig {
     name: string;
-    type: string;
     isPrimary: boolean;
     isNullable: boolean;
 }

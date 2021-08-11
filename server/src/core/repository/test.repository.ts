@@ -13,48 +13,40 @@ export interface TestRecord {
     deleted_at?: Date | null;
 }
 
-const columnConfig = [
-    {
-        name: 'id',
-        type: 'string',
-        isPrimary: true,
-        isNullable: false,
-    },
-    {
-        name: 'name',
-        type: 'string',
-        isPrimary: false,
-        isNullable: false,
-    },
-    {
-        name: 'age',
-        type: 'number',
-        isPrimary: false,
-        isNullable: true,
-    },
-    {
-        name: 'created_at',
-        type: 'Date',
-        isPrimary: false,
-        isNullable: false,
-    },
-    {
-        name: 'updated_at',
-        type: 'Date',
-        isPrimary: false,
-        isNullable: true,
-    },
-    {
-        name: 'deleted_at',
-        type: 'Date',
-        isPrimary: false,
-        isNullable: true,
-    },
-];
-
 @Injectable()
 export class TestRepository extends Repository<TestRecord> {
     constructor(databaseService: DatabaseService) {
-        super(databaseService, 'test', columnConfig);
+        super(databaseService, 'test', [
+            {
+                name: 'id',
+                isPrimary: true,
+                isNullable: false,
+            },
+            {
+                name: 'name',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'age',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'created_at',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'updated_at',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'deleted_at',
+                isPrimary: false,
+                isNullable: true,
+            },
+        ] as ColumnConfig[]);
     }
 }
