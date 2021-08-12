@@ -3,19 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 // Controllers
+import { DatabaseModule } from './core/database/database.module';
+import { RepositoriesModule } from './repositories';
+import { LoggerModule } from './core/logger/logger.module';
 import { LocationsController } from './controllers/locations/locations.controller';
 import { CharactersController } from './controllers/characters/characters.controller';
 import { ActionsController } from './controllers/actions/actions.controller';
 import { LocationsService } from './services/locations/locations.service';
 import { ActionsService } from './services/actions/actions.service';
 import { CharactersService } from './services/characters/characters.service';
-// import { LocationService } from './repositories/location/location.service';
-// import { CharacterService } from './repositories/character/character.service';
-import { DatabaseService } from './core/database/database.service';
-import { LoggerModule } from './core/logger/logger.module';
 
 @Module({
-    imports: [],
+    imports: [DatabaseModule, RepositoriesModule, LoggerModule],
     controllers: [
         AppController,
         CharactersController,
@@ -27,8 +26,6 @@ import { LoggerModule } from './core/logger/logger.module';
         LocationsService,
         CharactersService,
         ActionsService,
-        DatabaseService,
-        LoggerModule,
     ],
 })
 export class AppModule {}

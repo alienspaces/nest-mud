@@ -4,10 +4,10 @@
  * Rerun ./script/db-repositories.mjs to regenerate this file.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseService } from '@/core/database/database.service';
+import { DatabaseModule } from '@/core';
 import { {{interfaceName}}Record, {{interfaceName}}Repository } from './{{name}}.repository';
 
 describe('{{interfaceName}}Repository', () => {
@@ -15,7 +15,11 @@ describe('{{interfaceName}}Repository', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ConfigService, DatabaseService, {{interfaceName}}Repository],
+            imports: [
+                ConfigModule.forRoot({ ignoreEnvFile: false }),
+                DatabaseModule,
+            ],
+            providers: [{{interfaceName}}Repository],
         }).compile();
 
         repository = await module.resolve<{{interfaceName}}Repository>(

@@ -3,10 +3,10 @@
  * Rerun ./script/db-repositories.mjs to regenerate this file.
  */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseService } from '@/core/database/database.service';
+import { DatabaseModule } from '@/core';
 import { LocationRecord, LocationRepository } from './location.repository';
 
 describe('LocationRepository', () => {
@@ -14,7 +14,11 @@ describe('LocationRepository', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [ConfigService, DatabaseService, LocationRepository],
+            imports: [
+                ConfigModule.forRoot({ ignoreEnvFile: false }),
+                DatabaseModule,
+            ],
+            providers: [LocationRepository],
         }).compile();
 
         repository = await module.resolve<LocationRepository>(
