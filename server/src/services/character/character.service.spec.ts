@@ -4,14 +4,14 @@ import { ConfigModule } from '@nestjs/config';
 // Application
 import { DatabaseModule } from '@/core';
 import { RepositoriesModule } from '@/repositories/repositories.module';
-import { CharactersService } from './characters.service';
-import { LocationsService } from '../locations/locations.service';
+import { CharacterService } from './character.service';
+import { LocationService } from '../location/location.service';
 import { CharacterRecord, LocationRecord } from '@/repositories';
 
-describe('CharactersService', () => {
-    let service: CharactersService;
-    let locationsService: LocationsService;
-    let charactersService: CharactersService;
+describe('CharacterService', () => {
+    let service: CharacterService;
+    let locationService: LocationService;
+    let characterService: CharacterService;
     let locationRecord: LocationRecord;
     let characterRecord: CharacterRecord;
 
@@ -22,16 +22,16 @@ describe('CharactersService', () => {
                 DatabaseModule,
                 RepositoriesModule,
             ],
-            providers: [LocationsService, CharactersService, CharactersService],
+            providers: [LocationService, CharacterService, CharacterService],
         }).compile();
 
-        locationsService = await module.resolve<LocationsService>(
-            LocationsService,
+        locationService = await module.resolve<LocationService>(
+            LocationService,
         );
-        charactersService = await module.resolve<CharactersService>(
-            CharactersService,
+        characterService = await module.resolve<CharacterService>(
+            CharacterService,
         );
-        service = module.get<CharactersService>(CharactersService);
+        service = module.get<CharacterService>(CharacterService);
     });
 
     afterAll(async () => {});

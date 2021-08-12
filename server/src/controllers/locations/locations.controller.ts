@@ -1,14 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 
 // Application
-import { LocationsService } from '@/services/locations/locations.service';
+import { LocationService } from '@/services/location/location.service';
 import { LocationResponseDto } from './dto/location-response.dto';
 import { LocationDto } from './dto/location.dto';
 import { Location } from '@/interfaces/location.interface';
 
 @Controller('/api/v1/locations')
 export class LocationsController {
-    constructor(private locationsService: LocationsService) {}
+    constructor(private locationsService: LocationService) {}
 
     @Get()
     async getMany(): Promise<LocationResponseDto> {

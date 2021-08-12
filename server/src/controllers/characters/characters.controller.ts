@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 
 // Application
-import { CharactersService } from '@/services/characters/characters.service';
+import { CharacterService } from '@/services/character/character.service';
 
 @Controller('/api/v1/characters')
 export class CharactersController {
-    constructor(private charactersService: CharactersService) {}
+    constructor(private characterService: CharacterService) {}
 }

@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@/core';
 import { RepositoriesModule } from '@/repositories';
 import { CharactersController } from './characters.controller';
-import { CharactersService } from '@/services/characters/characters.service';
+import { CharacterService } from '@/services/character/character.service';
 
 describe('CharactersController', () => {
     let controller: CharactersController;
@@ -18,7 +18,7 @@ describe('CharactersController', () => {
                 RepositoriesModule,
             ],
             controllers: [CharactersController],
-            providers: [CharactersService],
+            providers: [CharacterService],
         }).compile();
 
         controller = module.get<CharactersController>(CharactersController);

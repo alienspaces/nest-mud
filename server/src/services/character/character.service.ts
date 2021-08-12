@@ -8,13 +8,13 @@ import {
     LocationRecord,
 } from '@/repositories';
 
-import { CreateCharacterEntity, CharacterEntity } from './entities';
+import { CreateCharacterEntity, CharacterEntity } from './character.entities';
 
 const defaultCoin = 100;
 const maxAttributes = 30;
 
 @Injectable()
-export class CharactersService {
+export class CharacterService {
     constructor(
         private characterRepository: CharacterRepository,
         private locationRepository: LocationRepository,

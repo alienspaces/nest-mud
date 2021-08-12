@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 // Application
 import { LocationsController } from './locations.controller';
 import { LocationResponseDto } from './dto/location-response.dto';
-import { LocationsService } from '@/services/locations/locations.service';
+import { LocationService } from '@/services/location/location.service';
 
 describe('LocationsController', () => {
     let controller: LocationsController;
@@ -11,7 +11,7 @@ describe('LocationsController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [LocationsController],
-            providers: [LocationsService],
+            providers: [LocationService],
         }).compile();
 
         controller = module.get<LocationsController>(LocationsController);

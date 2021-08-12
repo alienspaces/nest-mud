@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Location } from '@/interfaces/location.interface';
 
 @Injectable()
-export class LocationsService {
+export class LocationService {
     getMany(): Location[] {
         return null;
     }
