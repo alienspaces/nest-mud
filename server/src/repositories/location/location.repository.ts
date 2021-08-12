@@ -5,32 +5,44 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import { DatabaseService, Repository, ColumnConfig } from '@/core';
+import {
+    DatabaseService,
+    LoggerService,
+    Repository,
+    RepositoryParameter,
+    ColumnConfig,
+} from '@/core';
 
-export interface LocationRecord {
+export interface LocationRepositoryRecord {
     id?: string;
     name: string;
     description: string;
     default?: boolean;
-    north?: boolean;
-    northeast?: boolean;
-    east?: boolean;
-    southeast?: boolean;
-    south?: boolean;
-    southwest?: boolean;
-    west?: boolean;
-    northwest?: boolean;
-    up?: boolean;
-    down?: boolean;
+    north_location_id?: string;
+    northeast_location_id?: string;
+    east_location_id?: string;
+    southeast_location_id?: string;
+    south_location_id?: string;
+    southwest_location_id?: string;
+    west_location_id?: string;
+    northwest_location_id?: string;
+    up_location_id?: string;
+    down_location_id?: string;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
 }
 
+export interface LocationRepositoryParameter
+    extends RepositoryParameter<LocationRepositoryRecord> {}
+
 @Injectable()
-export class LocationRepository extends Repository<LocationRecord> {
-    constructor(databaseService: DatabaseService) {
-        super(databaseService, 'location', [
+export class LocationRepository extends Repository<LocationRepositoryRecord> {
+    constructor(
+        databaseService: DatabaseService,
+        loggerService: LoggerService,
+    ) {
+        super(databaseService, loggerService, 'location', [
             {
                 name: 'id',
                 isPrimary: true,
@@ -52,54 +64,54 @@ export class LocationRepository extends Repository<LocationRecord> {
                 isNullable: false,
             },
             {
-                name: 'north',
+                name: 'north_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'northeast',
+                name: 'northeast_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'east',
+                name: 'east_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'southeast',
+                name: 'southeast_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'south',
+                name: 'south_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'southwest',
+                name: 'southwest_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'west',
+                name: 'west_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'northwest',
+                name: 'northwest_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'up',
+                name: 'up_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
-                name: 'down',
+                name: 'down_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'created_at',

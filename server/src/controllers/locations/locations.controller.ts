@@ -1,10 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 
 // Application
-import { LocationService } from '@/services/location/location.service';
+import {
+    LocationService,
+    LocationEntity,
+    LocationParameters,
+} from '@/services';
 import { LocationResponseDto } from './dto/location-response.dto';
 import { LocationDto } from './dto/location.dto';
-import { Location } from '@/interfaces/location.interface';
 
 @Controller('/api/v1/locations')
 export class LocationsController {
@@ -12,15 +15,15 @@ export class LocationsController {
 
     @Get()
     async getMany(): Promise<LocationResponseDto> {
-        const locationsData = this.locationsService.getMany();
-        const locations = convertToDto(locationsData);
+        const locationsData = await this.locationsService.getLocations();
+        const locations = buildDto(locationsData);
         return {
             data: locations,
         };
     }
 }
 
-function convertToDto(collection: Location[]): LocationDto[] {
+function buildDto(collection: LocationEntity[]): LocationDto[] {
     const returnData: LocationDto[] = [];
     if (!collection) {
         return returnData;
@@ -32,16 +35,16 @@ function convertToDto(collection: Location[]): LocationDto[] {
             name: data.name,
             description: data.description,
             default: data.default,
-            north: data.north,
-            northeast: data.northeast,
-            east: data.east,
-            southeast: data.southeast,
-            south: data.south,
-            southwest: data.southwest,
-            west: data.west,
-            northwest: data.northwest,
-            up: data.up,
-            down: data.down,
+            north_location_id: data.north_location_id,
+            northeast_location_id: data.northeast_location_id,
+            east_location_id: data.east_location_id,
+            southeast_location_id: data.southeast_location_id,
+            south_location_id: data.south_location_id,
+            southwest_location_id: data.southwest_location_id,
+            west_location_id: data.west_location_id,
+            northwest_location_id: data.northwest_location_id,
+            up_location_id: data.up_location_id,
+            down_location_id: data.down_location_id,
             created_at: data.created_at,
             updated_at: data.updated_at,
         });

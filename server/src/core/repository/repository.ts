@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 // Application
-import { DatabaseService } from '@/core';
+import { DatabaseService, LoggerService } from '@/core';
 
 export interface ColumnConfig {
     name: string;
@@ -17,7 +17,7 @@ export interface Record {
     deleted_at?: Date | null;
 }
 
-export enum Operator {
+export enum RepositoryOperator {
     Equal,
     NotEqual,
     LessThan,
@@ -26,10 +26,10 @@ export enum Operator {
     GreaterThanEqual,
 }
 
-export interface Parameter<T> {
+export interface RepositoryParameter<T> {
     column: keyof T;
     value: any;
-    operator?: Operator;
+    operator?: RepositoryOperator;
 }
 
 export abstract class Repository<TRecord extends Record> {
@@ -40,6 +40,7 @@ export abstract class Repository<TRecord extends Record> {
 
     constructor(
         private databaseService: DatabaseService,
+        private loggerService: LoggerService,
         table: string,
         columns: ColumnConfig[],
     ) {
@@ -59,31 +60,40 @@ export abstract class Repository<TRecord extends Record> {
     }
 
     buildSelectSQL<TRecord>(args: {
-        parameters?: Parameter<TRecord>[];
+        parameters?: RepositoryParameter<TRecord>[];
         forUpdate?: boolean;
         offset?: number;
         limit?: number;
     }): string {
+        const logger = this.loggerService.logger({
+            function: 'buildSelectSQL',
+        });
+
         let sql = `SELECT `;
         this.columnNames.forEach((columnName) => {
             sql += `${columnName}, `;
         });
         sql = sql.substring(0, sql.length - 2);
         sql += ` FROM ${this.table}`;
-        if (args.parameters) {
-            sql += ' WHERE ';
+        sql += ' WHERE ';
+        if (args.parameters.length) {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
                 // TODO: Implement parameter operators
                 sql += `${parameter.column} = $${parameterCount}`;
             });
-            sql += ' AND deleted_at IS NULL';
+            sql += ' AND ';
         }
+        sql += 'deleted_at IS NULL';
+        logger.info(sql);
         return sql;
     }
 
     buildInsertSQL(): string {
+        const logger = this.loggerService.logger({
+            function: 'buildInsertSQL',
+        });
         let sql = `INSERT INTO ${this.table} (`;
         let values = '';
         let valueCount = 0;
@@ -101,12 +111,16 @@ export abstract class Repository<TRecord extends Record> {
             sql += `${columnName}, `;
         });
         sql = sql.substring(0, sql.length - 2);
+        logger.info(sql);
         return sql;
     }
 
     buildUpdateSQL<TRecord>(args: {
-        parameters?: Parameter<TRecord>[];
+        parameters?: RepositoryParameter<TRecord>[];
     }): string {
+        const logger = this.loggerService.logger({
+            function: 'buildUpdateSQL',
+        });
         let sql = `UPDATE ${this.table} SET `;
         let valueCount = 0;
         this.columnNames.forEach((columnName) => {
@@ -114,32 +128,33 @@ export abstract class Repository<TRecord extends Record> {
             sql += `${columnName} = $${valueCount}, `;
         });
         sql = sql.substring(0, sql.length - 2);
-        if (args.parameters) {
-            sql += ' WHERE ';
+        sql += ' WHERE ';
+        if (args.parameters.length) {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
                 // TODO: Implement parameter operators
                 sql += `${parameter.column} = $${parameterCount}`;
             });
+            sql += ' AND ';
         }
-        sql += ' AND deleted_at IS NULL';
-        sql += ' RETURNING ';
+        sql += 'deleted_at IS NULL RETURNING ';
         this.columnNames.forEach((columnName) => {
             valueCount++;
             sql += `${columnName}, `;
         });
         sql = sql.substring(0, sql.length - 2);
+        logger.info(sql);
         return sql;
     }
 
     // getOne - Returns one record or null, requires *at least* primary key columns as parameters.
     async getOne(args: {
-        parameters: Parameter<TRecord>[];
+        parameters: RepositoryParameter<TRecord>[];
         forUpdate?: boolean;
     }): Promise<TRecord> {
         if (
-            // TODO: Parameters contains primary key(s)
+            // TODO: RepositoryParameters contains primary key(s)
             args.parameters.filter((parameter) => parameter.column === 'id')
                 .length != 1
         ) {
@@ -152,7 +167,7 @@ export abstract class Repository<TRecord extends Record> {
             forUpdate: args.forUpdate,
         });
         const values = args.parameters.map(
-            (parameter: Parameter<TRecord>) => parameter.value,
+            (parameter: RepositoryParameter<TRecord>) => parameter.value,
         );
         const result = await client.query(sql, values);
         if (result.rows.length != 1) {
@@ -164,7 +179,7 @@ export abstract class Repository<TRecord extends Record> {
 
     // getOne - Returns many records or null, optional *any* valid columns as parameters
     async getMany(args: {
-        parameters?: Parameter<TRecord>[];
+        parameters?: RepositoryParameter<TRecord>[];
         forUpdate?: boolean;
     }): Promise<TRecord[]> {
         const client = await this.databaseService.connect();
@@ -173,7 +188,7 @@ export abstract class Repository<TRecord extends Record> {
             forUpdate: args.forUpdate,
         });
         const values = args.parameters.map(
-            (parameter: Parameter<TRecord>) => parameter.value,
+            (parameter: RepositoryParameter<TRecord>) => parameter.value,
         );
         const result = await client.query(sql, values);
 
@@ -187,7 +202,7 @@ export abstract class Repository<TRecord extends Record> {
             return {
                 column: primaryColumnName,
                 value: args.record[primaryColumnName],
-                operator: Operator.Equal,
+                operator: RepositoryOperator.Equal,
             };
         });
         const sql = this.buildUpdateSQL({
@@ -232,7 +247,7 @@ export abstract class Repository<TRecord extends Record> {
     }
 
     // deleteOne - Deletes one record, requires *at least* primary key columns as parameters.
-    deleteOne(args: { parameters: Parameter<TRecord>[] }): void {
+    deleteOne(args: { parameters: RepositoryParameter<TRecord>[] }): void {
         // TODO: Implement
         return;
     }

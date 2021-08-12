@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 // Application
 import { Repository, ColumnConfig } from './repository';
-import { DatabaseService } from '@/core';
+import { DatabaseService, LoggerService } from '@/core';
 
 export interface TestRecord {
     id?: string;
@@ -15,8 +15,11 @@ export interface TestRecord {
 
 @Injectable()
 export class TestRepository extends Repository<TestRecord> {
-    constructor(databaseService: DatabaseService) {
-        super(databaseService, 'test', [
+    constructor(
+        databaseService: DatabaseService,
+        loggerService: LoggerService,
+    ) {
+        super(databaseService, loggerService, 'test', [
             {
                 name: 'id',
                 isPrimary: true,

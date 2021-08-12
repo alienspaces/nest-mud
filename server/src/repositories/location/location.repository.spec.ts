@@ -6,8 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule } from '@/core';
-import { LocationRecord, LocationRepository } from './location.repository';
+import { DatabaseModule, LoggerModule } from '@/core';
+import { LocationRepositoryRecord, LocationRepository } from './location.repository';
 
 describe('LocationRepository', () => {
     let repository: LocationRepository;
@@ -17,6 +17,7 @@ describe('LocationRepository', () => {
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 DatabaseModule,
+                LoggerModule,
             ],
             providers: [LocationRepository],
         }).compile();

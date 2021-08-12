@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 // Application
 import {
     CharacterRepository,
-    CharacterRecord,
+    CharacterRepositoryRecord,
     LocationRepository,
-    LocationRecord,
+    LocationRepositoryRecord,
 } from '@/repositories';
 
 import { CreateCharacterEntity, CharacterEntity } from './character.entities';
@@ -45,7 +45,7 @@ export class CharacterService {
             );
         }
 
-        const characterRecord: CharacterRecord = {
+        const characterRecord: CharacterRepositoryRecord = {
             location_id: locationRecords[0].id,
             name: createCharacterEntity.name,
             strength: createCharacterEntity.strength,

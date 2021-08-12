@@ -6,14 +6,17 @@ import { DatabaseModule } from '@/core';
 import { RepositoriesModule } from '@/repositories/repositories.module';
 import { CharacterService } from './character.service';
 import { LocationService } from '../location/location.service';
-import { CharacterRecord, LocationRecord } from '@/repositories';
+import {
+    CharacterRepositoryRecord,
+    LocationRepositoryRecord,
+} from '@/repositories';
 
 describe('CharacterService', () => {
     let service: CharacterService;
     let locationService: LocationService;
     let characterService: CharacterService;
-    let locationRecord: LocationRecord;
-    let characterRecord: CharacterRecord;
+    let locationRecord: LocationRepositoryRecord;
+    let characterRecord: CharacterRepositoryRecord;
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({

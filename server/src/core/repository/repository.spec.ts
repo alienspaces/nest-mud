@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule } from '@nestjs/config';
 import { ContextIdFactory } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule, DatabaseService } from '@/core';
-import { Operator } from './repository';
+import { DatabaseModule, DatabaseService, LoggerModule } from '@/core';
+import { RepositoryOperator } from './repository';
 import { TestRepository, TestRecord } from './test.repository';
 
 const record: TestRecord = {
@@ -23,6 +23,7 @@ describe('Repository', () => {
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 DatabaseModule,
+                LoggerModule,
             ],
             providers: [TestRepository],
         }).compile();
@@ -85,7 +86,7 @@ DELETE FROM test;
                     {
                         column: 'id',
                         value: '635e27fe-9bc0-4dfb-b2a1-844faa2965b2',
-                        operator: Operator.Equal,
+                        operator: RepositoryOperator.Equal,
                     },
                 ],
             });
@@ -111,7 +112,7 @@ DELETE FROM test;
                     {
                         column: 'id',
                         value: '635e27fe-9bc0-4dfb-b2a1-844faa2965b2',
-                        operator: Operator.Equal,
+                        operator: RepositoryOperator.Equal,
                     },
                 ],
             });
@@ -126,7 +127,11 @@ DELETE FROM test;
             await expect(
                 repository.getOne({
                     parameters: [
-                        { column: 'age', value: 14, operator: Operator.Equal },
+                        {
+                            column: 'age',
+                            value: 14,
+                            operator: RepositoryOperator.Equal,
+                        },
                     ],
                 }),
             ).rejects.toThrow('Missing primary key');
@@ -166,7 +171,11 @@ DELETE FROM test;
         it('should return no records', async () => {
             let resultRecords = await repository.getMany({
                 parameters: [
-                    { column: 'age', value: 14, operator: Operator.Equal },
+                    {
+                        column: 'age',
+                        value: 14,
+                        operator: RepositoryOperator.Equal,
+                    },
                 ],
             });
             expect(resultRecords.length).toEqual(0);
@@ -177,7 +186,7 @@ DELETE FROM test;
                     {
                         column: 'age',
                         value: record.age,
-                        operator: Operator.Equal,
+                        operator: RepositoryOperator.Equal,
                     },
                 ],
             });

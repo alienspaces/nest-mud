@@ -3,9 +3,15 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import { DatabaseService, Repository, ColumnConfig } from '@/core';
+import {
+    DatabaseService,
+    LoggerService,
+    Repository,
+    RepositoryParameter,
+    ColumnConfig,
+} from '@/core';
 
-export interface {{interfaceName}}Record {
+export interface {{interfaceName}}RepositoryRecord {
   {{#each additionalProperties as |prop|}}
   {{prop}}
   {{/each}}
@@ -14,10 +20,16 @@ export interface {{interfaceName}}Record {
   {{/each}}
 }
 
+export interface {{interfaceName}}RepositoryParameter
+    extends RepositoryParameter<{{interfaceName}}RepositoryRecord> {}
+
 @Injectable()
-export class {{interfaceName}}Repository extends Repository<{{interfaceName}}Record> {
-    constructor(databaseService: DatabaseService) {
-        super(databaseService, '{{name}}', [
+export class {{interfaceName}}Repository extends Repository<{{interfaceName}}RepositoryRecord> {
+    constructor(
+        databaseService: DatabaseService,
+        loggerService: LoggerService,
+    ) {
+        super(databaseService, loggerService, '{{name}}', [
         {{#each columns as |column|}}
             {
                 name: '{{column.name}}',

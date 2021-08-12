@@ -6,8 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule } from '@/core';
-import { CharacterRecord, CharacterRepository } from './character.repository';
+import { DatabaseModule, LoggerModule } from '@/core';
+import { CharacterRepositoryRecord, CharacterRepository } from './character.repository';
 
 describe('CharacterRepository', () => {
     let repository: CharacterRepository;
@@ -17,6 +17,7 @@ describe('CharacterRepository', () => {
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 DatabaseModule,
+                LoggerModule,
             ],
             providers: [CharacterRepository],
         }).compile();

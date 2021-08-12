@@ -5,9 +5,15 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import { DatabaseService, Repository, ColumnConfig } from '@/core';
+import {
+    DatabaseService,
+    LoggerService,
+    Repository,
+    RepositoryParameter,
+    ColumnConfig,
+} from '@/core';
 
-export interface CharacterRecord {
+export interface CharacterRepositoryRecord {
     id?: string;
     location_id: string;
     name: string;
@@ -21,10 +27,16 @@ export interface CharacterRecord {
     deleted_at?: Date;
 }
 
+export interface CharacterRepositoryParameter
+    extends RepositoryParameter<CharacterRepositoryRecord> {}
+
 @Injectable()
-export class CharacterRepository extends Repository<CharacterRecord> {
-    constructor(databaseService: DatabaseService) {
-        super(databaseService, 'character', [
+export class CharacterRepository extends Repository<CharacterRepositoryRecord> {
+    constructor(
+        databaseService: DatabaseService,
+        loggerService: LoggerService,
+    ) {
+        super(databaseService, loggerService, 'character', [
             {
                 name: 'id',
                 isPrimary: true,
