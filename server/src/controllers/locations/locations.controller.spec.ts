@@ -45,9 +45,9 @@ describe('LocationsController', () => {
 
     describe('getMany', () => {
         // TODO:
-        // it('should return many', async () => {
-        //     let response = await controller.getMany();
-        //     expect(response.data).toBeTruthy();
-        // });
+        it('should return many', async () => {
+            let response = await controller.getMany();
+            expect(response.data).toBeTruthy();
+        });
     });
 });

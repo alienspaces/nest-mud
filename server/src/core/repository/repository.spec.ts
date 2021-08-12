@@ -91,7 +91,7 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'SELECT id, name, age, created_at, updated_at, deleted_at FROM test WHERE id = $1 AND deleted_at IS NULL',
+                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "id" = $1 AND deleted_at IS NULL',
             );
         });
     });
@@ -100,7 +100,7 @@ DELETE FROM test;
         it('should build insert SQL', () => {
             const sql = repository.buildInsertSQL();
             expect(sql).toEqual(
-                'INSERT INTO test (id, name, age, created_at, updated_at, deleted_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, age, created_at, updated_at, deleted_at',
+                'INSERT INTO test ("id", "name", "age", "created_at", "updated_at", "deleted_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
             );
         });
     });
@@ -117,7 +117,7 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'UPDATE test SET id = $1, name = $2, age = $3, created_at = $4, updated_at = $5, deleted_at = $6 WHERE id = $1 AND deleted_at IS NULL RETURNING id, name, age, created_at, updated_at, deleted_at',
+                'UPDATE test SET "id" = $1, "name" = $2, "age" = $3, "created_at" = $4, "updated_at" = $5, "deleted_at" = $6 WHERE "id" = $1 AND deleted_at IS NULL RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
             );
         });
     });

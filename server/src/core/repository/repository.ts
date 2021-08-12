@@ -71,7 +71,7 @@ export abstract class Repository<TRecord extends Record> {
 
         let sql = `SELECT `;
         this.columnNames.forEach((columnName) => {
-            sql += `${columnName}, `;
+            sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
         sql += ` FROM ${this.table}`;
@@ -81,7 +81,7 @@ export abstract class Repository<TRecord extends Record> {
             args.parameters.forEach((parameter) => {
                 parameterCount++;
                 // TODO: Implement parameter operators
-                sql += `${parameter.column} = $${parameterCount}`;
+                sql += `"${parameter.column}" = $${parameterCount}`;
             });
             sql += ' AND ';
         }
@@ -98,7 +98,7 @@ export abstract class Repository<TRecord extends Record> {
         let values = '';
         let valueCount = 0;
         this.columnNames.forEach((columnName) => {
-            sql += `${columnName}, `;
+            sql += `"${columnName}", `;
             valueCount++;
             values += `$${valueCount}, `;
         });
@@ -108,7 +108,7 @@ export abstract class Repository<TRecord extends Record> {
         sql += ' RETURNING ';
         this.columnNames.forEach((columnName) => {
             valueCount++;
-            sql += `${columnName}, `;
+            sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
         logger.info(sql);
@@ -125,7 +125,7 @@ export abstract class Repository<TRecord extends Record> {
         let valueCount = 0;
         this.columnNames.forEach((columnName) => {
             valueCount++;
-            sql += `${columnName} = $${valueCount}, `;
+            sql += `"${columnName}" = $${valueCount}, `;
         });
         sql = sql.substring(0, sql.length - 2);
         sql += ' WHERE ';
@@ -134,14 +134,14 @@ export abstract class Repository<TRecord extends Record> {
             args.parameters.forEach((parameter) => {
                 parameterCount++;
                 // TODO: Implement parameter operators
-                sql += `${parameter.column} = $${parameterCount}`;
+                sql += `"${parameter.column}" = $${parameterCount}`;
             });
             sql += ' AND ';
         }
         sql += 'deleted_at IS NULL RETURNING ';
         this.columnNames.forEach((columnName) => {
             valueCount++;
-            sql += `${columnName}, `;
+            sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
         logger.info(sql);
