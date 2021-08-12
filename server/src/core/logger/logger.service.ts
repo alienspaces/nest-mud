@@ -16,7 +16,7 @@ export class LoggerService {
         function?: string;
     }): pino.Logger {
         if (context) {
-            this._logger = this._logger.child(context);
+            return this._logger.child(context);
         }
         return this._logger;
     }

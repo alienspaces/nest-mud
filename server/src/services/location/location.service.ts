@@ -95,7 +95,8 @@ export class LocationService {
     }
 
     async deleteLocation(id: string): Promise<void> {
-        return null;
+        await this.locationRepository.deleteOne({ id: id });
+        return;
     }
 
     buildLocationEntity(

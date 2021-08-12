@@ -2,6 +2,7 @@ import * as crypto from 'crypto';
 
 // Application
 import { DatabaseService, LoggerService } from '@/core';
+import { identity } from 'rxjs';
 
 export interface ColumnConfig {
     name: string;
@@ -74,8 +75,8 @@ export abstract class Repository<TRecord extends Record> {
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        sql += ` FROM ${this.table}`;
-        sql += ' WHERE ';
+        sql += ` FROM ${this.table} `;
+        sql += 'WHERE ';
         if (args.parameters.length) {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
@@ -85,7 +86,7 @@ export abstract class Repository<TRecord extends Record> {
             });
             sql += ' AND ';
         }
-        sql += 'deleted_at IS NULL';
+        sql += '"deleted_at" IS NULL';
         logger.info(sql);
         return sql;
     }
@@ -138,7 +139,35 @@ export abstract class Repository<TRecord extends Record> {
             });
             sql += ' AND ';
         }
-        sql += 'deleted_at IS NULL RETURNING ';
+        sql += '"deleted_at" IS NULL RETURNING ';
+        this.columnNames.forEach((columnName) => {
+            valueCount++;
+            sql += `"${columnName}", `;
+        });
+        sql = sql.substring(0, sql.length - 2);
+        logger.info(sql);
+        return sql;
+    }
+
+    buildDeleteSQL<TRecord>(args: {
+        parameters?: RepositoryParameter<TRecord>[];
+    }): string {
+        const logger = this.loggerService.logger({
+            function: 'buildDeleteSQL',
+        });
+
+        let sql = `UPDATE ${this.table} SET "deleted_at" = NOW() WHERE `;
+        if (args.parameters.length) {
+            let parameterCount = 0;
+            args.parameters.forEach((parameter) => {
+                parameterCount++;
+                // TODO: Implement parameter operators
+                sql += `"${parameter.column}" = $${parameterCount}`;
+            });
+            sql += ' AND ';
+        }
+        sql += '"deleted_at" IS NULL RETURNING ';
+        let valueCount = 0;
         this.columnNames.forEach((columnName) => {
             valueCount++;
             sql += `"${columnName}", `;
@@ -149,39 +178,38 @@ export abstract class Repository<TRecord extends Record> {
     }
 
     // getOne - Returns one record or null, requires *at least* primary key columns as parameters.
-    async getOne(args: {
-        parameters: RepositoryParameter<TRecord>[];
-        forUpdate?: boolean;
-    }): Promise<TRecord> {
-        if (
-            // TODO: RepositoryParameters contains primary key(s)
-            args.parameters.filter((parameter) => parameter.column === 'id')
-                .length != 1
-        ) {
-            // TODO: Data layer exception type
-            throw new Error('Missing primary key');
-        }
+    async getOne(args: { id: string; forUpdate?: boolean }): Promise<TRecord> {
+        const logger = this.loggerService.logger({
+            function: 'getOne',
+        });
         const client = await this.databaseService.connect();
         const sql = this.buildSelectSQL({
-            parameters: args.parameters,
+            parameters: [
+                {
+                    column: 'id',
+                    value: args.id,
+                },
+            ],
             forUpdate: args.forUpdate,
         });
-        const values = args.parameters.map(
-            (parameter: RepositoryParameter<TRecord>) => parameter.value,
-        );
+        const values = [args.id];
+        logger.info(values);
         const result = await client.query(sql, values);
-        if (result.rows.length != 1) {
+        if (result.rowCount != 1) {
             // TODO: Data layer exception type
             throw new Error('Record does not exist');
         }
         return result.rows[0] as TRecord;
     }
 
-    // getOne - Returns many records or null, optional *any* valid columns as parameters
+    // getMany - Returns many records or null, optional *any* valid columns as parameters
     async getMany(args: {
         parameters?: RepositoryParameter<TRecord>[];
         forUpdate?: boolean;
     }): Promise<TRecord[]> {
+        const logger = this.loggerService.logger({
+            function: 'getMany',
+        });
         const client = await this.databaseService.connect();
         const sql = this.buildSelectSQL({
             parameters: args.parameters,
@@ -190,6 +218,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = args.parameters.map(
             (parameter: RepositoryParameter<TRecord>) => parameter.value,
         );
+        logger.info(values);
         const result = await client.query(sql, values);
 
         return result.rows as TRecord[];
@@ -197,6 +226,9 @@ export abstract class Repository<TRecord extends Record> {
 
     // updateOne - Updates one record, returning the updated record. Requires a record with primary key column values set.
     async updateOne(args: { record: TRecord }): Promise<TRecord> {
+        const logger = this.loggerService.logger({
+            function: 'updateOne',
+        });
         const client = await this.databaseService.connect();
         const parameters = this.primaryColumnNames.map((primaryColumnName) => {
             return {
@@ -214,8 +246,9 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
+        logger.info(values);
         const result = await client.query(sql, values);
-        if (result.rows.length != 1) {
+        if (result.rowCount != 1) {
             // TODO: Data layer exception type
             throw new Error('Failed returning record from update');
         }
@@ -224,6 +257,9 @@ export abstract class Repository<TRecord extends Record> {
 
     // insertOne - Inserts one record, returning the inserted record. Requires a record with primary key column values set.
     async insertOne(args: { record: TRecord }): Promise<TRecord> {
+        const logger = this.loggerService.logger({
+            function: 'insertOne',
+        });
         const client = await this.databaseService.connect();
 
         // TODO: Only include non null record properties in insert SQL column list and values
@@ -238,6 +274,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
+        logger.info(values);
         const result = await client.query(sql, values);
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -247,8 +284,28 @@ export abstract class Repository<TRecord extends Record> {
     }
 
     // deleteOne - Deletes one record, requires *at least* primary key columns as parameters.
-    deleteOne(args: { parameters: RepositoryParameter<TRecord>[] }): void {
-        // TODO: Implement
+    async deleteOne(args: { id: string }): Promise<void> {
+        const logger = this.loggerService.logger({
+            function: 'deleteOne',
+        });
+        const client = await this.databaseService.connect();
+        const parameters = [
+            {
+                column: 'id',
+                value: args.id,
+            },
+        ];
+        const sql = this.buildDeleteSQL({
+            parameters: parameters,
+        });
+
+        const values = [args.id];
+        logger.info(values);
+        const result = await client.query(sql, values);
+        if (result.rowCount != 1) {
+            // TODO: Data layer exception type
+            throw new Error('Failed deleting row');
+        }
         return;
     }
 }

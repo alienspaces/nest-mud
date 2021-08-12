@@ -65,13 +65,14 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
             record.name
         }', ${record.age}, '${record.created_at.toISOString()}');
         `);
+        await databaseService.end();
     });
 
     afterEach(async () => {
         const client = await databaseService.connect();
         await client.query(`
-DELETE FROM test;
-        `);
+        DELETE FROM test;
+                `);
         await databaseService.end();
     });
 
@@ -91,7 +92,7 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "id" = $1 AND deleted_at IS NULL',
+                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "id" = $1 AND "deleted_at" IS NULL',
             );
         });
     });
@@ -117,35 +118,33 @@ DELETE FROM test;
                 ],
             });
             expect(sql).toEqual(
-                'UPDATE test SET "id" = $1, "name" = $2, "age" = $3, "created_at" = $4, "updated_at" = $5, "deleted_at" = $6 WHERE "id" = $1 AND deleted_at IS NULL RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
+                'UPDATE test SET "id" = $1, "name" = $2, "age" = $3, "created_at" = $4, "updated_at" = $5, "deleted_at" = $6 WHERE "id" = $1 AND "deleted_at" IS NULL RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
+            );
+        });
+    });
+
+    describe('buildDeleteSQL', () => {
+        it('should build delete SQL', () => {
+            const sql = repository.buildDeleteSQL({
+                parameters: [
+                    {
+                        column: 'id',
+                        value: '635e27fe-9bc0-4dfb-b2a1-844faa2965b2',
+                        operator: RepositoryOperator.Equal,
+                    },
+                ],
+            });
+            expect(sql).toEqual(
+                'UPDATE test SET "deleted_at" = NOW() WHERE "id" = $1 AND "deleted_at" IS NULL RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
             );
         });
     });
 
     describe('getOne', () => {
-        it('should throw when missing primary key column parameters', async () => {
-            await expect(
-                repository.getOne({
-                    parameters: [
-                        {
-                            column: 'age',
-                            value: 14,
-                            operator: RepositoryOperator.Equal,
-                        },
-                    ],
-                }),
-            ).rejects.toThrow('Missing primary key');
-        });
-
         it('should throw when record cannot be found', async () => {
             await expect(
                 repository.getOne({
-                    parameters: [
-                        {
-                            column: 'id',
-                            value: '9da58182-76d6-4a2b-a7dd-8eaba788cb24',
-                        },
-                    ],
+                    id: '9da58182-76d6-4a2b-a7dd-8eaba788cb24',
                 }),
             ).rejects.toThrow('Record does not exist');
         });
@@ -153,12 +152,7 @@ DELETE FROM test;
         it('should return expected record', async () => {
             let resultRecord: TestRecord;
             resultRecord = await repository.getOne({
-                parameters: [
-                    {
-                        column: 'id',
-                        value: `${record.id}`,
-                    },
-                ],
+                id: `${record.id}`,
             });
             expect(resultRecord.id).toEqual(record.id);
             expect(resultRecord.name).toEqual(record.name);
@@ -206,8 +200,6 @@ DELETE FROM test;
             expect(insertRecord.updated_at).toBeFalsy();
             expect(insertRecord.deleted_at).toBeFalsy();
         });
-
-        // TODO: Test default values applied as expected
     });
 
     describe('updateOne', () => {
@@ -218,7 +210,29 @@ DELETE FROM test;
             expect(record.updated_at).toBeTruthy();
             expect(record.deleted_at).toBeFalsy();
         });
+    });
 
-        // TODO: Test default values applied as expected
+    describe('deleteOne', () => {
+        it('should not throw when deleting a valid record', async () => {
+            await expect(
+                repository.deleteOne({
+                    id: `${record.id}`,
+                }),
+            ).resolves.not.toThrow();
+
+            await expect(
+                repository.getOne({
+                    id: `${record.id}`,
+                }),
+            ).rejects.toThrow('Record does not exist');
+        });
+
+        it('should throw when deleting an invalid record', async () => {
+            await expect(
+                repository.deleteOne({
+                    id: 'df85976a-8764-4d33-a5c5-ceabcae2b366',
+                }),
+            ).rejects.toThrow('Failed deleting row');
+        });
     });
 });
