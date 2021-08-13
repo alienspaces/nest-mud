@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/character.schema.json",
+    "title": "Character",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "location_id": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "name": {
+            "type": "string"
+        },
+        "strength": {
+            "type": "number"
+        },
+        "dexterity": {
+            "type": "number"
+        },
+        "intelligence": {
+            "type": "number"
+        },
+        "coin": {
+            "type": "number"
+        },
+        "experience": {
+            "type": "number"
+        },
+        "created_at": {
+            "type": "string",
+            "format": "date"
+        },
+        "deleted_at": {
+            "type": "string",
+            "format": "date"
+        }
+    },
+    "required": [
+        "id",
+        "location_id",
+        "name",
+        "strength",
+        "dexterity",
+        "intelligence",
+        "coin",
+        "experience",
+        "created_at",
+        "deleted_at"
+    ],
+    "additionalProperties": false,
+    "definitions": {}
+}

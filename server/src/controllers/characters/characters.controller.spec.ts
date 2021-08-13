@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule } from '@/core';
+import { DatabaseModule, LoggerModule } from '@/core';
 import { RepositoriesModule } from '@/repositories';
 import { CharactersController } from './characters.controller';
 import { CharacterService } from '@/services/character/character.service';
@@ -15,6 +15,7 @@ describe('CharactersController', () => {
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 DatabaseModule,
+                LoggerModule,
                 RepositoriesModule,
             ],
             controllers: [CharactersController],

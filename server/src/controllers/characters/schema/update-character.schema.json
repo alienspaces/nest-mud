@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/update-character.schema.json",
+    "title": "Create Character",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "strength": {
+            "type": "number"
+        },
+        "dexterity": {
+            "type": "number"
+        },
+        "intelligence": {
+            "type": "number"
+        }
+    },
+    "required": ["name", "strength", "dexterity", "intelligence"],
+    "additionalProperties": false,
+    "definitions": {}
+}

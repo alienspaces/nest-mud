@@ -5,6 +5,15 @@ export interface CreateCharacterEntity {
     intelligence: number;
 }
 
+export interface UpdateCharacterEntity {
+    name: string;
+    strength: number;
+    dexterity: number;
+    intelligence: number;
+    coin: number;
+    experience: number;
+}
+
 export interface CharacterEntity {
     id: string;
     location_id: string;
