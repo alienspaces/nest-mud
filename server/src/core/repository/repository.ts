@@ -87,7 +87,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += ' AND ';
         }
         sql += '"deleted_at" IS NULL';
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -112,7 +112,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -145,7 +145,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -173,7 +173,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -193,7 +193,7 @@ export abstract class Repository<TRecord extends Record> {
             forUpdate: args.forUpdate,
         });
         const values = [args.id];
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
@@ -218,7 +218,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = args.parameters.map(
             (parameter: RepositoryParameter<TRecord>) => parameter.value,
         );
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
 
         return result.rows as TRecord[];
@@ -246,7 +246,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
@@ -274,7 +274,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -300,7 +300,7 @@ export abstract class Repository<TRecord extends Record> {
         });
 
         const values = [args.id];
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
         if (result.rowCount != 1) {
             // TODO: Data layer exception type

@@ -48,7 +48,6 @@ describe('LocationsController', () => {
         while (locationEntities.length) {
             const locationEntity = locationEntities.pop();
             await locationService.deleteLocation(locationEntity.id);
-            console.log(`(afterEach) Deleted location ${locationEntity.id}`);
         }
         await databaseService.end();
     });
@@ -62,7 +61,6 @@ describe('LocationsController', () => {
         const locationEntity = await locationService.createLocation(
             createLocationEntity,
         );
-        console.log(`(beforeEach) Created location ${locationEntity.id}`);
         locationEntities.push(locationEntity);
     });
 
@@ -70,7 +68,6 @@ describe('LocationsController', () => {
         while (locationEntities.length) {
             const locationEntity = locationEntities.pop();
             await locationService.deleteLocation(locationEntity.id);
-            console.log(`(afterEach) Deleted location ${locationEntity.id}`);
         }
     });
 
@@ -78,11 +75,11 @@ describe('LocationsController', () => {
         expect(controller).toBeDefined();
     });
 
-    // describe('getMany', () => {
-    //     it('should return many', async () => {
-    //         let response = await controller.getMany();
-    //         expect(response.data).toBeTruthy();
-    //         expect(response.data.length).toEqual(1);
-    //     });
-    // });
+    describe('getMany', () => {
+        it('should return many', async () => {
+            let response = await controller.getMany();
+            expect(response.data).toBeTruthy();
+            expect(response.data.length).toEqual(1);
+        });
+    });
 });
