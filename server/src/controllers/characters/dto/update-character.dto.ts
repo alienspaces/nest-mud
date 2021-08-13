@@ -1,6 +1,8 @@
 export class UpdateCharacterDto {
-    name: string;
-    strength: number;
-    dexterity: number;
-    intelligence: number;
+    data: {
+        name: string;
+        strength: number;
+        dexterity: number;
+        intelligence: number;
+    };
 }

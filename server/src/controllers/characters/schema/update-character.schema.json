@@ -4,20 +4,30 @@
     "title": "Create Character",
     "type": "object",
     "properties": {
-        "name": {
-            "type": "string"
-        },
-        "strength": {
-            "type": "number"
-        },
-        "dexterity": {
-            "type": "number"
-        },
-        "intelligence": {
-            "type": "number"
+        "data": {
+            "$ref": "#/definitions/data"
         }
     },
     "required": ["name", "strength", "dexterity", "intelligence"],
     "additionalProperties": false,
-    "definitions": {}
+    "definitions": {
+        "data": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "strength": {
+                    "type": "number"
+                },
+                "dexterity": {
+                    "type": "number"
+                },
+                "intelligence": {
+                    "type": "number"
+                }
+            },
+            "required": ["name", "strength", "dexterity", "intelligence"]
+        }
+    }
 }

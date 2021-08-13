@@ -2,10 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule } from '@/core';
-import { RepositoriesModule } from '@/repositories/repositories.module';
-import { LocationService } from '../location/location.service';
-import { LocationRepositoryRecord } from '@/repositories';
+import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
+import { LocationService } from './location.service';
+import { RepositoriesModule, LocationRepositoryRecord } from '@/repositories';
 
 describe('LocationService', () => {
     let service: LocationService;
@@ -16,9 +15,10 @@ describe('LocationService', () => {
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 DatabaseModule,
+                LoggerModule,
                 RepositoriesModule,
             ],
-            providers: [LocationService],
+            providers: [LoggerService, LocationService],
         }).compile();
 
         service = module.get<LocationService>(LocationService);

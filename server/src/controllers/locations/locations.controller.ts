@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 
 // Application
 import {
@@ -6,31 +6,28 @@ import {
     LocationEntity,
     LocationParameters,
 } from '@/services';
-import { LocationResponseDto } from './dto/location-response.dto';
-import { LocationDto } from './dto/location.dto';
+import { LocationDto } from './dto';
 
 @Controller('/api/v1/locations')
 export class LocationsController {
     constructor(private locationsService: LocationService) {}
 
-    @Get()
-    async getMany(): Promise<LocationResponseDto> {
-        const locationsData = await this.locationsService.getLocations();
-        const locations = buildDto(locationsData);
-        return {
-            data: locations,
-        };
+    @Get(':id')
+    async get(@Param('id') id: string): Promise<LocationDto> {
+        const locationEntity = await this.locationsService.getLocation(id);
+        if (!locationEntity) {
+            return;
+        }
+        const responseData = buildResponse([locationEntity]);
+        return responseData;
     }
 }
 
-function buildDto(collection: LocationEntity[]): LocationDto[] {
-    const returnData: LocationDto[] = [];
-    if (!collection) {
-        return returnData;
-    }
+function buildResponse(locationEntities: LocationEntity[]): LocationDto {
+    let returnDataLocations: LocationDto['data'] = [];
 
-    collection.forEach((data) => {
-        returnData.push({
+    locationEntities.forEach((data) => {
+        returnDataLocations.push({
             id: data.id,
             name: data.name,
             description: data.description,
@@ -49,5 +46,8 @@ function buildDto(collection: LocationEntity[]): LocationDto[] {
             updated_at: data.updated_at,
         });
     });
+
+    const returnData = { data: returnDataLocations };
+
     return returnData;
 }

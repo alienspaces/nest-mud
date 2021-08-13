@@ -24,7 +24,9 @@ export class CharactersController {
         new ValidationPipe(createCharacterSchema.$id, createCharacterSchema),
     )
     @Post()
-    async create(@Body() data: CreateCharacterDto): Promise<CharacterDto> {
+    async create(
+        @Body() requestData: CreateCharacterDto,
+    ): Promise<CharacterDto> {
         const logger = this.loggerService.logger({
             class: 'CharactersController',
             function: 'create',
@@ -33,10 +35,10 @@ export class CharactersController {
         logger.info('Creating character');
 
         const createCharacterEntity: CreateCharacterEntity = {
-            name: data.name,
-            strength: data.strength,
-            dexterity: data.dexterity,
-            intelligence: data.intelligence,
+            name: requestData.data.name,
+            strength: requestData.data.strength,
+            dexterity: requestData.data.dexterity,
+            intelligence: requestData.data.intelligence,
         };
 
         const characterEntity = await this.characterService.createCharacter(
@@ -44,16 +46,20 @@ export class CharactersController {
         );
 
         const responseData: CharacterDto = {
-            id: characterEntity.id,
-            location_id: characterEntity.location_id,
-            name: characterEntity.name,
-            strength: characterEntity.strength,
-            dexterity: characterEntity.dexterity,
-            intelligence: characterEntity.intelligence,
-            coin: characterEntity.coin,
-            experience: characterEntity.experience,
-            created_at: characterEntity.created_at,
-            updated_at: characterEntity.updated_at,
+            data: [
+                {
+                    id: characterEntity.id,
+                    location_id: characterEntity.location_id,
+                    name: characterEntity.name,
+                    strength: characterEntity.strength,
+                    dexterity: characterEntity.dexterity,
+                    intelligence: characterEntity.intelligence,
+                    coin: characterEntity.coin,
+                    experience: characterEntity.experience,
+                    created_at: characterEntity.created_at,
+                    updated_at: characterEntity.updated_at,
+                },
+            ],
         };
 
         return responseData;
@@ -62,10 +68,10 @@ export class CharactersController {
     @UsePipes(
         new ValidationPipe(updateCharacterSchema.$id, updateCharacterSchema),
     )
-    @Put('/api/characters/:id')
+    @Put(':id')
     async update(
         @Param('id') id: string,
-        @Body() data: UpdateCharacterDto,
+        @Body() requestData: UpdateCharacterDto,
     ): Promise<CharacterDto> {
         const logger = this.loggerService.logger({
             class: 'CharactersController',
@@ -73,33 +79,53 @@ export class CharactersController {
         });
         logger.info('Updating character');
 
-        const characterEntity: CharacterEntity =
+        let characterEntity: CharacterEntity =
             await this.characterService.getCharacter(id);
 
         const updateCharacterEntity: UpdateCharacterEntity = {
+            name: requestData.data.name,
+            strength: requestData.data.strength,
+            dexterity: requestData.data.dexterity,
+            intelligence: requestData.data.intelligence,
+            coin: characterEntity.coin,
+            experience: characterEntity.experience,
+        };
+
+        characterEntity = await this.characterService.updateCharacter(
+            id,
+            updateCharacterEntity,
+        );
+
+        const responseData = buildResponse([characterEntity]);
+
+        return responseData;
+    }
+}
+
+function buildResponse(characterEntities: CharacterEntity[]): CharacterDto {
+    let returnData: CharacterDto;
+    if (!characterEntities) {
+        return returnData;
+    }
+
+    let returnDataCharacters: CharacterDto['data'] = [];
+
+    characterEntities.forEach((data) => {
+        returnDataCharacters.push({
+            id: data.id,
+            location_id: data.location_id,
             name: data.name,
             strength: data.strength,
             dexterity: data.dexterity,
             intelligence: data.intelligence,
-            coin: characterEntity.coin,
-            experience: characterEntity.experience,
-        };
+            coin: data.coin,
+            experience: data.experience,
+            created_at: data.created_at,
+            updated_at: data.updated_at,
+        });
+    });
 
-        await this.characterService.updateCharacter(id, updateCharacterEntity);
+    returnData = { data: returnDataCharacters };
 
-        const responseData: CharacterDto = {
-            id: characterEntity.id,
-            location_id: characterEntity.location_id,
-            name: characterEntity.name,
-            strength: characterEntity.strength,
-            dexterity: characterEntity.dexterity,
-            intelligence: characterEntity.intelligence,
-            coin: characterEntity.coin,
-            experience: characterEntity.experience,
-            created_at: characterEntity.created_at,
-            updated_at: characterEntity.updated_at,
-        };
-
-        return responseData;
-    }
+    return returnData;
 }

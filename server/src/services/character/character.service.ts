@@ -25,7 +25,11 @@ export class CharacterService {
     ) {}
 
     async getCharacter(id: string): Promise<CharacterEntity> {
-        return null;
+        const characterRecord = await this.characterRepository.getOne({
+            id: id,
+        });
+        const characterEntity = this.buildCharacterEntity(characterRecord);
+        return characterEntity;
     }
 
     async createCharacter(
@@ -64,20 +68,7 @@ export class CharacterService {
             record: characterRecord,
         });
 
-        const characterEntity: CharacterEntity = {
-            id: characterRecord.id,
-            location_id: characterRecord.location_id,
-            name: characterRecord.name,
-            strength: characterRecord.strength,
-            dexterity: characterRecord.dexterity,
-            intelligence: characterRecord.intelligence,
-            coin: characterRecord.coin,
-            experience: characterRecord.experience,
-            created_at: characterRecord.created_at,
-            updated_at: characterRecord.updated_at,
-            deleted_at: characterRecord.deleted_at,
-        };
-
+        const characterEntity = this.buildCharacterEntity(characterRecord);
         return characterEntity;
     }
 
@@ -118,7 +109,18 @@ export class CharacterService {
             record: characterRecord,
         });
 
-        const characterEntity: CharacterEntity = {
+        const characterEntity = this.buildCharacterEntity(characterRecord);
+        return characterEntity;
+    }
+
+    async deleteCharacter(id: string): Promise<void> {
+        return null;
+    }
+
+    buildCharacterEntity(
+        characterRecord: CharacterRepositoryRecord,
+    ): CharacterEntity {
+        const locationEntity: CharacterEntity = {
             id: characterRecord.id,
             location_id: characterRecord.location_id,
             name: characterRecord.name,
@@ -131,11 +133,6 @@ export class CharacterService {
             updated_at: characterRecord.updated_at,
             deleted_at: characterRecord.deleted_at,
         };
-
-        return characterEntity;
-    }
-
-    async deleteCharacter(id: string): Promise<void> {
-        return null;
+        return locationEntity;
     }
 }

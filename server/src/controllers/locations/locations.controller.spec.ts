@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 // Application
 import { DatabaseModule, DatabaseService } from '@/core';
 import { LocationsController } from './locations.controller';
-import { LocationResponseDto } from './dto/location-response.dto';
+import { LocationDto } from './dto';
 import { LocationService } from '@/services/location/location.service';
 import {
     CreateLocationEntity,
@@ -75,9 +75,9 @@ describe('LocationsController', () => {
         expect(controller).toBeDefined();
     });
 
-    describe('getMany', () => {
-        it('should return many', async () => {
-            let response = await controller.getMany();
+    describe('get', () => {
+        it('should return one location', async () => {
+            let response = await controller.get(locationEntities[0].id);
             expect(response.data).toBeTruthy();
             expect(response.data.length).toEqual(1);
         });

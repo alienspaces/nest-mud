@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
+import { LoggerService } from '@/core';
 import {
     LocationRepository,
     LocationRepositoryRecord,
@@ -26,10 +27,17 @@ export interface LocationParameters {
 
 @Injectable()
 export class LocationService {
-    constructor(private locationRepository: LocationRepository) {}
+    constructor(
+        private loggerService: LoggerService,
+        private locationRepository: LocationRepository,
+    ) {}
 
     async getLocation(id: string): Promise<LocationEntity> {
-        return null;
+        const locationRecord = await this.locationRepository.getOne({
+            id: id,
+        });
+        const locationEntity = this.buildLocationEntity(locationRecord);
+        return locationEntity;
     }
 
     async getLocations(
@@ -86,7 +94,6 @@ export class LocationService {
         });
 
         const locationEntity = this.buildLocationEntity(locationRecord);
-
         return locationEntity;
     }
 

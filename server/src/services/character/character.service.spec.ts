@@ -2,11 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule } from '@/core';
-import { RepositoriesModule } from '@/repositories/repositories.module';
+import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { CharacterService } from './character.service';
 import { LocationService } from '../location/location.service';
 import {
+    RepositoriesModule,
     CharacterRepositoryRecord,
     LocationRepositoryRecord,
 } from '@/repositories';
@@ -23,9 +23,15 @@ describe('CharacterService', () => {
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 DatabaseModule,
+                LoggerModule,
                 RepositoriesModule,
             ],
-            providers: [LocationService, CharacterService, CharacterService],
+            providers: [
+                LoggerService,
+                LocationService,
+                CharacterService,
+                CharacterService,
+            ],
         }).compile();
 
         locationService = await module.resolve<LocationService>(

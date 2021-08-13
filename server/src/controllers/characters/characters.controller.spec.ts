@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import * as faker from 'faker';
 
 // Application
-import { DatabaseModule, LoggerModule } from '@/core';
+import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { RepositoriesModule } from '@/repositories';
 import { CharactersController } from './characters.controller';
 import { CharacterService } from '@/services/character/character.service';
+import { CharacterDto } from './dto';
 
 describe('CharactersController', () => {
     let controller: CharactersController;
@@ -19,13 +21,30 @@ describe('CharactersController', () => {
                 RepositoriesModule,
             ],
             controllers: [CharactersController],
-            providers: [CharacterService],
+            providers: [LoggerService, CharacterService],
         }).compile();
 
-        controller = module.get<CharactersController>(CharactersController);
+        controller = await module.resolve<CharactersController>(
+            CharactersController,
+        );
     });
 
     it('should be defined', () => {
         expect(controller).toBeDefined();
+    });
+
+    describe('create', () => {
+        it.skip('should create a character', async () => {
+            let characterDto: CharacterDto = await controller.create({
+                data: {
+                    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+                    strength: faker.datatype.number(10),
+                    dexterity: faker.datatype.number(10),
+                    intelligence: faker.datatype.number(10),
+                },
+            });
+            expect(characterDto.data).toBeTruthy();
+            expect(characterDto.data.length).toBeGreaterThan(0);
+        });
     });
 });
