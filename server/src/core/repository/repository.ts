@@ -87,7 +87,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += ' AND ';
         }
         sql += '"deleted_at" IS NULL';
-        logger.debug(sql);
+        logger.info(sql);
         return sql;
     }
 
@@ -141,11 +141,10 @@ export abstract class Repository<TRecord extends Record> {
         }
         sql += '"deleted_at" IS NULL RETURNING ';
         this.columnNames.forEach((columnName) => {
-            valueCount++;
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.debug(sql);
+        logger.info(sql);
         return sql;
     }
 
@@ -167,13 +166,11 @@ export abstract class Repository<TRecord extends Record> {
             sql += ' AND ';
         }
         sql += '"deleted_at" IS NULL RETURNING ';
-        let valueCount = 0;
         this.columnNames.forEach((columnName) => {
-            valueCount++;
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.debug(sql);
+        logger.info(sql);
         return sql;
     }
 
@@ -193,9 +190,11 @@ export abstract class Repository<TRecord extends Record> {
             forUpdate: args.forUpdate,
         });
         const values = [args.id];
-        logger.debug(values);
+        logger.info(values);
         const result = await client.query(sql, values);
-        if (result.rowCount != 1) {
+        await this.databaseService.end();
+
+        if (result.rows.length != 1) {
             // TODO: Data layer exception type
             throw new Error('Record does not exist');
         }
@@ -220,6 +219,7 @@ export abstract class Repository<TRecord extends Record> {
         );
         logger.debug(values);
         const result = await client.query(sql, values);
+        await this.databaseService.end();
 
         return result.rows as TRecord[];
     }
@@ -246,8 +246,10 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
-        logger.debug(values);
+        logger.info(values);
         const result = await client.query(sql, values);
+        await this.databaseService.end();
+
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
             throw new Error('Failed returning record from update');
@@ -276,6 +278,8 @@ export abstract class Repository<TRecord extends Record> {
         );
         logger.debug(values);
         const result = await client.query(sql, values);
+        await this.databaseService.end();
+
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
             throw new Error('Failed returning record from insert');
@@ -302,6 +306,8 @@ export abstract class Repository<TRecord extends Record> {
         const values = [args.id];
         logger.debug(values);
         const result = await client.query(sql, values);
+        await this.databaseService.end();
+
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
             throw new Error('Failed deleting row');

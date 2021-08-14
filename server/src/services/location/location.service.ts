@@ -8,7 +8,11 @@ import {
     LocationRepositoryParameter,
 } from '@/repositories';
 
-import { CreateLocationEntity, LocationEntity } from './location.entities';
+import {
+    CreateLocationEntity,
+    UpdateLocationEntity,
+    LocationEntity,
+} from './location.entities';
 
 export interface LocationParameters {
     name?: string;
@@ -74,6 +78,7 @@ export class LocationService {
         createLocationEntity: CreateLocationEntity,
     ): Promise<LocationEntity> {
         const locationRecord: LocationRepositoryRecord = {
+            id: createLocationEntity.id || null,
             name: createLocationEntity.name,
             description: createLocationEntity.description,
             default: createLocationEntity.default,
@@ -97,8 +102,40 @@ export class LocationService {
         return locationEntity;
     }
 
-    async updateLocation(locationEntity: LocationEntity): Promise<void> {
-        return null;
+    async updateLocation(
+        updateLocationEntity: UpdateLocationEntity,
+    ): Promise<LocationEntity> {
+        const locationRecord = await this.locationRepository.getOne({
+            id: updateLocationEntity.id,
+        });
+
+        locationRecord.id = updateLocationEntity.id;
+        locationRecord.name = updateLocationEntity.name;
+        locationRecord.description = updateLocationEntity.description;
+        locationRecord.default = updateLocationEntity.default;
+        locationRecord.north_location_id =
+            updateLocationEntity.north_location_id;
+        locationRecord.northeast_location_id =
+            updateLocationEntity.northeast_location_id;
+        locationRecord.east_location_id = updateLocationEntity.east_location_id;
+        locationRecord.southeast_location_id =
+            updateLocationEntity.southeast_location_id;
+        locationRecord.south_location_id =
+            updateLocationEntity.south_location_id;
+        locationRecord.southwest_location_id =
+            updateLocationEntity.southwest_location_id;
+        locationRecord.west_location_id = updateLocationEntity.west_location_id;
+        locationRecord.northwest_location_id =
+            updateLocationEntity.northwest_location_id;
+        locationRecord.up_location_id = updateLocationEntity.up_location_id;
+        locationRecord.down_location_id = updateLocationEntity.down_location_id;
+
+        await this.locationRepository.updateOne({
+            record: locationRecord,
+        });
+
+        const locationEntity = this.buildLocationEntity(locationRecord);
+        return locationEntity;
     }
 
     async deleteLocation(id: string): Promise<void> {

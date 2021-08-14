@@ -83,6 +83,8 @@ export class CharactersController {
             await this.characterService.getCharacter(id);
 
         const updateCharacterEntity: UpdateCharacterEntity = {
+            id: id,
+            location_id: characterEntity.location_id,
             name: requestData.data.name,
             strength: requestData.data.strength,
             dexterity: requestData.data.dexterity,
@@ -92,7 +94,6 @@ export class CharactersController {
         };
 
         characterEntity = await this.characterService.updateCharacter(
-            id,
             updateCharacterEntity,
         );
 

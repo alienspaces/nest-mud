@@ -5,9 +5,9 @@ import * as faker from 'faker';
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { RepositoriesModule } from '@/repositories';
-import { CharactersController } from './characters.controller';
-import { CharacterService } from '@/services/character/character.service';
+import { CharacterService, ServicesModule } from '@/services';
 import { CharacterDto } from './dto';
+import { CharactersController } from './characters.controller';
 
 describe('CharactersController', () => {
     let controller: CharactersController;
@@ -16,9 +16,10 @@ describe('CharactersController', () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
-                DatabaseModule,
                 LoggerModule,
+                DatabaseModule,
                 RepositoriesModule,
+                ServicesModule,
             ],
             controllers: [CharactersController],
             providers: [LoggerService, CharacterService],
@@ -34,6 +35,7 @@ describe('CharactersController', () => {
     });
 
     describe('create', () => {
+        // TODO: Use test module to setup data!
         it.skip('should create a character', async () => {
             let characterDto: CharacterDto = await controller.create({
                 data: {

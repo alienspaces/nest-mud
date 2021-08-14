@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 
 // Application
+import { LoggerService } from '@/core';
 import {
     LocationService,
     LocationEntity,
@@ -10,7 +11,10 @@ import { LocationDto } from './dto';
 
 @Controller('/api/v1/locations')
 export class LocationsController {
-    constructor(private locationsService: LocationService) {}
+    constructor(
+        private loggerService: LoggerService,
+        private locationsService: LocationService,
+    ) {}
 
     @Get(':id')
     async get(@Param('id') id: string): Promise<LocationDto> {

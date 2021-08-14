@@ -12,9 +12,10 @@ import { ActionsController } from './controllers/actions/actions.controller';
 import { LocationService } from './services/location/location.service';
 import { ActionService } from './services/action/action.service';
 import { CharacterService } from './services/character/character.service';
+import { Module } from './common/.module';
 
 @Module({
-    imports: [DatabaseModule, RepositoriesModule, LoggerModule],
+    imports: [DatabaseModule, RepositoriesModule, LoggerModule, Module],
     controllers: [
         AppController,
         CharactersController,

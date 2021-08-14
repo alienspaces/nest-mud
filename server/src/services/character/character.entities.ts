@@ -1,4 +1,5 @@
 export interface CreateCharacterEntity {
+    id?: string;
     name: string;
     strength: number;
     dexterity: number;
@@ -6,7 +7,9 @@ export interface CreateCharacterEntity {
 }
 
 export interface UpdateCharacterEntity {
+    id: string;
     name: string;
+    location_id: string;
     strength: number;
     dexterity: number;
     intelligence: number;

@@ -3,15 +3,20 @@ import { ContextIdFactory } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import { DatabaseModule, DatabaseService } from '@/core';
-import { LocationsController } from './locations.controller';
-import { LocationDto } from './dto';
-import { LocationService } from '@/services/location/location.service';
 import {
+    DatabaseModule,
+    DatabaseService,
+    LoggerModule,
+    LoggerService,
+} from '@/core';
+import {
+    LocationService,
     CreateLocationEntity,
     LocationEntity,
     ServicesModule,
 } from '@/services';
+import { LocationsController } from './locations.controller';
+import { RepositoriesModule } from '@/repositories';
 
 describe('LocationsController', () => {
     let controller: LocationsController;
@@ -23,10 +28,13 @@ describe('LocationsController', () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
+                LoggerModule,
                 DatabaseModule,
+                RepositoriesModule,
                 ServicesModule,
             ],
             controllers: [LocationsController],
+            providers: [LoggerService, LocationService],
         }).compile();
 
         const contextId = ContextIdFactory.create();

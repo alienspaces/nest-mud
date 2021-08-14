@@ -13,8 +13,10 @@ import {
     UpdateCharacterEntity,
     CharacterEntity,
 } from './character.entities';
+import { UpdateCharacterDto } from '@/controllers/characters/dto';
 
 const defaultCoin = 100;
+const defaultExperience = 0;
 const maxAttributes = 30;
 
 @Injectable()
@@ -56,12 +58,14 @@ export class CharacterService {
         }
 
         const characterRecord: CharacterRepositoryRecord = {
+            id: createCharacterEntity.id || null,
             location_id: locationRecords[0].id,
             name: createCharacterEntity.name,
             strength: createCharacterEntity.strength,
             dexterity: createCharacterEntity.dexterity,
             intelligence: createCharacterEntity.intelligence,
             coin: defaultCoin,
+            experience: defaultExperience,
         };
 
         await this.characterRepository.insertOne({
@@ -73,16 +77,8 @@ export class CharacterService {
     }
 
     async updateCharacter(
-        id: string,
         updateCharacterEntity: UpdateCharacterEntity,
     ): Promise<CharacterEntity> {
-        const locationRecords = await this.locationRepository.getMany({
-            parameters: [{ column: 'default', value: true }],
-        });
-        if (locationRecords.length !== 1) {
-            throw new Error('Default location record not found');
-        }
-
         // TODO: Move to validation function and calculate max attributes based
         // on character experience
         if (
@@ -96,14 +92,17 @@ export class CharacterService {
             );
         }
 
-        const characterRecord: CharacterRepositoryRecord = {
-            location_id: locationRecords[0].id,
-            name: updateCharacterEntity.name,
-            strength: updateCharacterEntity.strength,
-            dexterity: updateCharacterEntity.dexterity,
-            intelligence: updateCharacterEntity.intelligence,
-            coin: defaultCoin,
-        };
+        const characterRecord = await this.characterRepository.getOne({
+            id: updateCharacterEntity.id,
+        });
+
+        characterRecord.name = updateCharacterEntity.name;
+        characterRecord.location_id = updateCharacterEntity.location_id;
+        characterRecord.strength = updateCharacterEntity.strength;
+        characterRecord.dexterity = updateCharacterEntity.dexterity;
+        characterRecord.intelligence = updateCharacterEntity.intelligence;
+        characterRecord.coin = updateCharacterEntity.coin;
+        characterRecord.experience = updateCharacterEntity.experience;
 
         await this.characterRepository.updateOne({
             record: characterRecord,
@@ -114,7 +113,8 @@ export class CharacterService {
     }
 
     async deleteCharacter(id: string): Promise<void> {
-        return null;
+        await this.characterRepository.deleteOne({ id: id });
+        return;
     }
 
     buildCharacterEntity(
