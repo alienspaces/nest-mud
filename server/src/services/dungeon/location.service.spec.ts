@@ -3,12 +3,16 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
-import { LocationService } from './location.service';
-import { RepositoriesModule, LocationRepositoryRecord } from '@/repositories';
+import { DungeonService } from './dungeon.service';
+import {
+    RepositoriesModule,
+    DungeonRepositoryRecord,
+    DungeonLocationRepositoryRecord,
+} from '@/repositories';
 
-describe('LocationService', () => {
-    let service: LocationService;
-    let locationRecord: LocationRepositoryRecord;
+describe('DungeonService', () => {
+    let service: DungeonService;
+    let locationRecord: DungeonLocationRepositoryRecord;
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -18,10 +22,10 @@ describe('LocationService', () => {
                 LoggerModule,
                 RepositoriesModule,
             ],
-            providers: [LoggerService, LocationService],
+            providers: [LoggerService, DungeonService],
         }).compile();
 
-        service = module.get<LocationService>(LocationService);
+        service = module.get<DungeonService>(DungeonService);
     });
 
     afterAll(async () => {});

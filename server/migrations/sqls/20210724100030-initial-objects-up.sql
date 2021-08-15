@@ -1,51 +1,64 @@
 -- pgcrypto
 CREATE EXTENSION pgcrypto;
 
--- table location
-CREATE TABLE "location" (
-  "id"                    uuid CONSTRAINT location_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+-- table dungeon
+CREATE TABLE "dungeon" (
+  "id"                    uuid CONSTRAINT dungeon_pk PRIMARY KEY DEFAULT gen_random_uuid(),
   "name"                  text NOT NULL,
   "description"           text NOT NULL,
-  "default"               boolean NOT NULL DEFAULT FALSE,
-  "north_location_id"     uuid,
-  "northeast_location_id" uuid,
-  "east_location_id"      uuid,
-  "southeast_location_id" uuid,
-  "south_location_id"     uuid,
-  "southwest_location_id" uuid,
-  "west_location_id"      uuid,
-  "northwest_location_id" uuid,
-  "up_location_id"        uuid,
-  "down_location_id"      uuid,
   "created_at"            timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
   "updated_at"            timestamp WITH TIME ZONE,
-  "deleted_at"            timestamp WITH TIME ZONE,
-  CONSTRAINT north_location_id_fk FOREIGN KEY (north_location_id) REFERENCES location(id),
-  CONSTRAINT northeast_location_id_fk FOREIGN KEY (northeast_location_id) REFERENCES location(id),
-  CONSTRAINT east_location_id_fk FOREIGN KEY (east_location_id) REFERENCES location(id),
-  CONSTRAINT southeast_location_id_fk FOREIGN KEY (southeast_location_id) REFERENCES location(id),
-  CONSTRAINT south_location_id_fk FOREIGN KEY (south_location_id) REFERENCES location(id),
-  CONSTRAINT southwest_location_id_fk FOREIGN KEY (southwest_location_id) REFERENCES location(id),
-  CONSTRAINT west_location_id_fk FOREIGN KEY (west_location_id) REFERENCES location(id),
-  CONSTRAINT northwest_location_id_fk FOREIGN KEY (northwest_location_id) REFERENCES location(id),
-  CONSTRAINT up_location_id_fk FOREIGN KEY (up_location_id) REFERENCES location(id),
-  CONSTRAINT down_location_id_fk FOREIGN KEY (down_location_id) REFERENCES location(id)
+  "deleted_at"            timestamp WITH TIME ZONE
+);
+
+-- table dungeon_location
+CREATE TABLE "dungeon_location" (
+  "id"                            uuid CONSTRAINT dungeon_location_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_id"                    uuid NOT NULL,
+  "name"                          text NOT NULL,
+  "description"                   text NOT NULL,
+  "default"                       boolean NOT NULL DEFAULT FALSE,
+  "north_dungeon_location_id"     uuid,
+  "northeast_dungeon_location_id" uuid,
+  "east_dungeon_location_id"      uuid,
+  "southeast_dungeon_location_id" uuid,
+  "south_dungeon_location_id"     uuid,
+  "southwest_dungeon_location_id" uuid,
+  "west_dungeon_location_id"      uuid,
+  "northwest_dungeon_location_id" uuid,
+  "up_dungeon_location_id"        uuid,
+  "down_dungeon_location_id"      uuid,
+  "created_at"                    timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"                    timestamp WITH TIME ZONE,
+  "deleted_at"                    timestamp WITH TIME ZONE,
+  CONSTRAINT dungeon_location_dungeon_id_fk FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
+  CONSTRAINT dungeon_location_north_location_id_fk FOREIGN KEY (north_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_northeast_location_id_fk FOREIGN KEY (northeast_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_east_location_id_fk FOREIGN KEY (east_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_southeast_location_id_fk FOREIGN KEY (southeast_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_south_location_id_fk FOREIGN KEY (south_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_southwest_location_id_fk FOREIGN KEY (southwest_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_west_location_id_fk FOREIGN KEY (west_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_northwest_location_id_fk FOREIGN KEY (northwest_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_up_location_id_fk FOREIGN KEY (up_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED,
+  CONSTRAINT dungeon_location_down_location_id_fk FOREIGN KEY (down_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED
 );
 
 -- table character
 CREATE TABLE "character" (
-  "id"           uuid CONSTRAINT character_pk PRIMARY KEY DEFAULT gen_random_uuid(),
-  "location_id"  uuid NOT NULL,
-  "name"         text NOT NULL,
-  "strength"     integer NOT NULL DEFAULT 10,
-  "dexterity"    integer NOT NULL DEFAULT 10,
-  "intelligence" integer NOT NULL DEFAULT 10,
-  "coin"         integer NOT NULL DEFAULT 0,
-  "experience"   integer NOT NULL DEFAULT 0,
-  "created_at"   timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
-  "updated_at"   timestamp WITH TIME ZONE,
-  "deleted_at"   timestamp WITH TIME ZONE
+  "id"                   uuid CONSTRAINT character_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_id"           uuid NOT NULL,
+  "dungeon_location_id"  uuid NOT NULL,
+  "name"                 text NOT NULL,
+  "strength"             integer NOT NULL DEFAULT 10,
+  "dexterity"            integer NOT NULL DEFAULT 10,
+  "intelligence"         integer NOT NULL DEFAULT 10,
+  "coin"                 integer NOT NULL DEFAULT 0,
+  "experience"           integer NOT NULL DEFAULT 0,
+  "created_at"           timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"           timestamp WITH TIME ZONE,
+  "deleted_at"           timestamp WITH TIME ZONE,
+  CONSTRAINT "character_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
+  CONSTRAINT "character_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id)
 );
 
-ALTER TABLE "character" ADD CONSTRAINT "character_location_id_fk" 
-    FOREIGN KEY ("location_id") REFERENCES "location" ("id");

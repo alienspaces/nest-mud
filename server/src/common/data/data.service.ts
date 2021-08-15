@@ -9,272 +9,561 @@ import {
     CreateCharacterEntity,
     CharacterEntity,
     CharacterService,
-    CreateLocationEntity,
-    LocationEntity,
-    LocationService,
+    CreateDungeonEntity,
+    DungeonEntity,
+    CreateDungeonLocationEntity,
+    DungeonLocationEntity,
+    DungeonService,
 } from '@/services';
-import { DataConfig, LocationConfig, CharacterConfig } from './data.config';
+import { DataConfig, DungeonConfig } from './data.config';
+
+export class Data {
+    dungeonEntities: DungeonEntity[] = [];
+    dungeonLocationEntities: DungeonLocationEntity[] = [];
+    characterEntities: CharacterEntity[] = [];
+
+    private _dungeonTeardownIds: string[] = [];
+    private _dungeonLocationTeardownIds: string[] = [];
+    private _characterTeardownIds: string[] = [];
+
+    constructor() {
+        this.characterEntities = [];
+        this._characterTeardownIds = [];
+        this.dungeonEntities = [];
+        this._dungeonTeardownIds = [];
+        this.dungeonLocationEntities = [];
+        this._dungeonLocationTeardownIds = [];
+    }
+
+    getDungeonTeardownIds(): string[] {
+        return this._dungeonTeardownIds;
+    }
+
+    getDungeonLocationTeardownIds(): string[] {
+        return this._dungeonLocationTeardownIds;
+    }
+
+    getCharacterTeardownIds(): string[] {
+        return this._characterTeardownIds;
+    }
+
+    clearDungeonEntities() {
+        this.dungeonEntities = [];
+        this._dungeonTeardownIds = [];
+    }
+
+    clearDungeonLocationEntities() {
+        this.dungeonLocationEntities = [];
+        this._dungeonLocationTeardownIds = [];
+    }
+
+    clearCharacterEntities() {
+        this.characterEntities = [];
+        this._characterTeardownIds = [];
+    }
+
+    addDungeonTeardownId(id: string) {
+        this._dungeonTeardownIds.push(`'${id}'`);
+    }
+
+    addDungeonLocationTeardownId(id: string) {
+        this._dungeonLocationTeardownIds.push(`'${id}'`);
+    }
+
+    addCharacterTeardownId(id: string) {
+        this._characterTeardownIds.push(`'${id}'`);
+    }
+}
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class DataService {
-    characterEntities: CharacterEntity[] = [];
-    locationEntities: LocationEntity[] = [];
+    private instanceId: string;
 
     constructor(
         private loggerService: LoggerService,
         private databaseService: DatabaseService,
-        private locationsService: LocationService,
+        private dungeonService: DungeonService,
         private characterService: CharacterService,
-    ) {}
+    ) {
+        this.instanceId = uuidv4();
+    }
 
-    async setup(config: DataConfig) {
+    async setup(config: DataConfig, data: Data) {
         const logger = this.loggerService.logger({
             class: 'DataService',
             function: 'setup',
         });
 
-        logger.info('Setting up');
+        logger.debug(`Setting up >${this.instanceId}<`);
 
+        // Assign identifiers to all entities
         this.assignConfigIdentifiers(config);
+
+        // Update all identities with missing required properties
         this.assignConfigRequired(config);
 
-        for (var idx = 0; idx < config.locationConfig.length; idx++) {
-            await this.addLocationEntity(
-                config.locationConfig[idx].entity as CreateLocationEntity,
+        for (var idx = 0; idx < config.dungeonConfig.length; idx++) {
+            const dungeonConfig = config.dungeonConfig[idx];
+
+            // Dungeon entity
+            await this.addDungeonEntity(
+                data,
+                dungeonConfig.entity as CreateDungeonEntity,
             );
+
+            // Resolve all dungeon identifiers on entities where entity
+            // configuration references a dungeon by name
+            this.resolveConfigDungeonIdentifiers(dungeonConfig);
+
+            // Add dungeon location entities
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonLocationConfig.length;
+                idx++
+            ) {
+                // Assign default location
+                if (
+                    dungeonConfig.dungeonLocationConfig[idx].entity.name ==
+                    dungeonConfig.defaultDungeonLocationName
+                ) {
+                    dungeonConfig.dungeonLocationConfig[idx].entity.default =
+                        true;
+                } else {
+                    dungeonConfig.dungeonLocationConfig[idx].entity.default =
+                        false;
+                }
+
+                await this.addDungeonLocationEntity(
+                    data,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .entity as CreateDungeonLocationEntity,
+                );
+            }
+
+            // Resolve all location identifiers on entities where entity
+            // configuration references a location by name
+            this.resolveConfigLocationIdentifiers(dungeonConfig);
+
+            // Update dungeon location entities
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonLocationConfig.length;
+                idx++
+            ) {
+                await this.updateDungeonLocationEntity(
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .entity as DungeonLocationEntity,
+                );
+            }
+
+            // Add character entities
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonCharacterConfig.length;
+                idx++
+            ) {
+                await this.addCharacterEntity(
+                    data,
+                    dungeonConfig.dungeonCharacterConfig[idx]
+                        .entity as CreateCharacterEntity,
+                );
+            }
         }
 
-        this.resolveConfigIdentifiers(config);
-
-        for (var idx = 0; idx < config.locationConfig.length; idx++) {
-            await this.updateLocationEntity(
-                config.locationConfig[idx].entity as LocationEntity,
-            );
-        }
-
-        for (var idx = 0; idx < config.characterConfig.length; idx++) {
-            await this.addCharacterEntity(
-                config.characterConfig[idx].entity as CreateCharacterEntity,
-            );
-        }
-
-        logger.info('Done');
+        logger.debug('Done');
     }
 
-    async teardown() {
-        await this.removeCharacterEntities();
-        await this.removeLocationEntities();
+    async teardown(data: Data) {
+        await this.removeCharacterEntities(data);
+        await this.removeDungeonLocationEntities(data);
+        await this.removeDungeonEntities(data);
     }
 
-    private async addLocationEntity(
-        location: CreateLocationEntity,
-    ): Promise<LocationEntity[]> {
-        const locationEntity = await this.locationsService.createLocation(
-            location,
-        );
-        this.locationEntities.push(locationEntity);
+    private async addDungeonEntity(
+        data: Data,
+        dungeon: CreateDungeonEntity,
+    ): Promise<DungeonEntity[]> {
+        const logger = this.loggerService.logger({
+            class: 'DataService',
+            function: 'addDungeonEntity',
+        });
+        logger.debug(dungeon);
+        const dungeonEntity = await this.dungeonService.createDungeon(dungeon);
+        data.dungeonEntities.push(dungeonEntity);
+        data.addDungeonTeardownId(dungeonEntity.id);
         return;
     }
 
-    private async updateLocationEntity(
-        location: LocationEntity,
-    ): Promise<LocationEntity[]> {
+    private async addDungeonLocationEntity(
+        data: Data,
+        location: CreateDungeonLocationEntity,
+    ): Promise<DungeonLocationEntity[]> {
         const logger = this.loggerService.logger({
             class: 'DataService',
-            function: 'updateLocationEntity',
+            function: 'addDungeonLocationEntity',
         });
-        logger.info(location);
-        await this.locationsService.updateLocation(location);
+        logger.debug(location);
+        const locationEntity = await this.dungeonService.createDungeonLocation(
+            location,
+        );
+        data.dungeonLocationEntities.push(locationEntity);
+        data.addDungeonLocationTeardownId(locationEntity.id);
+        return;
+    }
+
+    private async updateDungeonLocationEntity(
+        location: DungeonLocationEntity,
+    ): Promise<DungeonLocationEntity[]> {
+        const logger = this.loggerService.logger({
+            class: 'DataService',
+            function: 'updateDungeonLocationEntity',
+        });
+        logger.debug(location);
+        await this.dungeonService.updateDungeonLocation(location);
         return;
     }
 
     private async addCharacterEntity(
+        data: Data,
         character: CreateCharacterEntity,
     ): Promise<CharacterEntity[]> {
+        const logger = this.loggerService.logger({
+            class: 'DataService',
+            function: 'addCharacterEntity',
+        });
+        logger.debug(character);
         const characterEntity = await this.characterService.createCharacter(
             character,
         );
-        this.characterEntities.push(characterEntity);
+        data.characterEntities.push(characterEntity);
+        data.addCharacterTeardownId(characterEntity.id);
         return;
     }
 
-    private async removeLocationEntities() {
+    private async removeDungeonEntities(data: Data) {
+        const logger = this.loggerService.logger({
+            class: 'DataService',
+            function: 'removeDungeonEntities',
+        });
+
+        const client = await this.databaseService.connect();
+        const sql = `DELETE FROM dungeon WHERE id IN (${data
+            .getDungeonTeardownIds()
+            .join(',')});`;
+        logger.debug(sql);
+
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
+        await this.databaseService.end();
+
+        data.clearDungeonEntities();
+    }
+
+    private async removeDungeonLocationEntities(data: Data) {
         const logger = this.loggerService.logger({
             class: 'DataService',
             function: 'removeLocationEntities',
         });
 
         const client = await this.databaseService.connect();
-        const locationIds = this.locationEntities.map(
-            (locationEntity) => `'${locationEntity.id}'`,
-        );
-        const sql = `DELETE FROM location WHERE id IN (${locationIds.join(
-            ',',
-        )});`;
-        logger.info(sql);
+        const sql = `DELETE FROM dungeon_location WHERE id IN (${data
+            .getDungeonLocationTeardownIds()
+            .join(',')});`;
+        logger.debug(sql);
 
-        await client.query(sql);
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
         await this.databaseService.end();
-        this.locationEntities = [];
+
+        data.clearDungeonLocationEntities();
     }
 
-    private async removeCharacterEntities() {
+    private async removeCharacterEntities(data: Data) {
         const logger = this.loggerService.logger({
             class: 'DataService',
             function: 'removeCharacterEntities',
         });
         const client = await this.databaseService.connect();
-        const characterIds = this.characterEntities.map(
-            (characterEntity) => `'${characterEntity.id}'`,
-        );
-        const sql = `DELETE FROM character WHERE id IN (${characterIds.join(
-            ',',
-        )});`;
-        logger.info(sql);
+        const sql = `DELETE FROM character WHERE id IN (${data
+            .getCharacterTeardownIds()
+            .join(',')});`;
+        logger.debug(sql);
 
-        await client.query(sql);
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
         await this.databaseService.end();
-        this.characterEntities = [];
+
+        data.clearCharacterEntities();
     }
 
-    private getLocationIdentifier(config: DataConfig, name: string): string {
+    private getLocationIdentifier(
+        dungeonConfig: DungeonConfig,
+        name: string,
+    ): string {
         const logger = this.loggerService.logger({
             class: 'DataService',
             function: 'getLocationIdentifier',
         });
-        for (var idx = 0; idx < config.locationConfig.length; idx++) {
-            if (config.locationConfig[idx].entity.name === name) {
-                logger.info(
-                    `Returning >${config.locationConfig[idx].entity.id}< for >${name}<`,
+        for (
+            var idx = 0;
+            idx < dungeonConfig.dungeonLocationConfig.length;
+            idx++
+        ) {
+            if (dungeonConfig.dungeonLocationConfig[idx].entity.name === name) {
+                logger.debug(
+                    `Returning >${dungeonConfig.dungeonLocationConfig[idx].entity.id}< for >${name}<`,
                 );
-                return config.locationConfig[idx].entity.id;
+                return dungeonConfig.dungeonLocationConfig[idx].entity.id;
             }
         }
         return;
     }
 
     private assignConfigIdentifiers(config: DataConfig) {
-        for (var idx = 0; idx < config.locationConfig.length; idx++) {
-            if (!config.locationConfig[idx].entity.id) {
-                config.locationConfig[idx].entity.id = uuidv4();
+        for (
+            var dungeonIdx = 0;
+            dungeonIdx < config.dungeonConfig.length;
+            dungeonIdx++
+        ) {
+            const dungeonConfig = config.dungeonConfig[dungeonIdx];
+            if (!dungeonConfig.entity.id) {
+                dungeonConfig.entity.id = uuidv4();
             }
-        }
-        for (var idx = 0; idx < config.characterConfig.length; idx++) {
-            if (!config.characterConfig[idx].entity.id) {
-                config.characterConfig[idx].entity.id = uuidv4();
+
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonLocationConfig.length;
+                idx++
+            ) {
+                if (!dungeonConfig.dungeonLocationConfig[idx].entity.id) {
+                    dungeonConfig.dungeonLocationConfig[idx].entity.id =
+                        uuidv4();
+                }
+            }
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonCharacterConfig.length;
+                idx++
+            ) {
+                if (!dungeonConfig.dungeonCharacterConfig[idx].entity.id) {
+                    dungeonConfig.dungeonCharacterConfig[idx].entity.id =
+                        uuidv4();
+                }
             }
         }
     }
 
     private assignConfigRequired(config: DataConfig) {
-        for (var idx = 0; idx < config.locationConfig.length; idx++) {
-            if (!config.locationConfig[idx].entity.description) {
-                config.locationConfig[idx].entity.description =
-                    faker.lorem.sentence();
+        for (
+            var dungeonIdx = 0;
+            dungeonIdx < config.dungeonConfig.length;
+            dungeonIdx++
+        ) {
+            const dungeonConfig = config.dungeonConfig[dungeonIdx];
+            if (!dungeonConfig.entity.description) {
+                dungeonConfig.entity.description = faker.lorem.sentence();
             }
-        }
-        for (var idx = 0; idx < config.characterConfig.length; idx++) {
-            if (!config.characterConfig[idx].entity.strength) {
-                config.characterConfig[idx].entity.strength = 10;
+
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonLocationConfig.length;
+                idx++
+            ) {
+                if (
+                    !dungeonConfig.dungeonLocationConfig[idx].entity.description
+                ) {
+                    dungeonConfig.dungeonLocationConfig[
+                        idx
+                    ].entity.description = faker.lorem.sentence();
+                }
             }
-            if (!config.characterConfig[idx].entity.dexterity) {
-                config.characterConfig[idx].entity.dexterity = 10;
-            }
-            if (!config.characterConfig[idx].entity.intelligence) {
-                config.characterConfig[idx].entity.intelligence = 10;
+            for (
+                var idx = 0;
+                idx < dungeonConfig.dungeonCharacterConfig.length;
+                idx++
+            ) {
+                if (
+                    !dungeonConfig.dungeonCharacterConfig[idx].entity.strength
+                ) {
+                    dungeonConfig.dungeonCharacterConfig[
+                        idx
+                    ].entity.strength = 10;
+                }
+                if (
+                    !dungeonConfig.dungeonCharacterConfig[idx].entity.dexterity
+                ) {
+                    dungeonConfig.dungeonCharacterConfig[
+                        idx
+                    ].entity.dexterity = 10;
+                }
+                if (
+                    !dungeonConfig.dungeonCharacterConfig[idx].entity
+                        .intelligence
+                ) {
+                    dungeonConfig.dungeonCharacterConfig[
+                        idx
+                    ].entity.intelligence = 10;
+                }
             }
         }
     }
 
-    private resolveConfigIdentifiers(config: DataConfig) {
+    private resolveConfigDungeonIdentifiers(dungeonConfig: DungeonConfig) {
+        // Dungeon identifiers
+        for (
+            var idx = 0;
+            idx < dungeonConfig.dungeonLocationConfig.length;
+            idx++
+        ) {
+            dungeonConfig.dungeonLocationConfig[idx].entity.dungeon_id =
+                dungeonConfig.entity.id;
+        }
+        for (
+            var idx = 0;
+            idx < dungeonConfig.dungeonCharacterConfig.length;
+            idx++
+        ) {
+            dungeonConfig.dungeonCharacterConfig[idx].entity.dungeon_id =
+                dungeonConfig.entity.id;
+        }
+    }
+
+    private resolveConfigLocationIdentifiers(dungeonConfig: DungeonConfig) {
         // Location direction identifiers
-        for (var idx = 0; idx < config.locationConfig.length; idx++) {
-            if (config.locationConfig[idx].north_location_name) {
-                config.locationConfig[idx].entity.north_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].north_location_name,
-                    );
+        for (
+            var idx = 0;
+            idx < dungeonConfig.dungeonLocationConfig.length;
+            idx++
+        ) {
+            if (dungeonConfig.dungeonLocationConfig[idx].north_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.north_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .north_location_name,
+                );
             }
-            if (config.locationConfig[idx].northeast_location_name) {
-                config.locationConfig[idx].entity.northeast_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].northeast_location_name,
-                    );
+            if (
+                dungeonConfig.dungeonLocationConfig[idx].northeast_location_name
+            ) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.northeast_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .northeast_location_name,
+                );
             }
-            if (config.locationConfig[idx].east_location_name) {
-                config.locationConfig[idx].entity.east_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].east_location_name,
-                    );
+            if (dungeonConfig.dungeonLocationConfig[idx].east_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.east_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx].east_location_name,
+                );
             }
-            if (config.locationConfig[idx].southeast_location_name) {
-                config.locationConfig[idx].entity.southeast_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].southeast_location_name,
-                    );
+            if (
+                dungeonConfig.dungeonLocationConfig[idx].southeast_location_name
+            ) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.southeast_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .southeast_location_name,
+                );
             }
-            if (config.locationConfig[idx].south_location_name) {
-                config.locationConfig[idx].entity.south_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].south_location_name,
-                    );
+            if (dungeonConfig.dungeonLocationConfig[idx].south_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.south_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .south_location_name,
+                );
             }
-            if (config.locationConfig[idx].southwest_location_name) {
-                config.locationConfig[idx].entity.southwest_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].southwest_location_name,
-                    );
+            if (
+                dungeonConfig.dungeonLocationConfig[idx].southwest_location_name
+            ) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.southwest_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .southwest_location_name,
+                );
             }
-            if (config.locationConfig[idx].west_location_name) {
-                config.locationConfig[idx].entity.west_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].west_location_name,
-                    );
+            if (dungeonConfig.dungeonLocationConfig[idx].west_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.west_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx].west_location_name,
+                );
             }
-            if (config.locationConfig[idx].northwest_location_name) {
-                config.locationConfig[idx].entity.northwest_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].northwest_location_name,
-                    );
+            if (
+                dungeonConfig.dungeonLocationConfig[idx].northwest_location_name
+            ) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.northwest_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .northwest_location_name,
+                );
             }
-            if (config.locationConfig[idx].north_location_name) {
-                config.locationConfig[idx].entity.north_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].north_location_name,
-                    );
+            if (dungeonConfig.dungeonLocationConfig[idx].north_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.north_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx]
+                        .north_location_name,
+                );
             }
-            if (config.locationConfig[idx].up_location_name) {
-                config.locationConfig[idx].entity.up_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].up_location_name,
-                    );
+            if (dungeonConfig.dungeonLocationConfig[idx].up_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.up_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx].up_location_name,
+                );
             }
-            if (config.locationConfig[idx].down_location_name) {
-                config.locationConfig[idx].entity.down_location_id =
-                    this.getLocationIdentifier(
-                        config,
-                        config.locationConfig[idx].down_location_name,
-                    );
+            if (dungeonConfig.dungeonLocationConfig[idx].down_location_name) {
+                dungeonConfig.dungeonLocationConfig[
+                    idx
+                ].entity.down_dungeon_location_id = this.getLocationIdentifier(
+                    dungeonConfig,
+                    dungeonConfig.dungeonLocationConfig[idx].down_location_name,
+                );
             }
         }
 
         // Character location identifiers
-        for (var idx = 0; idx < config.characterConfig.length; idx++) {
-            config.characterConfig[idx].entity.location_id =
-                this.getLocationIdentifier(
-                    config,
-                    config.characterConfig[idx].location_name,
-                );
+        for (
+            var idx = 0;
+            idx < dungeonConfig.dungeonCharacterConfig.length;
+            idx++
+        ) {
+            dungeonConfig.dungeonCharacterConfig[
+                idx
+            ].entity.dungeon_location_id = this.getLocationIdentifier(
+                dungeonConfig,
+                dungeonConfig.dungeonCharacterConfig[idx].location_name,
+            );
         }
     }
 }

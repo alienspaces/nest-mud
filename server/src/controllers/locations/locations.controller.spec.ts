@@ -1,31 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ContextIdFactory } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
-import {
-    DatabaseModule,
-    DatabaseService,
-    LoggerModule,
-    LoggerService,
-} from '@/core';
-import {
-    LocationService,
-    CreateLocationEntity,
-    LocationEntity,
-    ServicesModule,
-} from '@/services';
+import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
+import { ServicesModule } from '@/services';
+import { Data, DataService, defaultDataConfig } from '@/common/data';
+
 import { LocationsController } from './locations.controller';
 import { RepositoriesModule } from '@/repositories';
 
 describe('LocationsController', () => {
+    let module: TestingModule;
     let controller: LocationsController;
-    let databaseService: DatabaseService;
-    let locationService: LocationService;
-    let locationEntities: LocationEntity[] = [];
 
     beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        module = await Test.createTestingModule({
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
                 LoggerModule,
@@ -34,49 +23,12 @@ describe('LocationsController', () => {
                 ServicesModule,
             ],
             controllers: [LocationsController],
-            providers: [LoggerService, LocationService],
+            providers: [LoggerService, DataService],
         }).compile();
 
-        const contextId = ContextIdFactory.create();
-        databaseService = await module.resolve<DatabaseService>(
-            DatabaseService,
-            contextId,
-        );
-        locationService = await module.resolve<LocationService>(
-            LocationService,
-            contextId,
-        );
         controller = await module.resolve<LocationsController>(
             LocationsController,
-            contextId,
         );
-    });
-
-    afterAll(async () => {
-        while (locationEntities.length) {
-            const locationEntity = locationEntities.pop();
-            await locationService.deleteLocation(locationEntity.id);
-        }
-        await databaseService.end();
-    });
-
-    beforeEach(async () => {
-        const createLocationEntity: CreateLocationEntity = {
-            name: 'Test Location',
-            description: 'Test Location Description',
-            default: true,
-        };
-        const locationEntity = await locationService.createLocation(
-            createLocationEntity,
-        );
-        locationEntities.push(locationEntity);
-    });
-
-    afterEach(async () => {
-        while (locationEntities.length) {
-            const locationEntity = locationEntities.pop();
-            await locationService.deleteLocation(locationEntity.id);
-        }
     });
 
     it('should be defined', () => {
@@ -85,9 +37,19 @@ describe('LocationsController', () => {
 
     describe('get', () => {
         it('should return one location', async () => {
-            let response = await controller.get(locationEntities[0].id);
+            const service = await module.resolve<DataService>(DataService);
+            const data = new Data();
+            await expect(
+                service.setup(defaultDataConfig(), data),
+            ).resolves.not.toThrow();
+
+            let response = await controller.get(
+                data.dungeonLocationEntities[0].id,
+            );
             expect(response.data).toBeTruthy();
             expect(response.data.length).toEqual(1);
+
+            await expect(service.teardown(data)).resolves.not.toThrow();
         });
     });
 });

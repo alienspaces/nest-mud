@@ -1,7 +1,19 @@
-import { CharacterEntity, LocationEntity } from '@/services';
+import {
+    CharacterEntity,
+    DungeonEntity,
+    DungeonLocationEntity,
+} from '@/services';
 
-export interface LocationConfig {
-    entity: Partial<LocationEntity> & Required<Pick<LocationEntity, 'name'>>;
+export interface DungeonConfig {
+    entity: Partial<DungeonEntity> & Required<Pick<DungeonEntity, 'name'>>;
+    defaultDungeonLocationName: string;
+    dungeonLocationConfig?: DungeonLocationConfig[];
+    dungeonCharacterConfig?: CharacterConfig[];
+}
+
+export interface DungeonLocationConfig {
+    entity: Partial<DungeonLocationEntity> &
+        Required<Pick<DungeonLocationEntity, 'name'>>;
     north_location_name?: string;
     northeast_location_name?: string;
     east_location_name?: string;
@@ -20,44 +32,51 @@ export interface CharacterConfig {
 }
 
 export interface DataConfig {
-    locationConfig?: LocationConfig[];
-    characterConfig?: CharacterConfig[];
+    dungeonConfig?: DungeonConfig[];
 }
 
-export const defaultDataConfig: DataConfig = {
-    locationConfig: [
-        {
-            entity: {
-                name: 'Cave Entrance',
-                description: 'A large cave entrance.',
-                default: true,
+export function defaultDataConfig(): DataConfig {
+    return {
+        dungeonConfig: [
+            {
+                entity: {
+                    name: 'Cave',
+                },
+                defaultDungeonLocationName: 'Cave Entrance',
+                dungeonLocationConfig: [
+                    {
+                        entity: {
+                            name: 'Cave Entrance',
+                            description: 'A large cave entrance.',
+                        },
+                        north_location_name: 'Cave Tunnel',
+                    },
+                    {
+                        entity: {
+                            name: 'Cave Tunnel',
+                            description:
+                                'A cave tunnel descends into the mountain.',
+                        },
+                        north_location_name: 'Cave Room',
+                        south_location_name: 'Cave Entrance',
+                    },
+                    {
+                        entity: {
+                            name: 'Cave Room',
+                            description: 'A large cave room.',
+                        },
+                        south_location_name: 'Cave Tunnel',
+                    },
+                ],
+                dungeonCharacterConfig: [
+                    {
+                        entity: {
+                            name: 'Hero',
+                        },
+                        location_name: 'Cave Entrance',
+                    },
+                ],
             },
-            north_location_name: 'Cave Tunnel',
-        },
-        {
-            entity: {
-                name: 'Cave Tunnel',
-                description: 'A cave tunnel descends into the mountain.',
-                default: false,
-            },
-            north_location_name: 'Cave Room',
-            south_location_name: 'Cave Entrance',
-        },
-        {
-            entity: {
-                name: 'Cave Room',
-                description: 'A large cave room.',
-                default: false,
-            },
-            south_location_name: 'Cave Tunnel',
-        },
-    ],
-    characterConfig: [
-        {
-            entity: {
-                name: 'Hero',
-            },
-            location_name: 'Cave Entrance',
-        },
-    ],
-};
+        ],
+    };
+}

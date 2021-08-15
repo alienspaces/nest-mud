@@ -1,4 +1,12 @@
-import { Controller, Post, Put, Body, Param, UsePipes } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Put,
+    Body,
+    Param,
+    UsePipes,
+    NotFoundException,
+} from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
@@ -13,7 +21,7 @@ import * as createCharacterSchema from './schema/create-character.schema.json';
 import * as updateCharacterSchema from './schema/update-character.schema.json';
 import { CreateCharacterDto, UpdateCharacterDto, CharacterDto } from './dto';
 
-@Controller('/api/v1/characters')
+@Controller('/api/v1/dungeons/:dungeon_id/characters')
 export class CharactersController {
     constructor(
         private loggerService: LoggerService,
@@ -25,6 +33,7 @@ export class CharactersController {
     )
     @Post()
     async create(
+        @Param('dungeon_id') dungeon_id: string,
         @Body() requestData: CreateCharacterDto,
     ): Promise<CharacterDto> {
         const logger = this.loggerService.logger({
@@ -32,9 +41,10 @@ export class CharactersController {
             function: 'create',
         });
 
-        logger.info('Creating character');
+        logger.debug('Creating character');
 
         const createCharacterEntity: CreateCharacterEntity = {
+            dungeon_id: dungeon_id,
             name: requestData.data.name,
             strength: requestData.data.strength,
             dexterity: requestData.data.dexterity,
@@ -49,7 +59,8 @@ export class CharactersController {
             data: [
                 {
                     id: characterEntity.id,
-                    location_id: characterEntity.location_id,
+                    dungeon_id: characterEntity.dungeon_id,
+                    dungeon_location_id: characterEntity.dungeon_location_id,
                     name: characterEntity.name,
                     strength: characterEntity.strength,
                     dexterity: characterEntity.dexterity,
@@ -70,6 +81,7 @@ export class CharactersController {
     )
     @Put(':id')
     async update(
+        @Param('dungeon_id') dungeon_id: string,
         @Param('id') id: string,
         @Body() requestData: UpdateCharacterDto,
     ): Promise<CharacterDto> {
@@ -77,14 +89,23 @@ export class CharactersController {
             class: 'CharactersController',
             function: 'update',
         });
-        logger.info('Updating character');
+        logger.debug('Updating character');
 
         let characterEntity: CharacterEntity =
             await this.characterService.getCharacter(id);
 
+        if (!characterEntity) {
+            throw new NotFoundException();
+        }
+
+        if (characterEntity.dungeon_id !== dungeon_id) {
+            throw new NotFoundException();
+        }
+
         const updateCharacterEntity: UpdateCharacterEntity = {
             id: id,
-            location_id: characterEntity.location_id,
+            dungeon_id: characterEntity.dungeon_id,
+            dungeon_location_id: characterEntity.dungeon_location_id,
             name: requestData.data.name,
             strength: requestData.data.strength,
             dexterity: requestData.data.dexterity,
@@ -114,7 +135,8 @@ function buildResponse(characterEntities: CharacterEntity[]): CharacterDto {
     characterEntities.forEach((data) => {
         returnDataCharacters.push({
             id: data.id,
-            location_id: data.location_id,
+            dungeon_id: data.dungeon_id,
+            dungeon_location_id: data.dungeon_location_id,
             name: data.name,
             strength: data.strength,
             dexterity: data.dexterity,

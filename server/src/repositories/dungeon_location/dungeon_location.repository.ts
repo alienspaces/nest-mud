@@ -13,39 +13,45 @@ import {
     ColumnConfig,
 } from '@/core';
 
-export interface LocationRepositoryRecord {
+export interface DungeonLocationRepositoryRecord {
     id?: string;
+    dungeon_id: string;
     name: string;
     description: string;
     default?: boolean;
-    north_location_id?: string;
-    northeast_location_id?: string;
-    east_location_id?: string;
-    southeast_location_id?: string;
-    south_location_id?: string;
-    southwest_location_id?: string;
-    west_location_id?: string;
-    northwest_location_id?: string;
-    up_location_id?: string;
-    down_location_id?: string;
+    north_dungeon_location_id?: string;
+    northeast_dungeon_location_id?: string;
+    east_dungeon_location_id?: string;
+    southeast_dungeon_location_id?: string;
+    south_dungeon_location_id?: string;
+    southwest_dungeon_location_id?: string;
+    west_dungeon_location_id?: string;
+    northwest_dungeon_location_id?: string;
+    up_dungeon_location_id?: string;
+    down_dungeon_location_id?: string;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
 }
 
-export interface LocationRepositoryParameter
-    extends RepositoryParameter<LocationRepositoryRecord> {}
+export interface DungeonLocationRepositoryParameter
+    extends RepositoryParameter<DungeonLocationRepositoryRecord> {}
 
 @Injectable()
-export class LocationRepository extends Repository<LocationRepositoryRecord> {
+export class DungeonLocationRepository extends Repository<DungeonLocationRepositoryRecord> {
     constructor(
         databaseService: DatabaseService,
         loggerService: LoggerService,
     ) {
-        super(databaseService, loggerService, 'location', [
+        super(databaseService, loggerService, 'dungeon_location', [
             {
                 name: 'id',
                 isPrimary: true,
+                isNullable: false,
+            },
+            {
+                name: 'dungeon_id',
+                isPrimary: false,
                 isNullable: false,
             },
             {
@@ -64,52 +70,52 @@ export class LocationRepository extends Repository<LocationRepositoryRecord> {
                 isNullable: false,
             },
             {
-                name: 'north_location_id',
+                name: 'north_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'northeast_location_id',
+                name: 'northeast_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'east_location_id',
+                name: 'east_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'southeast_location_id',
+                name: 'southeast_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'south_location_id',
+                name: 'south_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'southwest_location_id',
+                name: 'southwest_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'west_location_id',
+                name: 'west_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'northwest_location_id',
+                name: 'northwest_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'up_location_id',
+                name: 'up_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'down_location_id',
+                name: 'down_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },

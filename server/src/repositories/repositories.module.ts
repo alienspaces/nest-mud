@@ -3,11 +3,20 @@ import { Module } from '@nestjs/common';
 // Application
 import { DatabaseModule, LoggerModule } from '@/core';
 import { CharacterRepository } from './character/character.repository';
-import { LocationRepository } from './location/location.repository';
+import { DungeonRepository } from './dungeon/dungeon.repository';
+import { DungeonLocationRepository } from './dungeon_location/dungeon_location.repository';
 
 @Module({
     imports: [LoggerModule, DatabaseModule],
-    exports: [CharacterRepository, LocationRepository],
-    providers: [CharacterRepository, LocationRepository],
+    exports: [
+        CharacterRepository,
+        DungeonRepository,
+        DungeonLocationRepository,
+    ],
+    providers: [
+        CharacterRepository,
+        DungeonRepository,
+        DungeonLocationRepository,
+    ],
 })
 export class RepositoriesModule {}

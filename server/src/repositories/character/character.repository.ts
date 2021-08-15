@@ -15,7 +15,8 @@ import {
 
 export interface CharacterRepositoryRecord {
     id?: string;
-    location_id: string;
+    dungeon_id: string;
+    dungeon_location_id: string;
     name: string;
     strength?: number;
     dexterity?: number;
@@ -43,7 +44,12 @@ export class CharacterRepository extends Repository<CharacterRepositoryRecord> {
                 isNullable: false,
             },
             {
-                name: 'location_id',
+                name: 'dungeon_id',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'dungeon_location_id',
                 isPrimary: false,
                 isNullable: false,
             },

@@ -83,11 +83,13 @@ export abstract class Repository<TRecord extends Record> {
                 parameterCount++;
                 // TODO: Implement parameter operators
                 sql += `"${parameter.column}" = $${parameterCount}`;
+                if (parameterCount <= args.parameters.length) {
+                    sql += ' AND ';
+                }
             });
-            sql += ' AND ';
         }
         sql += '"deleted_at" IS NULL';
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -144,7 +146,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -170,7 +172,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 
@@ -190,7 +192,7 @@ export abstract class Repository<TRecord extends Record> {
             forUpdate: args.forUpdate,
         });
         const values = [args.id];
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
         await this.databaseService.end();
 
@@ -246,7 +248,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map(
             (columnName: string) => args.record[columnName],
         );
-        logger.info(values);
+        logger.debug(values);
         const result = await client.query(sql, values);
         await this.databaseService.end();
 

@@ -56,6 +56,9 @@ class Main {
 
             const fileName = `${tableName}.repository.ts`;
             const directory = `src/repositories/${tableName}`;
+            if (!fs.existsSync(directory)) {
+                fs.mkdirSync(directory);
+            }
             const outFile = path.join(directory, fileName);
 
             logger.info(`Writing ${outFile}`);

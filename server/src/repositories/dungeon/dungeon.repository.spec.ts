@@ -7,10 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule } from '@/core';
-import { LocationRepositoryRecord, LocationRepository } from './location.repository';
+import { DungeonRepositoryRecord, DungeonRepository } from './dungeon.repository';
 
-describe('LocationRepository', () => {
-    let repository: LocationRepository;
+describe('DungeonRepository', () => {
+    let repository: DungeonRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -19,11 +19,11 @@ describe('LocationRepository', () => {
                 DatabaseModule,
                 LoggerModule,
             ],
-            providers: [LocationRepository],
+            providers: [DungeonRepository],
         }).compile();
 
-        repository = await module.resolve<LocationRepository>(
-            LocationRepository,
+        repository = await module.resolve<DungeonRepository>(
+            DungeonRepository,
         );
     });
 

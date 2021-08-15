@@ -4,8 +4,8 @@ import { Injectable } from '@nestjs/common';
 import {
     CharacterRepository,
     CharacterRepositoryRecord,
-    LocationRepository,
-    LocationRepositoryRecord,
+    DungeonLocationRepository,
+    DungeonLocationRepositoryRecord,
 } from '@/repositories';
 
 import {
@@ -23,7 +23,7 @@ const maxAttributes = 30;
 export class CharacterService {
     constructor(
         private characterRepository: CharacterRepository,
-        private locationRepository: LocationRepository,
+        private dungeonLocationRepository: DungeonLocationRepository,
     ) {}
 
     async getCharacter(id: string): Promise<CharacterEntity> {
@@ -37,11 +37,20 @@ export class CharacterService {
     async createCharacter(
         createCharacterEntity: CreateCharacterEntity,
     ): Promise<CharacterEntity> {
-        const locationRecords = await this.locationRepository.getMany({
-            parameters: [{ column: 'default', value: true }],
-        });
-        if (locationRecords.length !== 1) {
-            throw new Error('Default location record not found');
+        const dungeonLocationRecords =
+            await this.dungeonLocationRepository.getMany({
+                parameters: [
+                    {
+                        column: 'dungeon_id',
+                        value: createCharacterEntity.dungeon_id,
+                    },
+                    { column: 'default', value: true },
+                ],
+            });
+        if (dungeonLocationRecords.length !== 1) {
+            throw new Error(
+                `Dungeon ${createCharacterEntity.dungeon_id} default location record not found`,
+            );
         }
 
         // TODO: Move to validation function and calculate max attributes based
@@ -59,7 +68,8 @@ export class CharacterService {
 
         const characterRecord: CharacterRepositoryRecord = {
             id: createCharacterEntity.id || null,
-            location_id: locationRecords[0].id,
+            dungeon_id: createCharacterEntity.dungeon_id,
+            dungeon_location_id: dungeonLocationRecords[0].id,
             name: createCharacterEntity.name,
             strength: createCharacterEntity.strength,
             dexterity: createCharacterEntity.dexterity,
@@ -97,7 +107,8 @@ export class CharacterService {
         });
 
         characterRecord.name = updateCharacterEntity.name;
-        characterRecord.location_id = updateCharacterEntity.location_id;
+        characterRecord.dungeon_location_id =
+            updateCharacterEntity.dungeon_location_id;
         characterRecord.strength = updateCharacterEntity.strength;
         characterRecord.dexterity = updateCharacterEntity.dexterity;
         characterRecord.intelligence = updateCharacterEntity.intelligence;
@@ -120,9 +131,10 @@ export class CharacterService {
     buildCharacterEntity(
         characterRecord: CharacterRepositoryRecord,
     ): CharacterEntity {
-        const locationEntity: CharacterEntity = {
+        const characterEntity: CharacterEntity = {
             id: characterRecord.id,
-            location_id: characterRecord.location_id,
+            dungeon_id: characterRecord.dungeon_id,
+            dungeon_location_id: characterRecord.dungeon_location_id,
             name: characterRecord.name,
             strength: characterRecord.strength,
             dexterity: characterRecord.dexterity,
@@ -133,6 +145,6 @@ export class CharacterService {
             updated_at: characterRecord.updated_at,
             deleted_at: characterRecord.deleted_at,
         };
-        return locationEntity;
+        return characterEntity;
     }
 }

@@ -4,18 +4,18 @@ import { ConfigModule } from '@nestjs/config';
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { CharacterService } from './character.service';
-import { LocationService } from '../location/location.service';
+import { DungeonService } from '@/services';
 import {
     RepositoriesModule,
     CharacterRepositoryRecord,
-    LocationRepositoryRecord,
+    DungeonLocationRepositoryRecord,
 } from '@/repositories';
 
 describe('CharacterService', () => {
     let service: CharacterService;
-    let locationService: LocationService;
+    let dungeonService: DungeonService;
     let characterService: CharacterService;
-    let locationRecord: LocationRepositoryRecord;
+    let locationRecord: DungeonLocationRepositoryRecord;
     let characterRecord: CharacterRepositoryRecord;
 
     beforeAll(async () => {
@@ -28,15 +28,13 @@ describe('CharacterService', () => {
             ],
             providers: [
                 LoggerService,
-                LocationService,
+                DungeonService,
                 CharacterService,
                 CharacterService,
             ],
         }).compile();
 
-        locationService = await module.resolve<LocationService>(
-            LocationService,
-        );
+        dungeonService = await module.resolve<DungeonService>(DungeonService);
         characterService = await module.resolve<CharacterService>(
             CharacterService,
         );
