@@ -6,3 +6,5 @@ export * from './character/character.service';
 export * from './character/character.entities';
 export * from './dungeon/dungeon.service';
 export * from './dungeon/dungeon.entities';
+export * from './dungeon/dungeon_location.service';
+export * from './dungeon/dungeon_location.entities';

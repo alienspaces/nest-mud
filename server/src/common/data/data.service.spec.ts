@@ -12,15 +12,10 @@ import {
 } from '@/core';
 import { RepositoriesModule } from '@/repositories';
 import {
-    CharacterService,
-    CreateCharacterEntity,
-    CharacterEntity,
-    DungeonService,
-    CreateDungeonEntity,
-    DungeonEntity,
-    CreateDungeonLocationEntity,
-    DungeonLocationEntity,
     ServicesModule,
+    CharacterService,
+    DungeonService,
+    DungeonLocationService,
 } from '@/services';
 
 import { Data, DataService } from './data.service';
@@ -42,6 +37,7 @@ describe('DataService', () => {
                 LoggerService,
                 DatabaseService,
                 DungeonService,
+                DungeonLocationService,
                 CharacterService,
                 DataService,
             ],

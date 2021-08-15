@@ -26,18 +26,25 @@ cd server
 
 ## API
 
+### Dungeons
+
+```bash
+# Get a list of dungeons
+GET /api/v1/dungeons
+```
+
 ### Characters
 
 ```bash
-# Create a new character
-POST /api/v1/characters
+# Create a new character in a dungeon
+POST /api/v1/dungeons/:dungeon_id/characters
 ```
 
 ### Locations
 
 ```bash
-# Get a locations description
-GET /api/v1/locations
+# Get a list of dungeon locations
+GET /api/v1/dungeons/:dungeon_id/locations
 ```
 
 ### Actions
@@ -46,7 +53,7 @@ Actions, when successful, create an event log of a character exploration.
 
 ```bash
 # Create a new action
-POST /api/v1/actions
+POST /api/v1/dungeons/:dungeon_id/actions
 ```
 
 Example of moving north from the characters current location.

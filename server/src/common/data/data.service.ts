@@ -11,9 +11,10 @@ import {
     CharacterService,
     CreateDungeonEntity,
     DungeonEntity,
+    DungeonService,
     CreateDungeonLocationEntity,
     DungeonLocationEntity,
-    DungeonService,
+    DungeonLocationService,
 } from '@/services';
 import { DataConfig, DungeonConfig } from './data.config';
 
@@ -83,6 +84,7 @@ export class DataService {
         private loggerService: LoggerService,
         private databaseService: DatabaseService,
         private dungeonService: DungeonService,
+        private dungeonLocationService: DungeonLocationService,
         private characterService: CharacterService,
     ) {
         this.instanceId = uuidv4();
@@ -203,9 +205,8 @@ export class DataService {
             function: 'addDungeonLocationEntity',
         });
         logger.debug(location);
-        const locationEntity = await this.dungeonService.createDungeonLocation(
-            location,
-        );
+        const locationEntity =
+            await this.dungeonLocationService.createDungeonLocation(location);
         data.dungeonLocationEntities.push(locationEntity);
         data.addDungeonLocationTeardownId(locationEntity.id);
         return;
@@ -219,7 +220,7 @@ export class DataService {
             function: 'updateDungeonLocationEntity',
         });
         logger.debug(location);
-        await this.dungeonService.updateDungeonLocation(location);
+        await this.dungeonLocationService.updateDungeonLocation(location);
         return;
     }
 

@@ -1,4 +1,5 @@
 /* Replace with your SQL commands */
-DROP table "character";
-DROP table "location";
+DROP table "dungeon_character";
+DROP table "dungeon_location";
+DROP table "dungeon";
 

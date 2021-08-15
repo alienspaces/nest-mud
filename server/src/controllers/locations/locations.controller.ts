@@ -4,6 +4,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { LoggerService } from '@/core';
 import {
     DungeonService,
+    DungeonLocationService,
     DungeonLocationEntity,
     DungeonLocationParameters,
 } from '@/services';
@@ -14,11 +15,13 @@ export class LocationsController {
     constructor(
         private loggerService: LoggerService,
         private dungeonService: DungeonService,
+        private dungeonLocationService: DungeonLocationService,
     ) {}
 
     @Get(':id')
     async get(@Param('id') id: string): Promise<LocationDto> {
-        const locationEntity = await this.dungeonService.getDungeonLocation(id);
+        const locationEntity =
+            await this.dungeonLocationService.getDungeonLocation(id);
         if (!locationEntity) {
             return;
         }
