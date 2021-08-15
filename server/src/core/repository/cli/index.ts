@@ -30,20 +30,20 @@ class Main {
             function: 'run',
         });
 
-        logger.info('Loading test file template');
+        logger.debug('Loading test file template');
         const testFileTemplate = this.loadSpecTemplate();
 
-        logger.info('Getting all definitions');
+        logger.debug('Getting all definitions');
 
         const definitions = await sqlts.toObject(config);
         if (!definitions.tables) {
-            logger.info('No tables available, breaking..');
+            logger.debug('No tables available, breaking..');
             return;
         }
 
         for (var idx = 0; idx < definitions.tables.length; idx++) {
             const tableName = definitions.tables[idx].name;
-            logger.info(`Processing repository ${tableName}`);
+            logger.debug(`Processing repository ${tableName}`);
 
             // Recreate config with single table so we can generate individual
             // source for each repository
@@ -61,7 +61,7 @@ class Main {
             }
             const outFile = path.join(directory, fileName);
 
-            logger.info(`Writing ${outFile}`);
+            logger.debug(`Writing ${outFile}`);
             fs.writeFileSync(outFile, output);
 
             // Generate repository spec source
@@ -92,7 +92,7 @@ class Main {
         const directory = `src/repositories/${tableName}`;
         const outFile = path.join(directory, fileName);
 
-        logger.info(`Writing spec ${outFile}`);
+        logger.debug(`Writing spec ${outFile}`);
         fs.writeFileSync(outFile, result);
     }
 }

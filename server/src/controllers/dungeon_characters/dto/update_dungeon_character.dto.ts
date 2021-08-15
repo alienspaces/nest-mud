@@ -1,4 +1,4 @@
-export class CreateCharacterDto {
+export class UpdateDungeonCharacterDto {
     data: {
         name: string;
         strength: number;

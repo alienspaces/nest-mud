@@ -1,4 +1,4 @@
-export class CharacterDto {
+export class DungeonCharacterDto {
     data: {
         id: string;
         dungeon_id: string;

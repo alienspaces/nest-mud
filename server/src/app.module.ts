@@ -1,29 +1,37 @@
 import { Module } from '@nestjs/common';
+
+// Application
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-// Controllers
 import { DatabaseModule } from './core/database/database.module';
 import { RepositoriesModule } from './repositories';
 import { LoggerModule } from './core/logger/logger.module';
-import { LocationsController } from './controllers/locations/locations.controller';
-import { CharactersController } from './controllers/characters/characters.controller';
-import { ActionsController } from './controllers/actions/actions.controller';
+
+import { DungeonLocationsController } from './controllers/dungeon_locations/locations.controller';
+import { DungeonCharactersController } from './controllers/dungeon_characters/dungeon_characters.controller';
+import { ActionsController } from './controllers/dungeon_character_actions/actions.controller';
 import {
     ServicesModule,
     ActionService,
     DungeonService,
-    CharacterService,
+    DungeonLocationService,
+    DungeonCharacterService,
 } from '@/services';
 
 @Module({
     imports: [DatabaseModule, RepositoriesModule, LoggerModule, ServicesModule],
     controllers: [
         AppController,
-        CharactersController,
-        LocationsController,
+        DungeonCharactersController,
+        DungeonLocationsController,
         ActionsController,
     ],
-    providers: [AppService, DungeonService, CharacterService, ActionService],
+    providers: [
+        AppService,
+        DungeonService,
+        DungeonLocationService,
+        DungeonCharacterService,
+        ActionService,
+    ],
 })
 export class AppModule {}

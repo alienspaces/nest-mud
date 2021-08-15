@@ -6,9 +6,9 @@ import * as faker from 'faker';
 // Application
 import { LoggerService, DatabaseService } from '@/core';
 import {
-    CreateCharacterEntity,
-    CharacterEntity,
-    CharacterService,
+    CreateDungeonCharacterEntity,
+    DungeonCharacterEntity,
+    DungeonCharacterService,
     CreateDungeonEntity,
     DungeonEntity,
     DungeonService,
@@ -21,7 +21,7 @@ import { DataConfig, DungeonConfig } from './data.config';
 export class Data {
     dungeonEntities: DungeonEntity[] = [];
     dungeonLocationEntities: DungeonLocationEntity[] = [];
-    characterEntities: CharacterEntity[] = [];
+    characterEntities: DungeonCharacterEntity[] = [];
 
     private _dungeonTeardownIds: string[] = [];
     private _dungeonLocationTeardownIds: string[] = [];
@@ -85,7 +85,7 @@ export class DataService {
         private databaseService: DatabaseService,
         private dungeonService: DungeonService,
         private dungeonLocationService: DungeonLocationService,
-        private characterService: CharacterService,
+        private dungeonCharacterService: DungeonCharacterService,
     ) {
         this.instanceId = uuidv4();
     }
@@ -161,13 +161,13 @@ export class DataService {
             // Add character entities
             for (
                 var idx = 0;
-                idx < dungeonConfig.dungeonCharacterConfig.length;
+                idx < dungeonConfig.dungeonDungeonCharacterConfig.length;
                 idx++
             ) {
                 await this.addCharacterEntity(
                     data,
-                    dungeonConfig.dungeonCharacterConfig[idx]
-                        .entity as CreateCharacterEntity,
+                    dungeonConfig.dungeonDungeonCharacterConfig[idx]
+                        .entity as CreateDungeonCharacterEntity,
                 );
             }
         }
@@ -226,16 +226,15 @@ export class DataService {
 
     private async addCharacterEntity(
         data: Data,
-        character: CreateCharacterEntity,
-    ): Promise<CharacterEntity[]> {
+        character: CreateDungeonCharacterEntity,
+    ): Promise<DungeonCharacterEntity[]> {
         const logger = this.loggerService.logger({
             class: 'DataService',
             function: 'addCharacterEntity',
         });
         logger.debug(character);
-        const characterEntity = await this.characterService.createCharacter(
-            character,
-        );
+        const characterEntity =
+            await this.dungeonCharacterService.createCharacter(character);
         data.characterEntities.push(characterEntity);
         data.addCharacterTeardownId(characterEntity.id);
         return;
@@ -293,7 +292,7 @@ export class DataService {
             function: 'removeCharacterEntities',
         });
         const client = await this.databaseService.connect();
-        const sql = `DELETE FROM character WHERE id IN (${data
+        const sql = `DELETE FROM dungeon_character WHERE id IN (${data
             .getCharacterTeardownIds()
             .join(',')});`;
         logger.debug(sql);
@@ -355,11 +354,13 @@ export class DataService {
             }
             for (
                 var idx = 0;
-                idx < dungeonConfig.dungeonCharacterConfig.length;
+                idx < dungeonConfig.dungeonDungeonCharacterConfig.length;
                 idx++
             ) {
-                if (!dungeonConfig.dungeonCharacterConfig[idx].entity.id) {
-                    dungeonConfig.dungeonCharacterConfig[idx].entity.id =
+                if (
+                    !dungeonConfig.dungeonDungeonCharacterConfig[idx].entity.id
+                ) {
+                    dungeonConfig.dungeonDungeonCharacterConfig[idx].entity.id =
                         uuidv4();
                 }
             }
@@ -392,28 +393,30 @@ export class DataService {
             }
             for (
                 var idx = 0;
-                idx < dungeonConfig.dungeonCharacterConfig.length;
+                idx < dungeonConfig.dungeonDungeonCharacterConfig.length;
                 idx++
             ) {
                 if (
-                    !dungeonConfig.dungeonCharacterConfig[idx].entity.strength
+                    !dungeonConfig.dungeonDungeonCharacterConfig[idx].entity
+                        .strength
                 ) {
-                    dungeonConfig.dungeonCharacterConfig[
+                    dungeonConfig.dungeonDungeonCharacterConfig[
                         idx
                     ].entity.strength = 10;
                 }
                 if (
-                    !dungeonConfig.dungeonCharacterConfig[idx].entity.dexterity
+                    !dungeonConfig.dungeonDungeonCharacterConfig[idx].entity
+                        .dexterity
                 ) {
-                    dungeonConfig.dungeonCharacterConfig[
+                    dungeonConfig.dungeonDungeonCharacterConfig[
                         idx
                     ].entity.dexterity = 10;
                 }
                 if (
-                    !dungeonConfig.dungeonCharacterConfig[idx].entity
+                    !dungeonConfig.dungeonDungeonCharacterConfig[idx].entity
                         .intelligence
                 ) {
-                    dungeonConfig.dungeonCharacterConfig[
+                    dungeonConfig.dungeonDungeonCharacterConfig[
                         idx
                     ].entity.intelligence = 10;
                 }
@@ -433,10 +436,10 @@ export class DataService {
         }
         for (
             var idx = 0;
-            idx < dungeonConfig.dungeonCharacterConfig.length;
+            idx < dungeonConfig.dungeonDungeonCharacterConfig.length;
             idx++
         ) {
-            dungeonConfig.dungeonCharacterConfig[idx].entity.dungeon_id =
+            dungeonConfig.dungeonDungeonCharacterConfig[idx].entity.dungeon_id =
                 dungeonConfig.entity.id;
         }
     }
@@ -556,14 +559,14 @@ export class DataService {
         // Character location identifiers
         for (
             var idx = 0;
-            idx < dungeonConfig.dungeonCharacterConfig.length;
+            idx < dungeonConfig.dungeonDungeonCharacterConfig.length;
             idx++
         ) {
-            dungeonConfig.dungeonCharacterConfig[
+            dungeonConfig.dungeonDungeonCharacterConfig[
                 idx
             ].entity.dungeon_location_id = this.getLocationIdentifier(
                 dungeonConfig,
-                dungeonConfig.dungeonCharacterConfig[idx].location_name,
+                dungeonConfig.dungeonDungeonCharacterConfig[idx].location_name,
             );
         }
     }

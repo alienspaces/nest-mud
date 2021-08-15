@@ -1,5 +1,5 @@
 import {
-    CharacterEntity,
+    DungeonCharacterEntity,
     DungeonEntity,
     DungeonLocationEntity,
 } from '@/services';
@@ -8,7 +8,7 @@ export interface DungeonConfig {
     entity: Partial<DungeonEntity> & Required<Pick<DungeonEntity, 'name'>>;
     defaultDungeonLocationName: string;
     dungeonLocationConfig?: DungeonLocationConfig[];
-    dungeonCharacterConfig?: CharacterConfig[];
+    dungeonDungeonCharacterConfig?: DungeonCharacterConfig[];
 }
 
 export interface DungeonLocationConfig {
@@ -26,8 +26,8 @@ export interface DungeonLocationConfig {
     down_location_name?: string;
 }
 
-export interface CharacterConfig {
-    entity: Partial<CharacterEntity>;
+export interface DungeonCharacterConfig {
+    entity: Partial<DungeonCharacterEntity>;
     location_name: string;
 }
 
@@ -68,7 +68,7 @@ export function defaultDataConfig(): DataConfig {
                         south_location_name: 'Cave Tunnel',
                     },
                 ],
-                dungeonCharacterConfig: [
+                dungeonDungeonCharacterConfig: [
                     {
                         entity: {
                             name: 'Hero',

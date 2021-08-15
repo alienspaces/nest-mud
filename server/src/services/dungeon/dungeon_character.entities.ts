@@ -1,4 +1,4 @@
-export interface CreateCharacterEntity {
+export interface CreateDungeonCharacterEntity {
     id?: string;
     dungeon_id: string;
     name: string;
@@ -7,7 +7,7 @@ export interface CreateCharacterEntity {
     intelligence: number;
 }
 
-export interface UpdateCharacterEntity {
+export interface UpdateDungeonCharacterEntity {
     id: string;
     name: string;
     dungeon_id: string;
@@ -19,7 +19,7 @@ export interface UpdateCharacterEntity {
     experience: number;
 }
 
-export interface CharacterEntity {
+export interface DungeonCharacterEntity {
     id: string;
     dungeon_id: string;
     dungeon_location_id: string;

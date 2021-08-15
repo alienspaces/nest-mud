@@ -2,31 +2,31 @@ import { Injectable } from '@nestjs/common';
 
 // Application
 import {
-    CharacterRepository,
-    CharacterRepositoryRecord,
+    DungeonCharacterRepository,
+    DungeonCharacterRepositoryRecord,
     DungeonLocationRepository,
     DungeonLocationRepositoryRecord,
 } from '@/repositories';
 
 import {
-    CreateCharacterEntity,
-    UpdateCharacterEntity,
-    CharacterEntity,
-} from './character.entities';
-import { UpdateCharacterDto } from '@/controllers/characters/dto';
+    CreateDungeonCharacterEntity,
+    UpdateDungeonCharacterEntity,
+    DungeonCharacterEntity,
+} from './dungeon_character.entities';
+import { UpdateDungeonCharacterDto } from '@/controllers/dungeon_characters/dto';
 
 const defaultCoin = 100;
 const defaultExperience = 0;
 const maxAttributes = 30;
 
 @Injectable()
-export class CharacterService {
+export class DungeonCharacterService {
     constructor(
-        private characterRepository: CharacterRepository,
+        private characterRepository: DungeonCharacterRepository,
         private dungeonLocationRepository: DungeonLocationRepository,
     ) {}
 
-    async getCharacter(id: string): Promise<CharacterEntity> {
+    async getCharacter(id: string): Promise<DungeonCharacterEntity> {
         const characterRecord = await this.characterRepository.getOne({
             id: id,
         });
@@ -35,30 +35,30 @@ export class CharacterService {
     }
 
     async createCharacter(
-        createCharacterEntity: CreateCharacterEntity,
-    ): Promise<CharacterEntity> {
+        CreateDungeonCharacterEntity: CreateDungeonCharacterEntity,
+    ): Promise<DungeonCharacterEntity> {
         const dungeonLocationRecords =
             await this.dungeonLocationRepository.getMany({
                 parameters: [
                     {
                         column: 'dungeon_id',
-                        value: createCharacterEntity.dungeon_id,
+                        value: CreateDungeonCharacterEntity.dungeon_id,
                     },
                     { column: 'default', value: true },
                 ],
             });
         if (dungeonLocationRecords.length !== 1) {
             throw new Error(
-                `Dungeon ${createCharacterEntity.dungeon_id} default location record not found`,
+                `Dungeon ${CreateDungeonCharacterEntity.dungeon_id} default location record not found`,
             );
         }
 
         // TODO: Move to validation function and calculate max attributes based
         // on character experience
         if (
-            createCharacterEntity.strength +
-                createCharacterEntity.dexterity +
-                createCharacterEntity.intelligence >
+            CreateDungeonCharacterEntity.strength +
+                CreateDungeonCharacterEntity.dexterity +
+                CreateDungeonCharacterEntity.intelligence >
             maxAttributes
         ) {
             throw new Error(
@@ -66,14 +66,14 @@ export class CharacterService {
             );
         }
 
-        const characterRecord: CharacterRepositoryRecord = {
-            id: createCharacterEntity.id || null,
-            dungeon_id: createCharacterEntity.dungeon_id,
+        const characterRecord: DungeonCharacterRepositoryRecord = {
+            id: CreateDungeonCharacterEntity.id || null,
+            dungeon_id: CreateDungeonCharacterEntity.dungeon_id,
             dungeon_location_id: dungeonLocationRecords[0].id,
-            name: createCharacterEntity.name,
-            strength: createCharacterEntity.strength,
-            dexterity: createCharacterEntity.dexterity,
-            intelligence: createCharacterEntity.intelligence,
+            name: CreateDungeonCharacterEntity.name,
+            strength: CreateDungeonCharacterEntity.strength,
+            dexterity: CreateDungeonCharacterEntity.dexterity,
+            intelligence: CreateDungeonCharacterEntity.intelligence,
             coin: defaultCoin,
             experience: defaultExperience,
         };
@@ -87,14 +87,14 @@ export class CharacterService {
     }
 
     async updateCharacter(
-        updateCharacterEntity: UpdateCharacterEntity,
-    ): Promise<CharacterEntity> {
+        UpdateDungeonCharacterEntity: UpdateDungeonCharacterEntity,
+    ): Promise<DungeonCharacterEntity> {
         // TODO: Move to validation function and calculate max attributes based
         // on character experience
         if (
-            updateCharacterEntity.strength +
-                updateCharacterEntity.dexterity +
-                updateCharacterEntity.intelligence >
+            UpdateDungeonCharacterEntity.strength +
+                UpdateDungeonCharacterEntity.dexterity +
+                UpdateDungeonCharacterEntity.intelligence >
             maxAttributes
         ) {
             throw new Error(
@@ -103,17 +103,18 @@ export class CharacterService {
         }
 
         const characterRecord = await this.characterRepository.getOne({
-            id: updateCharacterEntity.id,
+            id: UpdateDungeonCharacterEntity.id,
         });
 
-        characterRecord.name = updateCharacterEntity.name;
+        characterRecord.name = UpdateDungeonCharacterEntity.name;
         characterRecord.dungeon_location_id =
-            updateCharacterEntity.dungeon_location_id;
-        characterRecord.strength = updateCharacterEntity.strength;
-        characterRecord.dexterity = updateCharacterEntity.dexterity;
-        characterRecord.intelligence = updateCharacterEntity.intelligence;
-        characterRecord.coin = updateCharacterEntity.coin;
-        characterRecord.experience = updateCharacterEntity.experience;
+            UpdateDungeonCharacterEntity.dungeon_location_id;
+        characterRecord.strength = UpdateDungeonCharacterEntity.strength;
+        characterRecord.dexterity = UpdateDungeonCharacterEntity.dexterity;
+        characterRecord.intelligence =
+            UpdateDungeonCharacterEntity.intelligence;
+        characterRecord.coin = UpdateDungeonCharacterEntity.coin;
+        characterRecord.experience = UpdateDungeonCharacterEntity.experience;
 
         await this.characterRepository.updateOne({
             record: characterRecord,
@@ -129,9 +130,9 @@ export class CharacterService {
     }
 
     buildCharacterEntity(
-        characterRecord: CharacterRepositoryRecord,
-    ): CharacterEntity {
-        const characterEntity: CharacterEntity = {
+        characterRecord: DungeonCharacterRepositoryRecord,
+    ): DungeonCharacterEntity {
+        const characterEntity: DungeonCharacterEntity = {
             id: characterRecord.id,
             dungeon_id: characterRecord.dungeon_id,
             dungeon_location_id: characterRecord.dungeon_location_id,

@@ -13,7 +13,7 @@ import {
     ColumnConfig,
 } from '@/core';
 
-export interface CharacterRepositoryRecord {
+export interface DungeonCharacterRepositoryRecord {
     id?: string;
     dungeon_id: string;
     dungeon_location_id: string;
@@ -28,16 +28,16 @@ export interface CharacterRepositoryRecord {
     deleted_at?: Date;
 }
 
-export interface CharacterRepositoryParameter
-    extends RepositoryParameter<CharacterRepositoryRecord> {}
+export interface DungeonCharacterRepositoryParameter
+    extends RepositoryParameter<DungeonCharacterRepositoryRecord> {}
 
 @Injectable()
-export class CharacterRepository extends Repository<CharacterRepositoryRecord> {
+export class DungeonCharacterRepository extends Repository<DungeonCharacterRepositoryRecord> {
     constructor(
         databaseService: DatabaseService,
         loggerService: LoggerService,
     ) {
-        super(databaseService, loggerService, 'character', [
+        super(databaseService, loggerService, 'dungeon_character', [
             {
                 name: 'id',
                 isPrimary: true,

@@ -13,7 +13,7 @@ import {
 import { RepositoriesModule } from '@/repositories';
 import {
     ServicesModule,
-    CharacterService,
+    DungeonCharacterService,
     DungeonService,
     DungeonLocationService,
 } from '@/services';
@@ -38,7 +38,7 @@ describe('DataService', () => {
                 DatabaseService,
                 DungeonService,
                 DungeonLocationService,
-                CharacterService,
+                DungeonCharacterService,
                 DataService,
             ],
         }).compile();

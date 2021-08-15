@@ -1,4 +1,4 @@
-export class LocationDto {
+export class DungeonLocationDto {
     data: {
         id: string;
         dungeon_id: string;

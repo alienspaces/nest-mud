@@ -6,12 +6,12 @@ import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { ServicesModule } from '@/services';
 import { Data, DataService, defaultDataConfig } from '@/common/data';
 
-import { LocationsController } from './locations.controller';
+import { DungeonLocationsController } from './dungeon_locations.controller';
 import { RepositoriesModule } from '@/repositories';
 
-describe('LocationsController', () => {
+describe('DungeonLocationsController', () => {
     let module: TestingModule;
-    let controller: LocationsController;
+    let controller: DungeonLocationsController;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
@@ -22,12 +22,12 @@ describe('LocationsController', () => {
                 RepositoriesModule,
                 ServicesModule,
             ],
-            controllers: [LocationsController],
+            controllers: [DungeonLocationsController],
             providers: [LoggerService, DataService],
         }).compile();
 
-        controller = await module.resolve<LocationsController>(
-            LocationsController,
+        controller = await module.resolve<DungeonLocationsController>(
+            DungeonLocationsController,
         );
     });
 

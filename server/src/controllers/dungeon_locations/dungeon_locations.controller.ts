@@ -8,10 +8,10 @@ import {
     DungeonLocationEntity,
     DungeonLocationParameters,
 } from '@/services';
-import { LocationDto } from './dto';
+import { DungeonLocationDto } from './dto';
 
 @Controller('/api/v1/locations')
-export class LocationsController {
+export class DungeonLocationsController {
     constructor(
         private loggerService: LoggerService,
         private dungeonService: DungeonService,
@@ -19,7 +19,7 @@ export class LocationsController {
     ) {}
 
     @Get(':id')
-    async get(@Param('id') id: string): Promise<LocationDto> {
+    async get(@Param('id') id: string): Promise<DungeonLocationDto> {
         const locationEntity =
             await this.dungeonLocationService.getDungeonLocation(id);
         if (!locationEntity) {
@@ -30,8 +30,10 @@ export class LocationsController {
     }
 }
 
-function buildResponse(locationEntities: DungeonLocationEntity[]): LocationDto {
-    let returnDataLocations: LocationDto['data'] = [];
+function buildResponse(
+    locationEntities: DungeonLocationEntity[],
+): DungeonLocationDto {
+    let returnDataLocations: DungeonLocationDto['data'] = [];
 
     locationEntities.forEach((data) => {
         returnDataLocations.push({

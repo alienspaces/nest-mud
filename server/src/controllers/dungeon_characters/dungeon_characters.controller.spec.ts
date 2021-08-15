@@ -11,12 +11,12 @@ import {
     DataService,
     defaultDataConfig,
 } from '@/common/data';
-import { CharacterService, ServicesModule } from '@/services';
-import { CharacterDto } from './dto';
-import { CharactersController } from './characters.controller';
+import { DungeonCharacterService, ServicesModule } from '@/services';
+import { DungeonCharacterDto } from './dto';
+import { DungeonCharactersController } from './dungeon_characters.controller';
 
-describe('CharactersController', () => {
-    let controller: CharactersController;
+describe('DungeonCharactersController', () => {
+    let controller: DungeonCharactersController;
     let module: TestingModule;
 
     beforeAll(async () => {
@@ -29,12 +29,12 @@ describe('CharactersController', () => {
                 ServicesModule,
                 DataModule,
             ],
-            controllers: [CharactersController],
-            providers: [LoggerService, DataService, CharacterService],
+            controllers: [DungeonCharactersController],
+            providers: [LoggerService, DataService, DungeonCharacterService],
         }).compile();
 
-        controller = await module.resolve<CharactersController>(
-            CharactersController,
+        controller = await module.resolve<DungeonCharactersController>(
+            DungeonCharactersController,
         );
     });
 
@@ -48,23 +48,21 @@ describe('CharactersController', () => {
             const data = new Data();
             await service.setup(defaultDataConfig(), data);
 
-            let characterDto: CharacterDto = await controller.create(
-                data.dungeonEntities[0].id,
-                {
+            let DungeonCharacterDto: DungeonCharacterDto =
+                await controller.create(data.dungeonEntities[0].id, {
                     data: {
                         name: `${faker.name.firstName()} ${faker.name.lastName()}`,
                         strength: faker.datatype.number(10),
                         dexterity: faker.datatype.number(10),
                         intelligence: faker.datatype.number(10),
                     },
-                },
-            );
-            expect(characterDto.data).toBeTruthy();
-            expect(characterDto.data.length).toBeGreaterThan(0);
+                });
+            expect(DungeonCharacterDto.data).toBeTruthy();
+            expect(DungeonCharacterDto.data.length).toBeGreaterThan(0);
 
             // TODO: Make data service teardown a list of ids so we
             // can easily add data to it..
-            data.addCharacterTeardownId(characterDto.data[0].id);
+            data.addCharacterTeardownId(DungeonCharacterDto.data[0].id);
 
             await service.teardown(data);
         });
