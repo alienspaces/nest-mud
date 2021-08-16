@@ -46,7 +46,9 @@ describe('DungeonCharactersController', () => {
         it('should create a character', async () => {
             const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await service.setup(defaultDataConfig(), data);
+            await expect(
+                service.setup(defaultDataConfig(), data),
+            ).resolves.not.toThrow();
 
             let DungeonCharacterDto: DungeonCharacterDto =
                 await controller.create(data.dungeonEntities[0].id, {
@@ -60,11 +62,9 @@ describe('DungeonCharactersController', () => {
             expect(DungeonCharacterDto.data).toBeTruthy();
             expect(DungeonCharacterDto.data.length).toBeGreaterThan(0);
 
-            // TODO: Make data service teardown a list of ids so we
-            // can easily add data to it..
             data.addCharacterTeardownId(DungeonCharacterDto.data[0].id);
 
-            await service.teardown(data);
+            await expect(service.teardown(data)).resolves.not.toThrow();
         });
     });
 });

@@ -21,14 +21,14 @@ import { DataConfig, DungeonConfig } from './data.config';
 export class Data {
     dungeonEntities: DungeonEntity[] = [];
     dungeonLocationEntities: DungeonLocationEntity[] = [];
-    characterEntities: DungeonCharacterEntity[] = [];
+    dungeonCharacterEntities: DungeonCharacterEntity[] = [];
 
     private _dungeonTeardownIds: string[] = [];
     private _dungeonLocationTeardownIds: string[] = [];
     private _characterTeardownIds: string[] = [];
 
     constructor() {
-        this.characterEntities = [];
+        this.dungeonCharacterEntities = [];
         this._characterTeardownIds = [];
         this.dungeonEntities = [];
         this._dungeonTeardownIds = [];
@@ -59,7 +59,7 @@ export class Data {
     }
 
     clearCharacterEntities() {
-        this.characterEntities = [];
+        this.dungeonCharacterEntities = [];
         this._characterTeardownIds = [];
     }
 
@@ -234,8 +234,10 @@ export class DataService {
         });
         logger.debug(character);
         const characterEntity =
-            await this.dungeonCharacterService.createCharacter(character);
-        data.characterEntities.push(characterEntity);
+            await this.dungeonCharacterService.createDungeonCharacter(
+                character,
+            );
+        data.dungeonCharacterEntities.push(characterEntity);
         data.addCharacterTeardownId(characterEntity.id);
         return;
     }

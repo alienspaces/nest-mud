@@ -22,19 +22,20 @@ const maxAttributes = 30;
 @Injectable()
 export class DungeonCharacterService {
     constructor(
-        private characterRepository: DungeonCharacterRepository,
+        private dungeonCharacterRepository: DungeonCharacterRepository,
         private dungeonLocationRepository: DungeonLocationRepository,
     ) {}
 
-    async getCharacter(id: string): Promise<DungeonCharacterEntity> {
-        const characterRecord = await this.characterRepository.getOne({
+    async getDungeonCharacter(id: string): Promise<DungeonCharacterEntity> {
+        const characterRecord = await this.dungeonCharacterRepository.getOne({
             id: id,
         });
-        const characterEntity = this.buildCharacterEntity(characterRecord);
+        const characterEntity =
+            this.buildDungeonCharacterEntity(characterRecord);
         return characterEntity;
     }
 
-    async createCharacter(
+    async createDungeonCharacter(
         CreateDungeonCharacterEntity: CreateDungeonCharacterEntity,
     ): Promise<DungeonCharacterEntity> {
         const dungeonLocationRecords =
@@ -78,15 +79,16 @@ export class DungeonCharacterService {
             experience: defaultExperience,
         };
 
-        await this.characterRepository.insertOne({
+        await this.dungeonCharacterRepository.insertOne({
             record: characterRecord,
         });
 
-        const characterEntity = this.buildCharacterEntity(characterRecord);
+        const characterEntity =
+            this.buildDungeonCharacterEntity(characterRecord);
         return characterEntity;
     }
 
-    async updateCharacter(
+    async updateDungeonCharacter(
         UpdateDungeonCharacterEntity: UpdateDungeonCharacterEntity,
     ): Promise<DungeonCharacterEntity> {
         // TODO: Move to validation function and calculate max attributes based
@@ -102,7 +104,7 @@ export class DungeonCharacterService {
             );
         }
 
-        const characterRecord = await this.characterRepository.getOne({
+        const characterRecord = await this.dungeonCharacterRepository.getOne({
             id: UpdateDungeonCharacterEntity.id,
         });
 
@@ -116,20 +118,21 @@ export class DungeonCharacterService {
         characterRecord.coin = UpdateDungeonCharacterEntity.coin;
         characterRecord.experience = UpdateDungeonCharacterEntity.experience;
 
-        await this.characterRepository.updateOne({
+        await this.dungeonCharacterRepository.updateOne({
             record: characterRecord,
         });
 
-        const characterEntity = this.buildCharacterEntity(characterRecord);
+        const characterEntity =
+            this.buildDungeonCharacterEntity(characterRecord);
         return characterEntity;
     }
 
-    async deleteCharacter(id: string): Promise<void> {
-        await this.characterRepository.deleteOne({ id: id });
+    async deleteDungeonCharacter(id: string): Promise<void> {
+        await this.dungeonCharacterRepository.deleteOne({ id: id });
         return;
     }
 
-    buildCharacterEntity(
+    buildDungeonCharacterEntity(
         characterRecord: DungeonCharacterRepositoryRecord,
     ): DungeonCharacterEntity {
         const characterEntity: DungeonCharacterEntity = {

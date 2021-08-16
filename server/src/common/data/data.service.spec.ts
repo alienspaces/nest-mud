@@ -69,9 +69,9 @@ describe('DataService', () => {
             expect(uuidValidate(dungeonLocationEntity.dungeon_id)).toBeTruthy();
         });
 
-        expect(data.characterEntities).toBeTruthy();
-        expect(data.characterEntities.length).toEqual(1);
-        data.characterEntities.forEach((dungeonCharacterEntity) => {
+        expect(data.dungeonCharacterEntities).toBeTruthy();
+        expect(data.dungeonCharacterEntities.length).toEqual(1);
+        data.dungeonCharacterEntities.forEach((dungeonCharacterEntity) => {
             expect(uuidValidate(dungeonCharacterEntity.id)).toBeTruthy();
             expect(
                 uuidValidate(dungeonCharacterEntity.dungeon_id),

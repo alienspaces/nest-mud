@@ -56,7 +56,7 @@ export class DungeonCharactersController {
         };
 
         const dungeonCharacterEntity =
-            await this.dungeonCharacterService.createCharacter(
+            await this.dungeonCharacterService.createDungeonCharacter(
                 CreateDungeonCharacterEntity,
             );
 
@@ -98,7 +98,7 @@ export class DungeonCharactersController {
         logger.debug('Updating character');
 
         let dungeonCharacterEntity: DungeonCharacterEntity =
-            await this.dungeonCharacterService.getCharacter(id);
+            await this.dungeonCharacterService.getDungeonCharacter(id);
 
         if (!dungeonCharacterEntity) {
             throw new NotFoundException();
@@ -121,7 +121,7 @@ export class DungeonCharactersController {
         };
 
         dungeonCharacterEntity =
-            await this.dungeonCharacterService.updateCharacter(
+            await this.dungeonCharacterService.updateDungeonCharacter(
                 UpdateDungeonCharacterEntity,
             );
 
