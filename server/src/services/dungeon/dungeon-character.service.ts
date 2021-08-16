@@ -13,7 +13,6 @@ import {
     UpdateDungeonCharacterEntity,
     DungeonCharacterEntity,
 } from './dungeon-character.entities';
-import { UpdateDungeonCharacterDto } from '@/controllers/dungeon-character/dto';
 
 const defaultCoin = 100;
 const defaultExperience = 0;

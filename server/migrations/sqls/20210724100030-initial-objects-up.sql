@@ -44,7 +44,7 @@ CREATE TABLE "dungeon_location" (
   CONSTRAINT dungeon_location_down_location_id_fk FOREIGN KEY (down_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED
 );
 
--- table character
+-- table dungeon_character
 CREATE TABLE "dungeon_character" (
   "id"                   uuid CONSTRAINT dungeon_character_pk PRIMARY KEY DEFAULT gen_random_uuid(),
   "dungeon_id"           uuid NOT NULL,
@@ -60,5 +60,23 @@ CREATE TABLE "dungeon_character" (
   "deleted_at"           timestamp WITH TIME ZONE,
   CONSTRAINT "dungeon_character_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
   CONSTRAINT "dungeon_character_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id)
+);
+
+-- table dungeon_character_action
+CREATE TABLE "dungeon_character_action" (
+  "id"                   uuid CONSTRAINT dungeon_character_action_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_id"           uuid NOT NULL,
+  "dungeon_location_id"  uuid NOT NULL,
+  "dungeon_character_id" uuid NOT NULL,
+  "serial_id"            SERIAL,
+  "action"               text NOT NULL,
+  "action_target"        text NOT NULL,
+  "action_result"        text NOT NULL,
+  "created_at"           timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"           timestamp WITH TIME ZONE,
+  "deleted_at"           timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_character_action_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
+  CONSTRAINT "dungeon_character_action_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id),
+  CONSTRAINT "dungeon_character_action_dungeon_character_id_fk" FOREIGN KEY (dungeon_character_id) REFERENCES dungeon_character(id)
 );
 

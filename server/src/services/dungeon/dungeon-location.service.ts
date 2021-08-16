@@ -4,8 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@/core';
 import {
     DungeonRepository,
-    DungeonRepositoryRecord,
-    DungeonRepositoryParameter,
     DungeonLocationRepository,
     DungeonLocationRepositoryRecord,
     DungeonLocationRepositoryParameter,
@@ -36,7 +34,6 @@ export interface DungeonLocationParameters {
 export class DungeonLocationService {
     constructor(
         private loggerService: LoggerService,
-        private dungeonRepository: DungeonRepository,
         private dungeonLocationRepository: DungeonLocationRepository,
     ) {}
 

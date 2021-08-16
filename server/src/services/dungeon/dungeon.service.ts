@@ -6,7 +6,6 @@ import {
     DungeonRepository,
     DungeonRepositoryRecord,
     DungeonRepositoryParameter,
-    DungeonLocationRepository,
 } from '@/repositories';
 
 import {

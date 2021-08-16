@@ -54,8 +54,11 @@ class Main {
             // Generate repository source
             const output = sqlts.fromObject(tableDefinitions, tableConfig);
 
-            const fileName = `${tableName.replace('_', '-')}.repository.ts`;
-            const directory = `src/repositories/${tableName.replace('_', '-')}`;
+            const fileName = `${tableName.replace(/_/g, '-')}.repository.ts`;
+            const directory = `src/repositories/${tableName.replace(
+                /_/g,
+                '-',
+            )}`;
             if (!fs.existsSync(directory)) {
                 fs.mkdirSync(directory);
             }
@@ -88,13 +91,13 @@ class Main {
         var compiledTemplate = Handlebars.compile(template);
         var result = compiledTemplate(tableDefinitions);
 
-        const fileName = `${tableName.replace('_', '-')}.repository.spec.ts`;
-        const directory = `src/repositories/${tableName.replace('_', '-')}`;
+        const fileName = `${tableName.replace(/_/g, '-')}.repository.spec.ts`;
+        const directory = `src/repositories/${tableName.replace(/_/g, '-')}`;
         const outFile = path.join(directory, fileName);
 
         var result = result.replace(
             `${tableName}.repository`,
-            `${tableName.replace('_', '-')}.repository`,
+            `${tableName.replace(/_/g, '-')}.repository`,
         );
 
         logger.debug(`Writing spec ${outFile}`);
