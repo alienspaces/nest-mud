@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
-import { DungeonCharacterService } from './dungeon_character.service';
+import { DungeonCharacterService } from './dungeon-character.service';
 import { DungeonService } from '@/services';
 import { RepositoriesModule } from '@/repositories';
 

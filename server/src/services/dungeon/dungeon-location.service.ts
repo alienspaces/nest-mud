@@ -15,7 +15,7 @@ import {
     CreateDungeonLocationEntity,
     UpdateDungeonLocationEntity,
     DungeonLocationEntity,
-} from './dungeon_location.entities';
+} from './dungeon-location.entities';
 
 export interface DungeonLocationParameters {
     name?: string;

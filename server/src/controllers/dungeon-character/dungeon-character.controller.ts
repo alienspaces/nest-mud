@@ -17,8 +17,8 @@ import {
     UpdateDungeonCharacterEntity,
     DungeonCharacterEntity,
 } from '@/services';
-import * as createCharacterSchema from './schema/create_dungeon_character.schema.json';
-import * as updateCharacterSchema from './schema/update_dungeon_character.schema.json';
+import * as createCharacterSchema from './schema/create-dungeon-character.schema.json';
+import * as updateCharacterSchema from './schema/update-dungeon-character.schema.json';
 import {
     CreateDungeonCharacterDto,
     UpdateDungeonCharacterDto,

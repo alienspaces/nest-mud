@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
-import { DungeonLocationService } from './dungeon_location.service';
+import { DungeonLocationService } from './dungeon-location.service';
 import { RepositoriesModule } from '@/repositories';
 
 describe('DungeonLocationService', () => {

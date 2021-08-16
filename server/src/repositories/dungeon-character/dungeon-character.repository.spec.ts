@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule } from '@/core';
-import { DungeonCharacterRepositoryRecord, DungeonCharacterRepository } from './dungeon_character.repository';
+import { DungeonCharacterRepositoryRecord, DungeonCharacterRepository } from './dungeon-character.repository';
 
 describe('DungeonCharacterRepository', () => {
     let repository: DungeonCharacterRepository;

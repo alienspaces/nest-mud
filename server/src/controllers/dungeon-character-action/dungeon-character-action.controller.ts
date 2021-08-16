@@ -4,6 +4,6 @@ import { Controller } from '@nestjs/common';
 import { ActionService } from '@/services/action/action.service';
 
 @Controller('/api/v1/dungeons/:dungeon_id/characters/:character_id/actions')
-export class ActionsController {
+export class DungeonCharacterActionController {
     constructor(private actionsService: ActionService) {}
 }

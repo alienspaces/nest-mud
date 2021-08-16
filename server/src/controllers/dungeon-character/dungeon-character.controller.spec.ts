@@ -13,7 +13,7 @@ import {
 } from '@/common/data';
 import { DungeonCharacterService, ServicesModule } from '@/services';
 import { DungeonCharacterDto } from './dto';
-import { DungeonCharactersController } from './dungeon_characters.controller';
+import { DungeonCharactersController } from './dungeon-character.controller';
 
 describe('DungeonCharactersController', () => {
     let controller: DungeonCharactersController;

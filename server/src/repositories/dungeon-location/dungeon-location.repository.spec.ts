@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule } from '@/core';
-import { DungeonLocationRepositoryRecord, DungeonLocationRepository } from './dungeon_location.repository';
+import { DungeonLocationRepositoryRecord, DungeonLocationRepository } from './dungeon-location.repository';
 
 describe('DungeonLocationRepository', () => {
     let repository: DungeonLocationRepository;

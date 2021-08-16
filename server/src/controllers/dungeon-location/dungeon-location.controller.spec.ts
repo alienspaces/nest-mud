@@ -6,7 +6,7 @@ import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { ServicesModule } from '@/services';
 import { Data, DataService, defaultDataConfig } from '@/common/data';
 
-import { DungeonLocationsController } from './dungeon_locations.controller';
+import { DungeonLocationsController } from './dungeon-location.controller';
 import { RepositoriesModule } from '@/repositories';
 
 describe('DungeonLocationsController', () => {

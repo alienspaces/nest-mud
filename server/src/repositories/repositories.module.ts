@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 // Application
 import { DatabaseModule, LoggerModule } from '@/core';
 import { DungeonRepository } from './dungeon/dungeon.repository';
-import { DungeonLocationRepository } from './dungeon_location/dungeon_location.repository';
-import { DungeonCharacterRepository } from './dungeon_character/dungeon_character.repository';
+import { DungeonLocationRepository } from './dungeon-location/dungeon-location.repository';
+import { DungeonCharacterRepository } from './dungeon-character/dungeon-character.repository';
 
 @Module({
     imports: [LoggerModule, DatabaseModule],
