@@ -13,11 +13,11 @@ import {
     ColumnConfig,
 } from '@/core';
 
-export interface DungeonCharacterActionRepositoryRecord {
+export interface DungeonMonsterActionRepositoryRecord {
     id?: string;
     dungeon_id: string;
     dungeon_location_id: string;
-    dungeon_character_id: string;
+    dungeon_monster_id: string;
     serial_id?: number;
     action: string;
     action_result: string;
@@ -31,16 +31,16 @@ export interface DungeonCharacterActionRepositoryRecord {
     deleted_at?: Date;
 }
 
-export interface DungeonCharacterActionRepositoryParameter
-    extends RepositoryParameter<DungeonCharacterActionRepositoryRecord> {}
+export interface DungeonMonsterActionRepositoryParameter
+    extends RepositoryParameter<DungeonMonsterActionRepositoryRecord> {}
 
 @Injectable()
-export class DungeonCharacterActionRepository extends Repository<DungeonCharacterActionRepositoryRecord> {
+export class DungeonMonsterActionRepository extends Repository<DungeonMonsterActionRepositoryRecord> {
     constructor(
         databaseService: DatabaseService,
         loggerService: LoggerService,
     ) {
-        super(databaseService, loggerService, 'dungeon_character_action', [
+        super(databaseService, loggerService, 'dungeon_monster_action', [
             {
                 name: 'id',
                 isPrimary: true,
@@ -57,7 +57,7 @@ export class DungeonCharacterActionRepository extends Repository<DungeonCharacte
                 isNullable: false,
             },
             {
-                name: 'dungeon_character_id',
+                name: 'dungeon_monster_id',
                 isPrimary: false,
                 isNullable: false,
             },

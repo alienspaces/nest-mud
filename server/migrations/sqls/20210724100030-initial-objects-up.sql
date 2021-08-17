@@ -44,6 +44,19 @@ CREATE TABLE "dungeon_location" (
   CONSTRAINT dungeon_location_down_location_id_fk FOREIGN KEY (down_dungeon_location_id) REFERENCES dungeon_location(id) INITIALLY DEFERRED
 );
 
+-- table dungeon_object
+CREATE TABLE "dungeon_object" (
+  "id"                   uuid CONSTRAINT dungeon_object_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_id"           uuid NOT NULL,
+  "dungeon_location_id"  uuid NOT NULL,
+  "name"                 text NOT NULL,
+  "created_at"           timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"           timestamp WITH TIME ZONE,
+  "deleted_at"           timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_object_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
+  CONSTRAINT "dungeon_object_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id)
+);
+
 -- table dungeon_character
 CREATE TABLE "dungeon_character" (
   "id"                   uuid CONSTRAINT dungeon_character_pk PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -62,21 +75,73 @@ CREATE TABLE "dungeon_character" (
   CONSTRAINT "dungeon_character_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id)
 );
 
--- table dungeon_character_action
-CREATE TABLE "dungeon_character_action" (
-  "id"                   uuid CONSTRAINT dungeon_character_action_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+-- table dungeon_monster
+CREATE TABLE "dungeon_monster" (
+  "id"                   uuid CONSTRAINT dungeon_monster_pk PRIMARY KEY DEFAULT gen_random_uuid(),
   "dungeon_id"           uuid NOT NULL,
   "dungeon_location_id"  uuid NOT NULL,
-  "dungeon_character_id" uuid NOT NULL,
-  "serial_id"            SERIAL,
-  "action"               text NOT NULL,
-  "action_target"        text NOT NULL,
-  "action_result"        text NOT NULL,
+  "name"                 text NOT NULL,
+  "strength"             integer NOT NULL DEFAULT 10,
+  "dexterity"            integer NOT NULL DEFAULT 10,
+  "intelligence"         integer NOT NULL DEFAULT 10,
+  "coin"                 integer NOT NULL DEFAULT 0,
+  "experience"           integer NOT NULL DEFAULT 0,
   "created_at"           timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
   "updated_at"           timestamp WITH TIME ZONE,
   "deleted_at"           timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_monster_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
+  CONSTRAINT "dungeon_monster_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id)
+);
+
+-- table dungeon_character_action
+CREATE TABLE "dungeon_character_action" (
+  "id"                          uuid CONSTRAINT dungeon_character_action_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_id"                  uuid NOT NULL,
+  "dungeon_location_id"         uuid NOT NULL,
+  "dungeon_character_id"        uuid NOT NULL,
+  "serial_id"                   SERIAL,
+  "action"                      text NOT NULL,
+  "action_result"               text NOT NULL,
+  "direction"                   text,
+  "source_dungeon_object_id"    uuid,
+  "target_dungeon_object_id"    uuid,
+  "target_dungeon_character_id" uuid,
+  "target_dungeon_monster_id"   uuid,
+  "created_at"                  timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"                  timestamp WITH TIME ZONE,
+  "deleted_at"                  timestamp WITH TIME ZONE,
   CONSTRAINT "dungeon_character_action_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
   CONSTRAINT "dungeon_character_action_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id),
-  CONSTRAINT "dungeon_character_action_dungeon_character_id_fk" FOREIGN KEY (dungeon_character_id) REFERENCES dungeon_character(id)
+  CONSTRAINT "dungeon_character_action_dungeon_character_id_fk" FOREIGN KEY (dungeon_character_id) REFERENCES dungeon_character(id),
+  CONSTRAINT "dungeon_character_action_source_dungeon_object_id_fk" FOREIGN KEY (source_dungeon_object_id) REFERENCES dungeon_object(id),
+  CONSTRAINT "dungeon_character_action_target_dungeon_object_id_fk" FOREIGN KEY (target_dungeon_object_id) REFERENCES dungeon_object(id),
+  CONSTRAINT "dungeon_character_action_target_dungeon_character_id_fk" FOREIGN KEY (target_dungeon_character_id) REFERENCES dungeon_character(id),
+  CONSTRAINT "dungeon_character_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id)
+);
+
+-- table dungeon_monster_action
+CREATE TABLE "dungeon_monster_action" (
+  "id"                          uuid CONSTRAINT dungeon_monster_action_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_id"                  uuid NOT NULL,
+  "dungeon_location_id"         uuid NOT NULL,
+  "dungeon_monster_id"          uuid NOT NULL,
+  "serial_id"                   SERIAL,
+  "action"                      text NOT NULL,
+  "action_result"               text NOT NULL,
+  "direction"                   text,
+  "source_dungeon_object_id"    uuid,
+  "target_dungeon_object_id"    uuid,
+  "target_dungeon_character_id" uuid,
+  "target_dungeon_monster_id"   uuid,
+  "created_at"                  timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"                  timestamp WITH TIME ZONE,
+  "deleted_at"                  timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_monster_action_dungeon_id_fk" FOREIGN KEY (dungeon_id) REFERENCES dungeon(id),
+  CONSTRAINT "dungeon_monster_action_dungeon_location_id_fk" FOREIGN KEY (dungeon_location_id) REFERENCES dungeon_location(id),
+  CONSTRAINT "dungeon_monster_action_dungeon_monster_id_fk" FOREIGN KEY (dungeon_monster_id) REFERENCES dungeon_monster(id),
+  CONSTRAINT "dungeon_monster_action_source_dungeon_object_id_fk" FOREIGN KEY (source_dungeon_object_id) REFERENCES dungeon_object(id),
+  CONSTRAINT "dungeon_monster_action_target_dungeon_object_id_fk" FOREIGN KEY (target_dungeon_object_id) REFERENCES dungeon_object(id),
+  CONSTRAINT "dungeon_monster_action_target_dungeon_character_id_fk" FOREIGN KEY (target_dungeon_character_id) REFERENCES dungeon_character(id),
+  CONSTRAINT "dungeon_monster_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id)
 );
 

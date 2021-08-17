@@ -13,34 +13,31 @@ import {
     ColumnConfig,
 } from '@/core';
 
-export interface DungeonCharacterActionRepositoryRecord {
+export interface DungeonMonsterRepositoryRecord {
     id?: string;
     dungeon_id: string;
     dungeon_location_id: string;
-    dungeon_character_id: string;
-    serial_id?: number;
-    action: string;
-    action_result: string;
-    direction?: string;
-    source_dungeon_object_id?: string;
-    target_dungeon_object_id?: string;
-    target_dungeon_character_id?: string;
-    target_dungeon_monster_id?: string;
+    name: string;
+    strength?: number;
+    dexterity?: number;
+    intelligence?: number;
+    coin?: number;
+    experience?: number;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
 }
 
-export interface DungeonCharacterActionRepositoryParameter
-    extends RepositoryParameter<DungeonCharacterActionRepositoryRecord> {}
+export interface DungeonMonsterRepositoryParameter
+    extends RepositoryParameter<DungeonMonsterRepositoryRecord> {}
 
 @Injectable()
-export class DungeonCharacterActionRepository extends Repository<DungeonCharacterActionRepositoryRecord> {
+export class DungeonMonsterRepository extends Repository<DungeonMonsterRepositoryRecord> {
     constructor(
         databaseService: DatabaseService,
         loggerService: LoggerService,
     ) {
-        super(databaseService, loggerService, 'dungeon_character_action', [
+        super(databaseService, loggerService, 'dungeon_monster', [
             {
                 name: 'id',
                 isPrimary: true,
@@ -57,49 +54,34 @@ export class DungeonCharacterActionRepository extends Repository<DungeonCharacte
                 isNullable: false,
             },
             {
-                name: 'dungeon_character_id',
+                name: 'name',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'serial_id',
+                name: 'strength',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'action',
+                name: 'dexterity',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'action_result',
+                name: 'intelligence',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'direction',
+                name: 'coin',
                 isPrimary: false,
-                isNullable: true,
+                isNullable: false,
             },
             {
-                name: 'source_dungeon_object_id',
+                name: 'experience',
                 isPrimary: false,
-                isNullable: true,
-            },
-            {
-                name: 'target_dungeon_object_id',
-                isPrimary: false,
-                isNullable: true,
-            },
-            {
-                name: 'target_dungeon_character_id',
-                isPrimary: false,
-                isNullable: true,
-            },
-            {
-                name: 'target_dungeon_monster_id',
-                isPrimary: false,
-                isNullable: true,
+                isNullable: false,
             },
             {
                 name: 'created_at',
