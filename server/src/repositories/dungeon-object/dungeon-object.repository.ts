@@ -17,7 +17,13 @@ export interface DungeonObjectRepositoryRecord {
     id?: string;
     dungeon_id: string;
     dungeon_location_id: string;
+    dungeon_character_id: string;
+    dungeon_monster_id: string;
     name: string;
+    description_short: string;
+    description_long: string;
+    is_stashed?: boolean;
+    is_equipped?: boolean;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
@@ -49,7 +55,37 @@ export class DungeonObjectRepository extends Repository<DungeonObjectRepositoryR
                 isNullable: false,
             },
             {
+                name: 'dungeon_character_id',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'dungeon_monster_id',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
                 name: 'name',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'description_short',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'description_long',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'is_stashed',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'is_equipped',
                 isPrimary: false,
                 isNullable: false,
             },

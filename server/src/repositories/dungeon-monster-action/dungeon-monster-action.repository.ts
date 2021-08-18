@@ -22,7 +22,8 @@ export interface DungeonMonsterActionRepositoryRecord {
     action: string;
     action_result: string;
     direction?: string;
-    source_dungeon_object_id?: string;
+    equipped_dungeon_object_id?: string;
+    stashed_dungeon_object_id?: string;
     target_dungeon_object_id?: string;
     target_dungeon_character_id?: string;
     target_dungeon_monster_id?: string;
@@ -82,7 +83,12 @@ export class DungeonMonsterActionRepository extends Repository<DungeonMonsterAct
                 isNullable: true,
             },
             {
-                name: 'source_dungeon_object_id',
+                name: 'equipped_dungeon_object_id',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'stashed_dungeon_object_id',
                 isPrimary: false,
                 isNullable: true,
             },
