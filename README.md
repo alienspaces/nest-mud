@@ -97,4 +97,4 @@ Lots to do, lots to do..
 
 ## Special Note
 
-As I would much prefer to build the backend in Go, I am only going to build limited funtionality into version as a proof of concept and a means of learning nestjs/typescript.
+As I would much prefer to build the backend in [`Go`](https://golang.org/doc/tutorial/getting-started), I am only going to build limited funtionality into this version as a proof of concept and a means of learning [`nestjs`](https://docs.nestjs.com/) and [`TypeScript`](https://www.typescriptlang.org/docs/).
