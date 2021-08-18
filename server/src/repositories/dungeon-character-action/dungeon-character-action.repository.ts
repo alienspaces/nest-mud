@@ -20,13 +20,12 @@ export interface DungeonCharacterActionRepositoryRecord {
     dungeon_character_id: string;
     serial_id?: number;
     action: string;
-    action_result: string;
-    direction?: string;
     equipped_dungeon_object_id?: string;
     stashed_dungeon_object_id?: string;
     target_dungeon_object_id?: string;
     target_dungeon_character_id?: string;
     target_dungeon_monster_id?: string;
+    target_dungeon_location_id?: string;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
@@ -73,16 +72,6 @@ export class DungeonCharacterActionRepository extends Repository<DungeonCharacte
                 isNullable: false,
             },
             {
-                name: 'action_result',
-                isPrimary: false,
-                isNullable: false,
-            },
-            {
-                name: 'direction',
-                isPrimary: false,
-                isNullable: true,
-            },
-            {
                 name: 'equipped_dungeon_object_id',
                 isPrimary: false,
                 isNullable: true,
@@ -104,6 +93,11 @@ export class DungeonCharacterActionRepository extends Repository<DungeonCharacte
             },
             {
                 name: 'target_dungeon_monster_id',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'target_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },

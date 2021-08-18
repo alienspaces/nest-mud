@@ -112,13 +112,12 @@ CREATE TABLE "dungeon_character_action" (
   "dungeon_character_id"        uuid NOT NULL,
   "serial_id"                   SERIAL,
   "action"                      text NOT NULL,
-  "action_result"               text NOT NULL,
-  "direction"                   text,
   "equipped_dungeon_object_id"  uuid,
   "stashed_dungeon_object_id"   uuid,
   "target_dungeon_object_id"    uuid,
   "target_dungeon_character_id" uuid,
   "target_dungeon_monster_id"   uuid,
+  "target_dungeon_location_id"  uuid,
   "created_at"                  timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
   "updated_at"                  timestamp WITH TIME ZONE,
   "deleted_at"                  timestamp WITH TIME ZONE,
@@ -129,7 +128,8 @@ CREATE TABLE "dungeon_character_action" (
   CONSTRAINT "dungeon_character_action_stashed_dungeon_object_id_fk" FOREIGN KEY (stashed_dungeon_object_id) REFERENCES dungeon_object(id),
   CONSTRAINT "dungeon_character_action_target_dungeon_object_id_fk" FOREIGN KEY (target_dungeon_object_id) REFERENCES dungeon_object(id),
   CONSTRAINT "dungeon_character_action_target_dungeon_character_id_fk" FOREIGN KEY (target_dungeon_character_id) REFERENCES dungeon_character(id),
-  CONSTRAINT "dungeon_character_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id)
+  CONSTRAINT "dungeon_character_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id),
+  CONSTRAINT "dungeon_character_action_target_dungeon_location_id_fk" FOREIGN KEY (target_dungeon_location_id) REFERENCES dungeon_location(id)
 );
 
 -- table dungeon_monster_action
@@ -140,13 +140,12 @@ CREATE TABLE "dungeon_monster_action" (
   "dungeon_monster_id"          uuid NOT NULL,
   "serial_id"                   SERIAL,
   "action"                      text NOT NULL,
-  "action_result"               text NOT NULL,
-  "direction"                   text,
   "equipped_dungeon_object_id"  uuid,
   "stashed_dungeon_object_id"   uuid,
   "target_dungeon_object_id"    uuid,
   "target_dungeon_character_id" uuid,
   "target_dungeon_monster_id"   uuid,
+  "target_dungeon_location_id"  uuid,
   "created_at"                  timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
   "updated_at"                  timestamp WITH TIME ZONE,
   "deleted_at"                  timestamp WITH TIME ZONE,
@@ -157,5 +156,6 @@ CREATE TABLE "dungeon_monster_action" (
   CONSTRAINT "dungeon_monster_action_stashed_dungeon_object_id_fk" FOREIGN KEY (stashed_dungeon_object_id) REFERENCES dungeon_object(id),
   CONSTRAINT "dungeon_monster_action_target_dungeon_object_id_fk" FOREIGN KEY (target_dungeon_object_id) REFERENCES dungeon_object(id),
   CONSTRAINT "dungeon_monster_action_target_dungeon_character_id_fk" FOREIGN KEY (target_dungeon_character_id) REFERENCES dungeon_character(id),
-  CONSTRAINT "dungeon_monster_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id)
+  CONSTRAINT "dungeon_monster_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id),
+  CONSTRAINT "dungeon_monster_action_target_dungeon_location_id_fk" FOREIGN KEY (target_dungeon_location_id) REFERENCES dungeon_location(id)
 );
