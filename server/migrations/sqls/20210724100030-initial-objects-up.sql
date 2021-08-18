@@ -129,7 +129,10 @@ CREATE TABLE "dungeon_character_action" (
   CONSTRAINT "dungeon_character_action_target_dungeon_object_id_fk" FOREIGN KEY (target_dungeon_object_id) REFERENCES dungeon_object(id),
   CONSTRAINT "dungeon_character_action_target_dungeon_character_id_fk" FOREIGN KEY (target_dungeon_character_id) REFERENCES dungeon_character(id),
   CONSTRAINT "dungeon_character_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id),
-  CONSTRAINT "dungeon_character_action_target_dungeon_location_id_fk" FOREIGN KEY (target_dungeon_location_id) REFERENCES dungeon_location(id)
+  CONSTRAINT "dungeon_character_action_target_dungeon_location_id_fk" FOREIGN KEY (target_dungeon_location_id) REFERENCES dungeon_location(id),
+  CONSTRAINT "dungeon_character_action_target_ck" CHECK (
+    num_nonnulls(target_dungeon_object_id, target_dungeon_character_id, target_dungeon_monster_id, target_dungeon_location_id) = 1
+  )
 );
 
 -- table dungeon_monster_action
@@ -157,5 +160,8 @@ CREATE TABLE "dungeon_monster_action" (
   CONSTRAINT "dungeon_monster_action_target_dungeon_object_id_fk" FOREIGN KEY (target_dungeon_object_id) REFERENCES dungeon_object(id),
   CONSTRAINT "dungeon_monster_action_target_dungeon_character_id_fk" FOREIGN KEY (target_dungeon_character_id) REFERENCES dungeon_character(id),
   CONSTRAINT "dungeon_monster_action_target_dungeon_monster_id_fk" FOREIGN KEY (target_dungeon_monster_id) REFERENCES dungeon_monster(id),
-  CONSTRAINT "dungeon_monster_action_target_dungeon_location_id_fk" FOREIGN KEY (target_dungeon_location_id) REFERENCES dungeon_location(id)
+  CONSTRAINT "dungeon_monster_action_target_dungeon_location_id_fk" FOREIGN KEY (target_dungeon_location_id) REFERENCES dungeon_location(id),
+  CONSTRAINT "dungeon_monster_action_target_ck" CHECK (
+    num_nonnulls(target_dungeon_object_id, target_dungeon_character_id, target_dungeon_monster_id, target_dungeon_location_id) = 1
+  )
 );
