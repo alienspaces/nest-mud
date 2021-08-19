@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/dungeon.schema.json",
+    "title": "Dungeon",
+    "type": "object",
+    "properties": {
+        "data": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/dungeon" }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "dungeon": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date"
+                }
+            },
+            "required": ["id", "name", "created_at", "deleted_at"]
+        }
+    }
+}

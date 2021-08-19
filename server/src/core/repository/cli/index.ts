@@ -1,18 +1,21 @@
 import * as fs from 'fs';
 import * as path from 'path';
-
-import Handlebars from 'handlebars';
 import sqlts, { Config } from '@rmp135/sql-ts';
-import { LoggerService } from '@/core';
 import { DecoratedDatabase } from '@rmp135/sql-ts/dist/Typings';
+import Handlebars from 'handlebars';
+
+import { LoggerService } from '@/core';
+import { ConfigService } from '@nestjs/config';
+
+const configService = new ConfigService({ ignoreEnvFile: false });
 
 const config: Config = {
     client: 'pg',
     connection: {
-        host: 'localhost',
-        user: 'nest-mud-user',
-        password: 'nest-mud-pass',
-        database: 'nest-mud',
+        host: configService.get<string>('APP_SERVER_DB_HOST'),
+        user: configService.get<string>('APP_SERVER_DB_USER'),
+        password: configService.get<string>('APP_SERVER_DB_PASSWORD'),
+        database: configService.get<string>('APP_SERVER_DB_NAME'),
     },
     template:
         path.resolve(__dirname, '') +
