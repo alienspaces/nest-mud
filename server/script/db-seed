@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+npx ts-node -r tsconfig-paths/register src/common/data/cli;
