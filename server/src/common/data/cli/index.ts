@@ -1,5 +1,6 @@
+import 'os';
 import { NestFactory } from '@nestjs/core';
-import { Module } from '@nestjs/common';
+import { INestApplication, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
@@ -12,6 +13,7 @@ import {
     defaultDataConfig,
 } from '@/common/data';
 import { ServicesModule } from '@/services';
+import { DataConfig } from '../data.config';
 
 @Module({
     imports: [
@@ -27,13 +29,38 @@ import { ServicesModule } from '@/services';
 export class MainModule {}
 
 class Main {
+    loggerService: LoggerService;
+    dataService: DataService;
+
     async run() {
         const app = await NestFactory.create(MainModule);
-        const loggerService = await app.resolve<LoggerService>(LoggerService);
-        const dataService = await app.resolve<DataService>(DataService);
+        this.loggerService = await app.resolve<LoggerService>(LoggerService);
+        this.dataService = await app.resolve<DataService>(DataService);
 
-        const logger = loggerService.logger({ class: 'Main', function: 'run' });
-        logger.info(`Have dataService ${dataService}`);
+        const logger = this.loggerService.logger({
+            class: 'Main',
+            function: 'run',
+        });
+
+        await this.loadData();
+    }
+
+    async loadData() {
+        const logger = this.loggerService.logger({
+            class: 'Main',
+            function: 'loadData',
+        });
+        logger.info('Loading game data..');
+        let config: DataConfig = require('./game.data.json');
+        let data = new Data();
+        await this.dataService.setup(config, data);
+        logger.info('Done!');
+    }
+
+    usage() {
+        console.log();
+        console.log(`USAGE: db-seed load [filename]`);
+        process.exit(1);
     }
 }
 

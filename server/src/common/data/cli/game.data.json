@@ -1,0 +1,42 @@
+{
+    "dungeonConfig": [
+        {
+            "entity": {
+                "name": "Cave"
+            },
+            "defaultDungeonLocationName": "Cave Entrance",
+            "dungeonLocationConfig": [
+                {
+                    "entity": {
+                        "name": "Cave Entrance",
+                        "description": "A large cave entrance."
+                    },
+                    "north_location_name": "Cave Tunnel"
+                },
+                {
+                    "entity": {
+                        "name": "Cave Tunnel",
+                        "description": "A cave tunnel descends into the mountain."
+                    },
+                    "north_location_name": "Cave Room",
+                    "south_location_name": "Cave Entrance"
+                },
+                {
+                    "entity": {
+                        "name": "Cave Room",
+                        "description": "A large cave room."
+                    },
+                    "south_location_name": "Cave Tunnel"
+                }
+            ],
+            "dungeonDungeonCharacterConfig": [
+                {
+                    "entity": {
+                        "name": "Hero"
+                    },
+                    "location_name": "Cave Entrance"
+                }
+            ]
+        }
+    ]
+}
