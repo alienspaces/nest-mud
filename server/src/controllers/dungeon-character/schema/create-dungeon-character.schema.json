@@ -1,14 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://gitlab.com/alienspaces/nest-mud/create_dungeon_character.schema.json",
-    "title": "Create Character",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/create-dungeon-character.schema.json",
+    "title": "Create Dungeon Character",
     "type": "object",
     "properties": {
         "data": {
             "$ref": "#/definitions/data"
         }
     },
-    "required": ["name", "strength", "dexterity", "intelligence"],
+    "required": ["data"],
     "additionalProperties": false,
     "definitions": {
         "data": {

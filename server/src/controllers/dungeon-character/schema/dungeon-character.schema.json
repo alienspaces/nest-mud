@@ -1,17 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://gitlab.com/alienspaces/nest-mud/character.schema.json",
-    "title": "Character",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/dungeon-character.schema.json",
+    "title": "Dungeon Character",
     "type": "object",
     "properties": {
         "data": {
             "type": "array",
-            "items": { "$ref": "#/$defs/character" }
+            "items": { "$ref": "#/$defs/data" }
         }
     },
+    "required": ["data"],
     "additionalProperties": false,
     "$defs": {
-        "character": {
+        "data": {
             "type": "object",
             "properties": {
                 "id": {
@@ -44,7 +45,7 @@
                     "type": "string",
                     "format": "date"
                 },
-                "deleted_at": {
+                "updated_at": {
                     "type": "string",
                     "format": "date"
                 }
@@ -59,7 +60,7 @@
                 "coin",
                 "experience",
                 "created_at",
-                "deleted_at"
+                "updated_at"
             ]
         }
     }

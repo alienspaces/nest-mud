@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://gitlab.com/alienspaces/nest-mud/dungeon.schema.json",
-    "title": "Dungeon",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/dungeon-character-action.schema.json",
+    "title": "Dungeon Character Action",
     "type": "object",
     "properties": {
         "data": {
@@ -19,8 +19,8 @@
                     "type": "string",
                     "format": "uuid"
                 },
-                "name": {
-                    "type": "string"
+                "action": {
+                    "type": "number"
                 },
                 "created_at": {
                     "type": "string",
@@ -31,7 +31,7 @@
                     "format": "date"
                 }
             },
-            "required": ["id", "name", "created_at", "updated_at"]
+            "required": ["id", "action", "created_at", "updated_at"]
         }
     }
 }
