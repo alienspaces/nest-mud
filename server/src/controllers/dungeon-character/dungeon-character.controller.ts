@@ -207,7 +207,7 @@ function buildResponse(
             experience_points: data.experience_points,
             attribute_points: data.attribute_points,
             created_at: data.created_at,
-            updated_at: data.updated_at,
+            updated_at: data.updated_at || undefined,
         });
     });
 

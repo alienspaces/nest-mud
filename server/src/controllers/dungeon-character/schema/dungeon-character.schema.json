@@ -45,10 +45,13 @@
                 "fatigue": {
                     "type": "number"
                 },
-                "coin": {
+                "coins": {
                     "type": "number"
                 },
-                "experience": {
+                "experience_points": {
+                    "type": "number"
+                },
+                "attribute_points": {
                     "type": "number"
                 },
                 "points": {
@@ -56,24 +59,27 @@
                 },
                 "created_at": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date-time"
                 },
                 "updated_at": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date-time"
                 }
             },
             "required": [
                 "id",
-                "location_id",
+                "dungeon_id",
+                "dungeon_location_id",
                 "name",
                 "strength",
                 "dexterity",
                 "intelligence",
-                "coin",
-                "experience",
-                "created_at",
-                "updated_at"
+                "health",
+                "fatigue",
+                "coins",
+                "experience_points",
+                "attribute_points",
+                "created_at"
             ]
         }
     }
