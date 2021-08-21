@@ -1,22 +1,28 @@
-# Nest M.U.D
+# Nest M.U.D - How To Play
 
-A M.U.D (multi user dungeon) with a back end API built with [`nestjs`](https://docs.nestjs.com/) and a front end UI built with [`Flutter`](https://flutter.dev/docs).
+- [Getting Started](README.md)
+- [How to Play](README-HOWTOPLAY.md)
+- [API](README-API.md)
 
-[Getting Started](README.md)
+## Characters
 
-## How To Play
+Characters are created and begin their adventure at the start of a dungeon.
 
-### Characters
-
-Characters are always created and begin their adventure at the start of a dungeon.
-
-### Actions
+## Actions
 
 Characters are controlled with actions that are simple sentences.
 
-#### Movement
+### Movement Actions
 
-Each dungeon location contains available directions to move.
+Character can `move` from one location to another location using the `move [direction]` action.
+
+**Syntax Examples:**
+
+```text
+move north
+move southwest
+move up
+```
 
 Possible directions:
 
@@ -31,8 +37,30 @@ Possible directions:
 - up
 - down
 
-Action Syntax:
+### Look Actions
+
+A character can `look` a direction, at an object, at another character or at a monster that is in the current location.
+
+When a character looks at an object that is not in their possession a brief description of the object will be provided. To look more closely at an object, a character must have the object equipped or stashed in their backpack.
+
+When a character looks a direction a brief description of the location will be provided. To get a more detailed view of a location a character must move into that location.
+
+**Syntax Examples:**
 
 ```text
-move north
+look north
+look chest
+look goblin
+```
+
+### Equip, Stash and Drop Actions
+
+A character may `equip` or `stash` an object into their backpack that is in their current location. A character may also `equip` and object that has been stashed in their backback. Any item that is currently equipped where that item would normally be equipped will be stashed if there is enough room in the characters backpack or dropped if there is not. A character may `drop` any item that is equipped or stashed in their backpack.
+
+**Syntax Examples:**
+
+```text
+equip sword
+stash gold hammer
+drop dragon tongue
 ```

@@ -1,4 +1,8 @@
-# Nest M.U.D
+# Nest M.U.D - Getting Started
+
+- [Getting Started](README.md)
+- [How to Play](README-HOWTOPLAY.md)
+- [API](README-API.md)
 
 A M.U.D (multi user dungeon) with a back end API built with [`nestjs`](https://docs.nestjs.com/) and a front end UI built with [`Flutter`](https://flutter.dev/docs).
 
@@ -23,11 +27,6 @@ Starts a [`postgres`](https://www.postgresql.org/) database in a [`docker`](http
 cd server
 ./script/start
 ```
-
-## Documentation
-
-- [How to Play](README-HOWTOPLAY.md)
-- [API](README-API.md)
 
 ## TODO
 
