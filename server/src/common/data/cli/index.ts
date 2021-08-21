@@ -1,17 +1,12 @@
 import 'os';
 import { NestFactory } from '@nestjs/core';
-import { INestApplication, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { RepositoriesModule } from '@/repositories';
-import {
-    Data,
-    DataModule,
-    DataService,
-    defaultDataConfig,
-} from '@/common/data';
+import { Data, DataModule, DataService } from '@/common/data';
 import { ServicesModule } from '@/services';
 import { DataConfig } from '../data.config';
 

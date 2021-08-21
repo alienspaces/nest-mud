@@ -1,4 +1,5 @@
-// Repositories
+/* istanbul ignore file */
+
 export * from './repositories.module';
 export * from './dungeon/dungeon.repository';
 export * from './dungeon-location/dungeon-location.repository';

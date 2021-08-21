@@ -1,4 +1,5 @@
-// Services
+/* istanbul ignore file */
+
 export * from './services.module';
 export * from './action/action.service';
 export * from './action/action.entities';

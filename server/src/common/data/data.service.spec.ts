@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ContextIdFactory } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { validate as uuidValidate } from 'uuid';
 
