@@ -38,8 +38,40 @@ describe('DungeonCharactersController', () => {
         );
     });
 
-    it('should be defined', () => {
-        expect(controller).toBeDefined();
+    describe('get', () => {
+        it('should get a character', async () => {
+            const service = await module.resolve<DataService>(DataService);
+            const data = new Data();
+            await expect(
+                service.setup(defaultDataConfig(), data),
+            ).resolves.not.toThrow();
+
+            let DungeonCharacterDto: DungeonCharacterDto = await controller.get(
+                data.dungeonEntities[0].id,
+                data.dungeonCharacterEntities[0].id,
+            );
+            expect(DungeonCharacterDto.data).toBeTruthy();
+            expect(DungeonCharacterDto.data.length).toBeGreaterThan(0);
+
+            await expect(service.teardown(data)).resolves.not.toThrow();
+        });
+    });
+
+    describe('getMany', () => {
+        it('should get a character', async () => {
+            const service = await module.resolve<DataService>(DataService);
+            const data = new Data();
+            await expect(
+                service.setup(defaultDataConfig(), data),
+            ).resolves.not.toThrow();
+
+            let DungeonCharacterDto: DungeonCharacterDto =
+                await controller.getMany(data.dungeonEntities[0].id);
+            expect(DungeonCharacterDto.data).toBeTruthy();
+            expect(DungeonCharacterDto.data.length).toBeGreaterThan(0);
+
+            await expect(service.teardown(data)).resolves.not.toThrow();
+        });
     });
 
     describe('create', () => {

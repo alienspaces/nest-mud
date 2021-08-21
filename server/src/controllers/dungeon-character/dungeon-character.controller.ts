@@ -1,5 +1,6 @@
 import {
     Controller,
+    Get,
     Post,
     Put,
     Body,
@@ -31,6 +32,50 @@ export class DungeonCharactersController {
         private loggerService: LoggerService,
         private dungeonCharacterService: DungeonCharacterService,
     ) {}
+
+    @Get()
+    async getMany(
+        @Param('dungeon_id') dungeon_id: string,
+    ): Promise<DungeonCharacterDto> {
+        const characterEntities =
+            await this.dungeonCharacterService.getDungeonCharacters({
+                dungeon_id: dungeon_id,
+            });
+        const responseData = buildResponse(characterEntities);
+        return responseData;
+    }
+
+    @Get('/:character_id')
+    async get(
+        @Param('dungeon_id') dungeon_id: string,
+        @Param('character_id') character_id: string,
+    ): Promise<DungeonCharacterDto> {
+        const logger = this.loggerService.logger({
+            class: 'DungeonCharactersController',
+            function: 'get',
+        });
+
+        logger.debug(
+            `Getting dungeon ID ${dungeon_id} character ID ${character_id}`,
+        );
+
+        const characterEntity =
+            await this.dungeonCharacterService.getDungeonCharacter(
+                character_id,
+            );
+        if (!characterEntity) {
+            logger.error('Failed getting dungeon character entity');
+            throw new NotFoundException();
+        }
+        if (characterEntity.dungeon_id !== dungeon_id) {
+            logger.error(
+                'Dungeon character entity requested does not belong to requested dungeon',
+            );
+            throw new NotFoundException();
+        }
+        const responseData = buildResponse([characterEntity]);
+        return responseData;
+    }
 
     @UsePipes(
         new ValidationPipe(createCharacterSchema.$id, createCharacterSchema),

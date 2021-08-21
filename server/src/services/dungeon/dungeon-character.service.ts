@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import {
     DungeonCharacterRepository,
     DungeonCharacterRepositoryRecord,
+    DungeonCharacterRepositoryParameter,
     DungeonLocationRepository,
     DungeonLocationRepositoryRecord,
 } from '@/repositories';
@@ -14,6 +15,9 @@ import {
     DungeonCharacterEntity,
 } from './dungeon-character.entities';
 
+export interface DungeonCharacterParameters {
+    dungeon_id?: string;
+}
 const defaultCoins = 100;
 const defaultExperiencePoints = 0;
 const defaultAttributePoints = 30;
@@ -29,9 +33,40 @@ export class DungeonCharacterService {
         const characterRecord = await this.dungeonCharacterRepository.getOne({
             id: id,
         });
-        const characterEntity =
+        const dungeonCharacterEntity =
             this.buildDungeonCharacterEntity(characterRecord);
-        return characterEntity;
+        return dungeonCharacterEntity;
+    }
+
+    async getDungeonCharacters(
+        parameters?: DungeonCharacterParameters,
+    ): Promise<DungeonCharacterEntity[]> {
+        // TODO: Can probably write a generic function for this however directly
+        // mapping service parameters to repository parameters is probably not
+        // going to be a consistent pattern..
+        const repositoryParameters: DungeonCharacterRepositoryParameter[] = [];
+        for (var key in parameters) {
+            if (parameters.hasOwnProperty(key)) {
+                repositoryParameters.push({
+                    column: key,
+                    value: parameters[key],
+                } as DungeonCharacterRepositoryParameter);
+            }
+        }
+
+        const dungeonCharacterRecords =
+            await this.dungeonCharacterRepository.getMany({
+                parameters: repositoryParameters,
+            });
+
+        const dungeonCharacterEntities: DungeonCharacterEntity[] = [];
+        dungeonCharacterRecords.forEach((dungeonCharacterRecord) => {
+            dungeonCharacterEntities.push(
+                this.buildDungeonCharacterEntity(dungeonCharacterRecord),
+            );
+        });
+
+        return dungeonCharacterEntities;
     }
 
     async createDungeonCharacter(
@@ -91,9 +126,9 @@ export class DungeonCharacterService {
             record: characterRecord,
         });
 
-        const characterEntity =
+        const dungeonCharacterEntity =
             this.buildDungeonCharacterEntity(characterRecord);
-        return characterEntity;
+        return dungeonCharacterEntity;
     }
 
     async updateDungeonCharacter(
@@ -137,9 +172,9 @@ export class DungeonCharacterService {
             record: characterRecord,
         });
 
-        const characterEntity =
+        const dungeonCharacterEntity =
             this.buildDungeonCharacterEntity(characterRecord);
-        return characterEntity;
+        return dungeonCharacterEntity;
     }
 
     async deleteDungeonCharacter(id: string): Promise<void> {
@@ -162,7 +197,7 @@ export class DungeonCharacterService {
     buildDungeonCharacterEntity(
         characterRecord: DungeonCharacterRepositoryRecord,
     ): DungeonCharacterEntity {
-        const characterEntity: DungeonCharacterEntity = {
+        const dungeonCharacterEntity: DungeonCharacterEntity = {
             id: characterRecord.id,
             dungeon_id: characterRecord.dungeon_id,
             dungeon_location_id: characterRecord.dungeon_location_id,
@@ -179,6 +214,6 @@ export class DungeonCharacterService {
             updated_at: characterRecord.updated_at,
             deleted_at: characterRecord.deleted_at,
         };
-        return characterEntity;
+        return dungeonCharacterEntity;
     }
 }

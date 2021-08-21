@@ -20,7 +20,6 @@ import { DungeonLocationDto } from './dto';
 export class DungeonLocationsController {
     constructor(
         private loggerService: LoggerService,
-        private dungeonService: DungeonService,
         private dungeonLocationService: DungeonLocationService,
     ) {}
 

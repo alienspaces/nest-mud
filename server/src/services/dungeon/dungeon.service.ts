@@ -37,11 +37,10 @@ export class DungeonService {
     async getDungeons(
         parameters?: DungeonParameters,
     ): Promise<DungeonEntity[]> {
-        const repositoryParameters: DungeonRepositoryParameter[] = [];
-
         // TODO: Can probably write a generic function for this however directly
         // mapping service parameters to repository parameters is probably not
         // going to be a consistent pattern..
+        const repositoryParameters: DungeonRepositoryParameter[] = [];
         for (var key in parameters) {
             if (parameters.hasOwnProperty(key)) {
                 console.log(key + ' -> ' + parameters[key]);
