@@ -6,7 +6,7 @@ include:
 stages:
   - test
 
-test_server:
+test-server:
   stage: test
   variables:
     POSTGRES_DB: nest-mud
@@ -24,4 +24,6 @@ test_server:
     - source .env
     - yarn install
     - ./script/db-migrate-up
+    - ./script/db-seed
     - yarn test
+    - yarn test:e2e
