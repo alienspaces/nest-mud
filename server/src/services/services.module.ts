@@ -5,6 +5,7 @@ import { LoggerModule } from '@/core';
 import { DungeonService } from './dungeon/dungeon.service';
 import { DungeonLocationService } from './dungeon/dungeon-location.service';
 import { DungeonCharacterService } from './dungeon/dungeon-character.service';
+import { DungeonCharacterActionService } from './dungeon-character-action/dungeon-character-action.service';
 import { RepositoriesModule } from '@/repositories';
 
 @Module({

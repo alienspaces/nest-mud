@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import * as crypto from 'crypto';
 
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
@@ -10,36 +11,31 @@ import {
     DataService,
     defaultDataConfig,
 } from '@/common/data';
-import { ServicesModule, DungeonCharacterActionService } from '@/services';
-import { DungeonCharacterActionController } from './dungeon-character-action.controller';
+import { ServicesModule } from '@/services/services.module';
+import { DungeonCharacterActionService } from './dungeon-character-action.service';
 
-describe('DungeonCharacterActionController', () => {
-    let controller: DungeonCharacterActionController;
+describe('ActionsService', () => {
+    let service: DungeonCharacterActionService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 ConfigModule.forRoot({ ignoreEnvFile: false }),
-                LoggerModule,
                 DatabaseModule,
-                RepositoriesModule,
+                LoggerModule,
                 ServicesModule,
+                RepositoriesModule,
                 DataModule,
             ],
-            controllers: [DungeonCharacterActionController],
-            providers: [
-                LoggerService,
-                DataService,
-                DungeonCharacterActionService,
-            ],
+            providers: [DungeonCharacterActionService],
         }).compile();
 
-        controller = module.get<DungeonCharacterActionController>(
-            DungeonCharacterActionController,
+        service = module.get<DungeonCharacterActionService>(
+            DungeonCharacterActionService,
         );
     });
 
     it('should be defined', () => {
-        expect(controller).toBeDefined();
+        expect(service).toBeDefined();
     });
 });

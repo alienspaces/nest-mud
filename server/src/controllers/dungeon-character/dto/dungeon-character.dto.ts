@@ -13,6 +13,6 @@ export class DungeonCharacterDto {
         experience_points: number;
         attribute_points: number;
         created_at: Date;
-        updated_at: Date | null;
+        updated_at?: Date;
     }[];
 }

@@ -1,3 +1,3 @@
 /* istanbul ignore file */
 
-export * from './dungeon-character.dto';
+export * from './dungeon.dto';

@@ -50,7 +50,7 @@ export interface DungeonLocationEntity {
     northwest_dungeon_location_id?: string;
     up_dungeon_location_id?: string;
     down_dungeon_location_id?: string;
-    created_at?: Date;
+    created_at: Date;
     updated_at?: Date;
     deleted_at?: Date;
 }
