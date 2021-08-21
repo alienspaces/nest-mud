@@ -11,14 +11,7 @@ import {
 
 // Application
 import { LoggerService } from '@/core';
-import { ValidationPipe } from '@/pipes/validation/validation.pipe';
-import {
-    DungeonService,
-    CreateDungeonEntity,
-    UpdateDungeonEntity,
-    DungeonEntity,
-} from '@/services';
-import * as dungeonSchema from './schema/dungeon.schema.json';
+import { DungeonService, DungeonEntity } from '@/services';
 import { DungeonDto } from './dto';
 
 @Controller('/api/v1/dungeons/')
@@ -72,7 +65,7 @@ function buildResponse(dungeonEntities: DungeonEntity[]): DungeonDto {
             id: data.id,
             name: data.name,
             created_at: data.created_at,
-            updated_at: data.updated_at,
+            updated_at: data.updated_at || undefined,
         });
     });
 

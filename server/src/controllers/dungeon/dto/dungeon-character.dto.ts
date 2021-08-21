@@ -3,6 +3,6 @@ export class DungeonDto {
         id: string;
         name: string;
         created_at: Date;
-        updated_at: Date | null;
+        updated_at?: Date;
     }[];
 }

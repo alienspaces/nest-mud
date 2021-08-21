@@ -3,8 +3,8 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
 // Application
-import { AppModule } from './../src/app.module';
-import { AppService } from './../src/app.service';
+import { AppModule } from '../src/app.module';
+import { AppService } from '../src/app.service';
 import {
     Data,
     DataModule,

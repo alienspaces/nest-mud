@@ -24,6 +24,5 @@ test-server:
     - source .env
     - yarn install
     - ./script/db-migrate-up
-    - ./script/db-seed
     - yarn test
     - yarn test:e2e

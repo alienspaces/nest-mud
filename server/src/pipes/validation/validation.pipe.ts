@@ -5,11 +5,7 @@ import {
     BadRequestException,
 } from '@nestjs/common';
 
-// TODO: Assess https://ajv.js.org/guide/managing-schemas.html
-import Ajv from 'ajv';
-import addFormats from 'ajv-formats';
-const ajv = new Ajv();
-addFormats(ajv);
+import { Schema } from '@/core/schema/schema';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
@@ -19,16 +15,10 @@ export class ValidationPipe implements PipeTransform {
         console.log(`Schema ${this.schemaId}`);
         console.log(`Meta`, metadata);
 
-        let validate = ajv.getSchema(this.schemaId);
-        if (!validate) {
-            console.log('Adding schema', this.schema);
-            ajv.addSchema(this.schema, this.schemaId);
-            validate = ajv.getSchema(this.schemaId)!;
-        }
-
-        if (!validate(value)) {
+        const errors = Schema.validate(this.schemaId, this.schema, value);
+        if (errors) {
             // TODO: Consistent definition and handling of errors
-            console.error('Failed validation', validate.errors);
+            console.error('Failed validation', errors);
             throw new BadRequestException('Validation failed');
         }
 

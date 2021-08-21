@@ -24,14 +24,14 @@
                 },
                 "created_at": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date-time"
                 },
                 "updated_at": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date-time"
                 }
             },
-            "required": ["id", "name", "created_at", "updated_at"]
+            "required": ["id", "name", "created_at"]
         }
     }
 }
