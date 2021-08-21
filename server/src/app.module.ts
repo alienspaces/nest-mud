@@ -14,10 +14,10 @@ import { DungeonCharactersController } from './controllers/dungeon-character/dun
 import { DungeonCharacterActionController } from './controllers/dungeon-character-action/dungeon-character-action.controller';
 import {
     ServicesModule,
-    ActionService,
     DungeonService,
     DungeonLocationService,
     DungeonCharacterService,
+    DungeonCharacterActionService,
 } from '@/services';
 
 @Module({
@@ -40,7 +40,7 @@ import {
         DungeonService,
         DungeonLocationService,
         DungeonCharacterService,
-        ActionService,
+        DungeonCharacterActionService,
     ],
 })
 export class AppModule {}
