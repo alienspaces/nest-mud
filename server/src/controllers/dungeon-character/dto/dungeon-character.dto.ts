@@ -7,8 +7,11 @@ export class DungeonCharacterDto {
         strength: number;
         dexterity: number;
         intelligence: number;
-        coin: number;
-        experience: number;
+        health: number;
+        fatigue: number;
+        coins: number;
+        experience_points: number;
+        attribute_points: number;
         created_at: Date;
         updated_at: Date | null;
     }[];

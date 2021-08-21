@@ -14,9 +14,9 @@ import {
     DungeonCharacterEntity,
 } from './dungeon-character.entities';
 
-const defaultCoin = 100;
-const defaultExperience = 0;
-const maxAttributes = 30;
+const defaultCoins = 100;
+const defaultExperiencePoints = 0;
+const defaultAttributePoints = 30;
 
 @Injectable()
 export class DungeonCharacterService {
@@ -59,10 +59,10 @@ export class DungeonCharacterService {
             CreateDungeonCharacterEntity.strength +
                 CreateDungeonCharacterEntity.dexterity +
                 CreateDungeonCharacterEntity.intelligence >
-            maxAttributes
+            defaultAttributePoints
         ) {
             throw new Error(
-                `New character attributes exceeds allowed maximum of ${maxAttributes}`,
+                `New character attributes exceeds allowed maximum of ${defaultAttributePoints}`,
             );
         }
 
@@ -74,8 +74,17 @@ export class DungeonCharacterService {
             strength: CreateDungeonCharacterEntity.strength,
             dexterity: CreateDungeonCharacterEntity.dexterity,
             intelligence: CreateDungeonCharacterEntity.intelligence,
-            coin: defaultCoin,
-            experience: defaultExperience,
+            health: this.calculateHealth({
+                strength: CreateDungeonCharacterEntity.strength,
+                dexterity: CreateDungeonCharacterEntity.dexterity,
+            }),
+            fatigue: this.calculateFatigue({
+                strength: CreateDungeonCharacterEntity.strength,
+                intelligence: CreateDungeonCharacterEntity.intelligence,
+            }),
+            coins: defaultCoins,
+            experience_points: defaultExperiencePoints,
+            attribute_points: 0,
         };
 
         await this.dungeonCharacterRepository.insertOne({
@@ -88,34 +97,41 @@ export class DungeonCharacterService {
     }
 
     async updateDungeonCharacter(
-        UpdateDungeonCharacterEntity: UpdateDungeonCharacterEntity,
+        updateDungeonCharacterEntity: UpdateDungeonCharacterEntity,
     ): Promise<DungeonCharacterEntity> {
-        // TODO: Move to validation function and calculate max attributes based
-        // on character experience
+        const allowedAttributePoints = this.calculateAttributePoints({
+            experiencePoints: updateDungeonCharacterEntity.experience_points,
+        });
+
         if (
-            UpdateDungeonCharacterEntity.strength +
-                UpdateDungeonCharacterEntity.dexterity +
-                UpdateDungeonCharacterEntity.intelligence >
-            maxAttributes
+            updateDungeonCharacterEntity.strength +
+                updateDungeonCharacterEntity.dexterity +
+                updateDungeonCharacterEntity.intelligence >
+            allowedAttributePoints
         ) {
             throw new Error(
-                `New character attributes exceeds allowed maximum of ${maxAttributes}`,
+                `New character attributes exceeds allowed maximum of ${allowedAttributePoints}`,
             );
         }
 
         const characterRecord = await this.dungeonCharacterRepository.getOne({
-            id: UpdateDungeonCharacterEntity.id,
+            id: updateDungeonCharacterEntity.id,
         });
 
-        characterRecord.name = UpdateDungeonCharacterEntity.name;
+        characterRecord.name = updateDungeonCharacterEntity.name;
         characterRecord.dungeon_location_id =
-            UpdateDungeonCharacterEntity.dungeon_location_id;
-        characterRecord.strength = UpdateDungeonCharacterEntity.strength;
-        characterRecord.dexterity = UpdateDungeonCharacterEntity.dexterity;
+            updateDungeonCharacterEntity.dungeon_location_id;
+        characterRecord.strength = updateDungeonCharacterEntity.strength;
+        characterRecord.dexterity = updateDungeonCharacterEntity.dexterity;
         characterRecord.intelligence =
-            UpdateDungeonCharacterEntity.intelligence;
-        characterRecord.coin = UpdateDungeonCharacterEntity.coin;
-        characterRecord.experience = UpdateDungeonCharacterEntity.experience;
+            updateDungeonCharacterEntity.intelligence;
+        characterRecord.health = updateDungeonCharacterEntity.health;
+        characterRecord.fatigue = updateDungeonCharacterEntity.fatigue;
+        characterRecord.coins = updateDungeonCharacterEntity.coins;
+        characterRecord.experience_points =
+            updateDungeonCharacterEntity.experience_points;
+        characterRecord.attribute_points =
+            updateDungeonCharacterEntity.attribute_points;
 
         await this.dungeonCharacterRepository.updateOne({
             record: characterRecord,
@@ -131,6 +147,18 @@ export class DungeonCharacterService {
         return;
     }
 
+    calculateHealth(args: { strength: number; dexterity: number }): number {
+        return args.strength + args.dexterity * 10;
+    }
+
+    calculateFatigue(args: { strength: number; intelligence: number }): number {
+        return args.strength + args.intelligence * 10;
+    }
+
+    calculateAttributePoints(args: { experiencePoints: number }): number {
+        return defaultAttributePoints + (args.experiencePoints ^ (2 / 100));
+    }
+
     buildDungeonCharacterEntity(
         characterRecord: DungeonCharacterRepositoryRecord,
     ): DungeonCharacterEntity {
@@ -142,8 +170,11 @@ export class DungeonCharacterService {
             strength: characterRecord.strength,
             dexterity: characterRecord.dexterity,
             intelligence: characterRecord.intelligence,
-            coin: characterRecord.coin,
-            experience: characterRecord.experience,
+            health: characterRecord.health,
+            fatigue: characterRecord.fatigue,
+            coins: characterRecord.coins,
+            experience_points: characterRecord.experience_points,
+            attribute_points: characterRecord.attribute_points,
             created_at: characterRecord.created_at,
             updated_at: characterRecord.updated_at,
             deleted_at: characterRecord.deleted_at,

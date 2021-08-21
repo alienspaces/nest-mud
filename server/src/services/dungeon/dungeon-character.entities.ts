@@ -15,8 +15,11 @@ export interface UpdateDungeonCharacterEntity {
     strength: number;
     dexterity: number;
     intelligence: number;
-    coin: number;
-    experience: number;
+    health: number;
+    fatigue: number;
+    coins: number;
+    experience_points: number;
+    attribute_points: number;
 }
 
 export interface DungeonCharacterEntity {
@@ -27,8 +30,11 @@ export interface DungeonCharacterEntity {
     strength: number;
     dexterity: number;
     intelligence: number;
-    coin: number;
-    experience: number;
+    health: number;
+    fatigue: number;
+    coins: number;
+    experience_points: number;
+    attribute_points: number;
     created_at: Date;
     updated_at: Date | null;
     deleted_at: Date | null;

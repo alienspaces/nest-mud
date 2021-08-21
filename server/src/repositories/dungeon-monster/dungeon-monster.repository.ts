@@ -21,8 +21,9 @@ export interface DungeonMonsterRepositoryRecord {
     strength?: number;
     dexterity?: number;
     intelligence?: number;
-    coin?: number;
-    experience?: number;
+    health?: number;
+    fatigue?: number;
+    coins?: number;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
@@ -74,12 +75,17 @@ export class DungeonMonsterRepository extends Repository<DungeonMonsterRepositor
                 isNullable: false,
             },
             {
-                name: 'coin',
+                name: 'health',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'experience',
+                name: 'fatigue',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'coins',
                 isPrimary: false,
                 isNullable: false,
             },

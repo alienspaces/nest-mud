@@ -19,7 +19,11 @@
                     "type": "string",
                     "format": "uuid"
                 },
-                "location_id": {
+                "dungeon_id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "dungeon_location_id": {
                     "type": "string",
                     "format": "uuid"
                 },
@@ -35,10 +39,19 @@
                 "intelligence": {
                     "type": "number"
                 },
+                "health": {
+                    "type": "number"
+                },
+                "fatigue": {
+                    "type": "number"
+                },
                 "coin": {
                     "type": "number"
                 },
                 "experience": {
+                    "type": "number"
+                },
+                "points": {
                     "type": "number"
                 },
                 "created_at": {

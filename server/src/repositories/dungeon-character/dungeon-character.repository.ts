@@ -21,8 +21,11 @@ export interface DungeonCharacterRepositoryRecord {
     strength?: number;
     dexterity?: number;
     intelligence?: number;
-    coin?: number;
-    experience?: number;
+    health?: number;
+    fatigue?: number;
+    coins?: number;
+    experience_points?: number;
+    attribute_points?: number;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
@@ -74,12 +77,27 @@ export class DungeonCharacterRepository extends Repository<DungeonCharacterRepos
                 isNullable: false,
             },
             {
-                name: 'coin',
+                name: 'health',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'experience',
+                name: 'fatigue',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'coins',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'experience_points',
+                isPrimary: false,
+                isNullable: false,
+            },
+            {
+                name: 'attribute_points',
                 isPrimary: false,
                 isNullable: false,
             },
