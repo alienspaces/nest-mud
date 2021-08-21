@@ -16,18 +16,7 @@ import {
 } from './dungeon-location.entities';
 
 export interface DungeonLocationParameters {
-    name?: string;
-    description?: string;
-    default?: boolean;
-    north_location_id?: string;
-    northeast_location_id?: string;
-    east_location_id?: string;
-    southeast_location_id?: string;
-    south_location_id?: string;
-    southwest_location_id?: string;
-    west_location_id?: string;
-    northwest_location_id?: string;
-    up_location_id?: string;
+    dungeon_id?: string;
 }
 
 @Injectable()
@@ -58,7 +47,6 @@ export class DungeonLocationService {
         // going to be a consistent pattern..
         for (var key in parameters) {
             if (parameters.hasOwnProperty(key)) {
-                console.log(key + ' -> ' + parameters[key]);
                 repositoryParameters.push({
                     column: key,
                     value: parameters[key],
@@ -174,7 +162,7 @@ export class DungeonLocationService {
     ): DungeonLocationEntity {
         const dungeonLocationEntity: DungeonLocationEntity = {
             id: dungeonLocationRecord.id,
-            dungeon_id: dungeonLocationRecord.id,
+            dungeon_id: dungeonLocationRecord.dungeon_id,
             name: dungeonLocationRecord.name,
             description: dungeonLocationRecord.description,
             default: dungeonLocationRecord.default,

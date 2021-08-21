@@ -44,6 +44,7 @@ describe('DungeonLocationsController', () => {
             ).resolves.not.toThrow();
 
             let response = await controller.get(
+                data.dungeonEntities[0].id,
                 data.dungeonLocationEntities[0].id,
             );
             expect(response.data).toBeTruthy();
