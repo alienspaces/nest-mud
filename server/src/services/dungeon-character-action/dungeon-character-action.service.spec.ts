@@ -30,7 +30,7 @@ describe('ActionsService', () => {
             providers: [DungeonCharacterActionService],
         }).compile();
 
-        service = module.get<DungeonCharacterActionService>(
+        service = await module.resolve<DungeonCharacterActionService>(
             DungeonCharacterActionService,
         );
     });
