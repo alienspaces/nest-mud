@@ -19,6 +19,7 @@ import {
     DungeonCharacterActionEntity,
 } from './dungeon-character-action.entities';
 
+import { DungeonCharacterActionResolver } from './dungeon-character-action.resolver';
 type Action = {
     action: string;
     dungeon_location_id: string;
@@ -28,13 +29,16 @@ type Action = {
 
 @Injectable()
 export class DungeonCharacterActionService {
+    private resolver: DungeonCharacterActionResolver;
     constructor(
         private dungeonCharacterRepository: DungeonCharacterRepository,
         private dungeonLocationRepository: DungeonLocationRepository,
         private dungeonMonsterRepository: DungeonMonsterRepository,
         private dungeonObjectRepository: DungeonObjectRepository,
         private dungeonCharacterActionRepository: DungeonCharacterActionRepository,
-    ) {}
+    ) {
+        this.resolver = new DungeonCharacterActionResolver();
+    }
 
     async createDungeonCharacterAction(
         createDungeonCharacterActionEntity: CreateDungeonCharacterActionEntity,
@@ -85,7 +89,7 @@ export class DungeonCharacterActionService {
         });
 
         // Resolve action sentence
-        const actionResult = await this.resolveAction(
+        const actionRecord = await this.resolver.resolveAction(
             createDungeonCharacterActionEntity.action,
             {
                 character: characterRecord,
@@ -101,39 +105,5 @@ export class DungeonCharacterActionService {
         // Update dungeon character record
 
         throw new Error('Method not implemented');
-    }
-
-    async resolveAction(
-        action: string,
-        records: {
-            character: DungeonCharacterRepositoryRecord;
-            location: DungeonLocationRepositoryRecord;
-            characters: DungeonCharacterRepositoryRecord[];
-            monsters: DungeonMonsterRepositoryRecord[];
-            objects: DungeonObjectRepositoryRecord[];
-        },
-    ): Promise<Action> {
-        const words = action.split(' ');
-        if (words.length < 2) {
-            throw new Error('Not enough words for an action');
-        }
-        switch (words[0]) {
-            case 'move':
-                //
-                break;
-            case 'look':
-                //
-                break;
-            case 'equip':
-                //
-                break;
-            case 'stash':
-                //
-                break;
-            case 'drop':
-                //
-                break;
-        }
-        return null;
     }
 }
