@@ -100,11 +100,11 @@ export class DungeonCharacterActionService {
             objects: objectRecords,
         };
 
-        this.resolver.resolveAction(
+        const dungeonCharacterActionRecord = this.resolver.resolveAction(
             createDungeonCharacterActionEntity.action,
             records,
         );
-        if (!records.action) {
+        if (!dungeonCharacterActionRecord) {
             throw new Error('Failed to resolve action');
         }
 
