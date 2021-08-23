@@ -19,7 +19,10 @@ import {
     DungeonCharacterActionEntity,
 } from './dungeon-character-action.entities';
 
-import { DungeonCharacterActionResolver } from './dungeon-character-action.resolver';
+import {
+    DungeonCharacterActionResolver,
+    ResolverRecords,
+} from './dungeon-character-action.resolver';
 type Action = {
     action: string;
     dungeon_location_id: string;
@@ -89,16 +92,21 @@ export class DungeonCharacterActionService {
         });
 
         // Resolve action sentence
-        const actionRecord = await this.resolver.resolveAction(
+        const records: ResolverRecords = {
+            character: characterRecord,
+            location: locationRecord,
+            characters: characterRecords,
+            monsters: monsterRecords,
+            objects: objectRecords,
+        };
+
+        this.resolver.resolveAction(
             createDungeonCharacterActionEntity.action,
-            {
-                character: characterRecord,
-                location: locationRecord,
-                characters: characterRecords,
-                monsters: monsterRecords,
-                objects: objectRecords,
-            },
+            records,
         );
+        if (!records.action) {
+            throw new Error('Failed to resolve action');
+        }
 
         // Create dungeon character action record
 

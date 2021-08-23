@@ -8,12 +8,13 @@ import {
 } from '@/repositories';
 import { Resolver } from 'dns';
 
-interface ResolverRecords {
+export interface ResolverRecords {
+    action?: DungeonCharacterActionRepositoryRecord;
     character: DungeonCharacterRepositoryRecord;
     location: DungeonLocationRepositoryRecord;
-    characters: DungeonCharacterRepositoryRecord[];
-    monsters: DungeonMonsterRepositoryRecord[];
-    objects: DungeonObjectRepositoryRecord[];
+    characters?: DungeonCharacterRepositoryRecord[];
+    monsters?: DungeonMonsterRepositoryRecord[];
+    objects?: DungeonObjectRepositoryRecord[];
 }
 
 interface ResolverSentence {
@@ -22,17 +23,7 @@ interface ResolverSentence {
 }
 
 export class DungeonCharacterActionResolver {
-    // const characterActionRecord: DungeonCharacterActionRepositoryRecord = {
-    //     dungeon_id: records.character.dungeon_id,
-    //     dungeon_location_id: records.character.dungeon_location_id,
-    //     dungeon_character_id: records.character.id,
-    //     action: action,
-    // };
-
-    resolveAction(
-        sentence: string,
-        records: ResolverRecords,
-    ): DungeonCharacterActionRepositoryRecord {
+    resolveAction(sentence: string, records: ResolverRecords) {
         const resolved = this.resolveSentence(sentence);
 
         const resolveFuncs = {
@@ -43,11 +34,14 @@ export class DungeonCharacterActionResolver {
             drop: this.resolveDropAction,
         };
 
-        const characterActionRecord = resolveFuncs[resolved.action](
-            resolved.words,
-            records,
-        );
-        return characterActionRecord;
+        records.action = {
+            dungeon_id: records.character.dungeon_id,
+            dungeon_location_id: records.character.dungeon_location_id,
+            dungeon_character_id: records.character.id,
+            action: resolved.action,
+        };
+
+        resolveFuncs[resolved.action](resolved.words, records);
     }
 
     resolveSentence(sentence: string): ResolverSentence {
@@ -67,9 +61,34 @@ export class DungeonCharacterActionResolver {
 
     resolveMoveAction(
         words: string[],
-        records: Resolver,
+        records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
-        return null;
+        if (!words) {
+            // throw?
+            return;
+        }
+
+        const directionMap = {
+            north_dungeon_location_id: 'north',
+            northeast_dungeon_location_id: 'northeast',
+            east_dungeon_location_id: 'east',
+            southeast_dungeon_location_id: 'southeast',
+            south_dungeon_location_id: 'south',
+            southwest_dungeon_location_id: 'southwest',
+            west_dungeon_location_id: 'west',
+            northwest_dungeon_location_id: 'northwest',
+            up_dungeon_location_id: 'up',
+            down_dungeon_location_id: 'down',
+        };
+
+        for (var prop in directionMap) {
+            if (records.location[prop] && words.indexOf[directionMap[prop]]) {
+                records.action.target_dungeon_location_id =
+                    records.location[prop];
+            }
+        }
+
+        return;
     }
 
     resolveLookAction(
