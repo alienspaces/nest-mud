@@ -62,8 +62,10 @@ export class DungeonCharacterActionResolver {
             if (index === -1) {
                 return;
             }
-            resolved.action = findAction;
-            resolved.words = parts.splice(index);
+            resolved = {
+                action: findAction,
+                words: parts.splice(index + 1),
+            };
         });
         return resolved;
     }
