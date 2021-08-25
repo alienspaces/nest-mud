@@ -13,7 +13,7 @@ describe('DungeonCharacterActionResolver', () => {
             name: string;
             sentence: string;
             expectCommand: string;
-            expectWords: string[];
+            expectSentence: string;
         };
 
         const testCases: TestCase[] = [
@@ -21,55 +21,55 @@ describe('DungeonCharacterActionResolver', () => {
                 name: 'should resolve "move north"',
                 sentence: 'move north',
                 expectCommand: 'move',
-                expectWords: ['north'],
+                expectSentence: 'north',
             },
             {
                 name: 'should resolve "move"',
                 sentence: 'move',
                 expectCommand: 'move',
-                expectWords: undefined,
+                expectSentence: undefined,
             },
             {
                 name: 'should resolve "look northeast"',
                 sentence: 'look northeast',
                 expectCommand: 'look',
-                expectWords: ['northeast'],
+                expectSentence: 'northeast',
             },
             {
                 name: 'should resolve "look"',
                 sentence: 'look',
                 expectCommand: 'look',
-                expectWords: undefined,
+                expectSentence: undefined,
             },
             {
                 name: 'should resolve "equip large axe"',
                 sentence: 'equip large axe',
                 expectCommand: 'equip',
-                expectWords: ['large', 'axe'],
+                expectSentence: 'large axe',
             },
             {
                 name: 'should resolve "equip"',
                 sentence: 'equip',
                 expectCommand: 'equip',
-                expectWords: undefined,
+                expectSentence: undefined,
             },
             {
                 name: 'should resolve "stash green mermaid brain"',
                 sentence: 'stash green mermaid brain',
                 expectCommand: 'stash',
-                expectWords: ['large', 'axe'],
+                expectSentence: 'green mermaid brain',
             },
             {
                 name: 'should resolve "stash"',
                 sentence: 'stash',
                 expectCommand: 'stash',
-                expectWords: undefined,
+                expectSentence: undefined,
             },
             {
                 name: 'should not resolve "scratch head"',
                 sentence: 'scratch head',
                 expectCommand: undefined,
-                expectWords: undefined,
+                expectSentence: undefined,
             },
         ];
 
@@ -81,7 +81,9 @@ describe('DungeonCharacterActionResolver', () => {
                 expect(resolverSentence.command).toEqual(
                     testCase.expectCommand,
                 );
-                expect(resolverSentence.words).toEqual(testCase.expectWords);
+                expect(resolverSentence.sentence).toEqual(
+                    testCase.expectSentence,
+                );
             });
         });
     });

@@ -18,7 +18,7 @@ export interface ResolverRecords {
 
 interface ResolverSentence {
     command?: string;
-    words?: string[];
+    sentence?: string;
 }
 
 export class DungeonCharacterActionResolver {
@@ -45,7 +45,7 @@ export class DungeonCharacterActionResolver {
 
         resolveFuncs[resolved.command](
             dungeonCharacterActionRecord,
-            resolved.words,
+            resolved.sentence,
             records,
         );
 
@@ -63,9 +63,9 @@ export class DungeonCharacterActionResolver {
             }
             resolved = {
                 command: findAction,
-                words:
+                sentence:
                     parts.length > index + 1
-                        ? parts.splice(index + 1)
+                        ? parts.splice(index + 1).join(' ')
                         : undefined,
             };
             return true;
