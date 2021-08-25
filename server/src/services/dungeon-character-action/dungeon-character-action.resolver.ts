@@ -6,7 +6,6 @@ import {
     DungeonObjectRepositoryRecord,
     DungeonCharacterActionRepositoryRecord,
 } from '@/repositories';
-import { Resolver } from 'dns';
 
 export interface ResolverRecords {
     character: DungeonCharacterRepositoryRecord;
@@ -36,20 +35,12 @@ export class DungeonCharacterActionResolver {
             drop: this.resolveDropAction,
         };
 
-        let dungeonCharacterActionRecord: Partial<DungeonCharacterActionRepositoryRecord> =
-            {
-                dungeon_id: records.character.dungeon_id,
-                dungeon_location_id: records.character.dungeon_location_id,
-                dungeon_character_id: records.character.id,
-            };
-
-        resolveFuncs[resolved.command](
-            dungeonCharacterActionRecord,
+        const dungeonCharacterActionRecord = resolveFuncs[resolved.command](
             resolved.sentence,
             records,
         );
 
-        return dungeonCharacterActionRecord as DungeonCharacterActionRepositoryRecord;
+        return dungeonCharacterActionRecord;
     }
 
     resolveCommand(sentence: string): ResolverSentence {
@@ -74,8 +65,7 @@ export class DungeonCharacterActionResolver {
     }
 
     resolveMoveAction(
-        dungeonCharacterActionRecord: DungeonCharacterActionRepositoryRecord,
-        words: string[],
+        sentence: string,
         records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
         const directionMap = {
@@ -90,39 +80,79 @@ export class DungeonCharacterActionResolver {
             up_dungeon_location_id: 'up',
             down_dungeon_location_id: 'down',
         };
+
+        let targetDungeonLocationId: string;
+        let action: string;
         for (var prop in directionMap) {
-            if (records.location[prop] && words.indexOf[directionMap[prop]]) {
-                dungeonCharacterActionRecord.target_dungeon_location_id =
-                    records.location[prop];
-                dungeonCharacterActionRecord.action += ` ${directionMap[prop]}`;
+            if (
+                records.location[prop] &&
+                sentence.match(
+                    new RegExp(`\s?${directionMap[prop]}(?![A-Za-z]+)`),
+                )
+            ) {
+                targetDungeonLocationId = records.location[prop];
+                action = `move ${directionMap[prop]}`;
             }
         }
 
-        return null;
+        let dungeonCharacterActionRecord: DungeonCharacterActionRepositoryRecord =
+            {
+                dungeon_id: records.character.dungeon_id,
+                dungeon_location_id: records.character.dungeon_location_id,
+                dungeon_character_id: records.character.id,
+                target_dungeon_location_id: targetDungeonLocationId,
+                action: action,
+            };
+
+        return dungeonCharacterActionRecord;
     }
 
     resolveLookAction(
-        words: string[],
-        records: Resolver,
+        sentence: string,
+        records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
+        let dungeonCharacterActionRecord: Partial<DungeonCharacterActionRepositoryRecord> =
+            {
+                dungeon_id: records.character.dungeon_id,
+                dungeon_location_id: records.character.dungeon_location_id,
+                dungeon_character_id: records.character.id,
+            };
         return null;
     }
     resolveEquipAction(
-        words: string[],
-        records: Resolver,
+        sentence: string,
+        records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
+        let dungeonCharacterActionRecord: Partial<DungeonCharacterActionRepositoryRecord> =
+            {
+                dungeon_id: records.character.dungeon_id,
+                dungeon_location_id: records.character.dungeon_location_id,
+                dungeon_character_id: records.character.id,
+            };
         return null;
     }
     resolveStashAction(
-        words: string[],
-        records: Resolver,
+        sentence: string,
+        records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
+        let dungeonCharacterActionRecord: Partial<DungeonCharacterActionRepositoryRecord> =
+            {
+                dungeon_id: records.character.dungeon_id,
+                dungeon_location_id: records.character.dungeon_location_id,
+                dungeon_character_id: records.character.id,
+            };
         return null;
     }
     resolveDropAction(
-        words: string[],
-        records: Resolver,
+        sentence: string,
+        records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
+        let dungeonCharacterActionRecord: Partial<DungeonCharacterActionRepositoryRecord> =
+            {
+                dungeon_id: records.character.dungeon_id,
+                dungeon_location_id: records.character.dungeon_location_id,
+                dungeon_character_id: records.character.id,
+            };
         return null;
     }
 }
