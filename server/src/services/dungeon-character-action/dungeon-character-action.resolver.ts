@@ -17,7 +17,7 @@ export interface ResolverRecords {
 }
 
 interface ResolverSentence {
-    action: string;
+    command?: string;
     words?: string[];
 }
 
@@ -26,7 +26,7 @@ export class DungeonCharacterActionResolver {
         sentence: string,
         records: ResolverRecords,
     ): DungeonCharacterActionRepositoryRecord {
-        const resolved = this.resolveSentence(sentence);
+        const resolved = this.resolveCommand(sentence);
 
         const resolveFuncs = {
             move: this.resolveMoveAction,
@@ -36,36 +36,39 @@ export class DungeonCharacterActionResolver {
             drop: this.resolveDropAction,
         };
 
-        let dungeonCharacterActionRecord: DungeonCharacterActionRepositoryRecord =
+        let dungeonCharacterActionRecord: Partial<DungeonCharacterActionRepositoryRecord> =
             {
                 dungeon_id: records.character.dungeon_id,
                 dungeon_location_id: records.character.dungeon_location_id,
                 dungeon_character_id: records.character.id,
-                action: resolved.action,
             };
 
-        resolveFuncs[resolved.action](
+        resolveFuncs[resolved.command](
             dungeonCharacterActionRecord,
             resolved.words,
             records,
         );
 
-        return dungeonCharacterActionRecord;
+        return dungeonCharacterActionRecord as DungeonCharacterActionRepositoryRecord;
     }
 
-    resolveSentence(sentence: string): ResolverSentence {
+    resolveCommand(sentence: string): ResolverSentence {
         const parts = sentence.split(' ');
-        let resolved: ResolverSentence;
+        let resolved: ResolverSentence = {};
 
-        ['move', 'look', 'equip', 'stash', 'drop'].forEach((findAction) => {
+        ['move', 'look', 'equip', 'stash', 'drop'].some((findAction) => {
             const index = parts.indexOf(findAction);
             if (index === -1) {
                 return;
             }
             resolved = {
-                action: findAction,
-                words: parts.splice(index + 1),
+                command: findAction,
+                words:
+                    parts.length > index + 1
+                        ? parts.splice(index + 1)
+                        : undefined,
             };
+            return true;
         });
         return resolved;
     }
