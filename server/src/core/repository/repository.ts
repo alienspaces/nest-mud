@@ -25,11 +25,12 @@ export enum RepositoryOperator {
     GreaterThan,
     LessThanEqual,
     GreaterThanEqual,
+    In,
 }
 
 export interface RepositoryParameter<T> {
     column: keyof T;
-    value: any;
+    value: any | any[];
     operator?: RepositoryOperator;
 }
 
@@ -79,17 +80,33 @@ export abstract class Repository<TRecord extends Record> {
         sql += 'WHERE ';
         if (args.parameters.length) {
             let parameterCount = 0;
+            let placeholderCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
                 // TODO: Implement parameter operators
-                sql += `"${parameter.column}" = $${parameterCount}`;
+                if (
+                    parameter.operator === RepositoryOperator.In &&
+                    Array.isArray(parameter.value)
+                ) {
+                    sql += `"${parameter.column}" IN (`;
+                    parameter.value.forEach((value) => {
+                        placeholderCount++;
+                        sql += `$${placeholderCount}, `;
+                        parameterCount++;
+                    });
+                    sql = sql.substring(0, sql.length - 2);
+                    sql += ') ';
+                } else {
+                    placeholderCount++;
+                    sql += `"${parameter.column}" = $${placeholderCount}`;
+                }
                 if (parameterCount <= args.parameters.length) {
                     sql += ' AND ';
                 }
             });
         }
         sql += '"deleted_at" IS NULL';
-        logger.debug(sql);
+        logger.info(sql);
         return sql;
     }
 

@@ -13,6 +13,7 @@ export interface ResolverRecords {
     characters?: DungeonCharacterRepositoryRecord[];
     monsters?: DungeonMonsterRepositoryRecord[];
     objects?: DungeonObjectRepositoryRecord[];
+    locations?: DungeonLocationRepositoryRecord[];
 }
 
 interface ResolverSentence {
@@ -81,8 +82,9 @@ export class DungeonCharacterActionResolver {
             down_dungeon_location_id: 'down',
         };
 
+        let command: string;
         let targetDungeonLocationId: string;
-        let action: string;
+        let targetDungeonLocationDirection: string;
         for (var prop in directionMap) {
             if (
                 records.location[prop] &&
@@ -90,9 +92,21 @@ export class DungeonCharacterActionResolver {
                     new RegExp(`\s?${directionMap[prop]}(?![A-Za-z]+)`),
                 )
             ) {
+                command = 'move';
                 targetDungeonLocationId = records.location[prop];
-                action = `move ${directionMap[prop]}`;
+                targetDungeonLocationDirection = directionMap[prop];
+                break;
             }
+        }
+
+        let targetDungeonLocationName: string;
+        if (targetDungeonLocationId && records.locations) {
+            records.locations.some((location) => {
+                if (location.id === targetDungeonLocationId) {
+                    targetDungeonLocationName = location.name;
+                    return true;
+                }
+            });
         }
 
         let dungeonCharacterActionRecord: DungeonCharacterActionRepositoryRecord =
@@ -100,8 +114,11 @@ export class DungeonCharacterActionResolver {
                 dungeon_id: records.character.dungeon_id,
                 dungeon_location_id: records.character.dungeon_location_id,
                 dungeon_character_id: records.character.id,
+                command: command,
+                target_dungeon_location_direction:
+                    targetDungeonLocationDirection,
+                target_dungeon_location_name: targetDungeonLocationName,
                 target_dungeon_location_id: targetDungeonLocationId,
-                action: action,
             };
 
         return dungeonCharacterActionRecord;

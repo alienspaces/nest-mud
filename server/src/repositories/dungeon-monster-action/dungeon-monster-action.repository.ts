@@ -19,12 +19,19 @@ export interface DungeonMonsterActionRepositoryRecord {
     dungeon_location_id: string;
     dungeon_monster_id: string;
     serial_id?: number;
-    action: string;
+    command: string;
+    equipped_dungeon_object_name?: string;
     equipped_dungeon_object_id?: string;
+    stashed_dungeon_object_name?: string;
     stashed_dungeon_object_id?: string;
+    target_dungeon_object_name?: string;
     target_dungeon_object_id?: string;
+    target_dungeon_character_name?: string;
     target_dungeon_character_id?: string;
+    target_dungeon_monster_name?: string;
     target_dungeon_monster_id?: string;
+    target_dungeon_location_direction?: string;
+    target_dungeon_location_name?: string;
     target_dungeon_location_id?: string;
     created_at?: Date;
     updated_at?: Date;
@@ -67,12 +74,22 @@ export class DungeonMonsterActionRepository extends Repository<DungeonMonsterAct
                 isNullable: false,
             },
             {
-                name: 'action',
+                name: 'command',
                 isPrimary: false,
                 isNullable: false,
             },
             {
+                name: 'equipped_dungeon_object_name',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
                 name: 'equipped_dungeon_object_id',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'stashed_dungeon_object_name',
                 isPrimary: false,
                 isNullable: true,
             },
@@ -82,7 +99,17 @@ export class DungeonMonsterActionRepository extends Repository<DungeonMonsterAct
                 isNullable: true,
             },
             {
+                name: 'target_dungeon_object_name',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
                 name: 'target_dungeon_object_id',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'target_dungeon_character_name',
                 isPrimary: false,
                 isNullable: true,
             },
@@ -92,7 +119,22 @@ export class DungeonMonsterActionRepository extends Repository<DungeonMonsterAct
                 isNullable: true,
             },
             {
+                name: 'target_dungeon_monster_name',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
                 name: 'target_dungeon_monster_id',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'target_dungeon_location_direction',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
+                name: 'target_dungeon_location_name',
                 isPrimary: false,
                 isNullable: true,
             },

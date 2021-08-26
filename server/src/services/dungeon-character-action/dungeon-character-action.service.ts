@@ -23,6 +23,7 @@ import {
     DungeonCharacterActionResolver,
     ResolverRecords,
 } from './dungeon-character-action.resolver';
+import { RepositoryOperator } from '@/core';
 type Action = {
     action: string;
     dungeon_location_id: string;
@@ -91,6 +92,35 @@ export class DungeonCharacterActionService {
             ],
         });
 
+        let locationIds: string[] = [];
+        [
+            'north_dungeon_location_id',
+            'northeast_dungeon_location_id',
+            'east_dungeon_location_id',
+            'southeast_dungeon_location_id',
+            'south_dungeon_location_id',
+            'southwest_dungeon_location_id',
+            'west_dungeon_location_id',
+            'northwest_dungeon_location_id',
+            'up_dungeon_location_id',
+            'down_dungeon_location_id',
+        ].forEach((prop) => {
+            if (locationRecord[prop]) {
+                locationIds.push(locationRecord[prop]);
+            }
+        });
+
+        // Location records
+        const locationRecords = await this.dungeonLocationRepository.getMany({
+            parameters: [
+                {
+                    column: 'id',
+                    value: locationIds,
+                    operator: RepositoryOperator.In,
+                },
+            ],
+        });
+
         // Resolve action sentence
         const records: ResolverRecords = {
             character: characterRecord,
@@ -98,6 +128,7 @@ export class DungeonCharacterActionService {
             characters: characterRecords,
             monsters: monsterRecords,
             objects: objectRecords,
+            locations: locationRecords,
         };
 
         const dungeonCharacterActionRecord = this.resolver.resolveAction(
