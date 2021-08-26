@@ -92,7 +92,6 @@ export abstract class Repository<TRecord extends Record> {
                     parameter.value.forEach((value) => {
                         placeholderCount++;
                         sql += `$${placeholderCount}, `;
-                        parameterCount++;
                     });
                     sql = sql.substring(0, sql.length - 2);
                     sql += ') ';
@@ -233,9 +232,16 @@ export abstract class Repository<TRecord extends Record> {
             parameters: args.parameters,
             forUpdate: args.forUpdate,
         });
-        const values = args.parameters.map(
-            (parameter: RepositoryParameter<TRecord>) => parameter.value,
-        );
+        let values: any[] = [];
+        args.parameters.forEach((parameter: RepositoryParameter<TRecord>) => {
+            if (Array.isArray(parameter.value)) {
+                parameter.value.forEach((value) => {
+                    values.push(value);
+                });
+            } else {
+                values.push(parameter.value);
+            }
+        });
         logger.debug(values);
         const result = await client.query(sql, values);
         await this.databaseService.end();

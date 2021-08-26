@@ -162,7 +162,7 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
     });
 
     describe('getMany', () => {
-        it('should return no records', async () => {
+        it('should return no records with operator equal', async () => {
             let resultRecords = await repository.getMany({
                 parameters: [
                     {
@@ -174,7 +174,7 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
             });
             expect(resultRecords.length).toEqual(0);
         });
-        it('should return expected records', async () => {
+        it('should return expected records with operator equal', async () => {
             let resultRecords = await repository.getMany({
                 parameters: [
                     {
@@ -186,8 +186,18 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
             });
             expect(resultRecords.length).toEqual(1);
         });
-
-        // TODO: Test RepositoryOperator.In with getMany!
+        it('should return expected records with array value and operator in', async () => {
+            let resultRecords = await repository.getMany({
+                parameters: [
+                    {
+                        column: 'age',
+                        value: [record.age],
+                        operator: RepositoryOperator.In,
+                    },
+                ],
+            });
+            expect(resultRecords.length).toEqual(1);
+        });
     });
 
     describe('insertOne', () => {
