@@ -83,7 +83,7 @@ export abstract class Repository<TRecord extends Record> {
             let placeholderCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
-                // TODO: Implement parameter operators
+                // TODO: Implement ALL parameter operators
                 if (
                     parameter.operator === RepositoryOperator.In &&
                     Array.isArray(parameter.value)
@@ -106,7 +106,7 @@ export abstract class Repository<TRecord extends Record> {
             });
         }
         sql += '"deleted_at" IS NULL';
-        logger.info(sql);
+        logger.debug(sql);
         return sql;
     }
 

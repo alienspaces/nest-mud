@@ -186,6 +186,8 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
             });
             expect(resultRecords.length).toEqual(1);
         });
+
+        // TODO: Test RepositoryOperator.In with getMany!
     });
 
     describe('insertOne', () => {
