@@ -10,19 +10,19 @@ import {
     DungeonMonsterRepositoryRecord,
     DungeonObjectRepository,
     DungeonObjectRepositoryRecord,
-    DungeonCharacterActionRepository,
-    DungeonCharacterActionRepositoryRecord,
+    DungeonActionRepository,
+    DungeonActionRepositoryRecord,
 } from '@/repositories';
 
 import {
-    CreateDungeonCharacterActionEntity,
-    DungeonCharacterActionEntity,
-} from './dungeon-character-action.entities';
+    CreateDungeonActionEntity,
+    DungeonActionEntity,
+} from './dungeon-action.entities';
 
 import {
     DungeonCharacterActionResolver,
     ResolverRecords,
-} from './dungeon-character-action.resolver';
+} from './dungeon-action.resolver';
 import { RepositoryOperator } from '@/core';
 type Action = {
     action: string;
@@ -39,21 +39,22 @@ export class DungeonCharacterActionService {
         private dungeonLocationRepository: DungeonLocationRepository,
         private dungeonMonsterRepository: DungeonMonsterRepository,
         private dungeonObjectRepository: DungeonObjectRepository,
-        private dungeonCharacterActionRepository: DungeonCharacterActionRepository,
+        private DungeonActionRepository: DungeonActionRepository,
     ) {
         this.resolver = new DungeonCharacterActionResolver();
     }
 
-    async createDungeonCharacterAction(
-        createDungeonCharacterActionEntity: CreateDungeonCharacterActionEntity,
-    ): Promise<DungeonCharacterActionEntity> {
+    async resolveDungeonCharacterAction(
+        dungeonCharacterID: string,
+        sentence: string,
+    ): Promise<CreateDungeonActionEntity> {
         // Character record
         const characterRecord = await this.dungeonCharacterRepository.getOne({
-            id: createDungeonCharacterActionEntity.character_id,
+            id: dungeonCharacterID,
         });
         if (!characterRecord) {
             throw new Error(
-                `Character ${createDungeonCharacterActionEntity.character_id} not found, cannot create dungeon character action`,
+                `Character ${dungeonCharacterID} not found, cannot create dungeon character action`,
             );
         }
 
@@ -131,14 +132,20 @@ export class DungeonCharacterActionService {
             locations: locationRecords,
         };
 
-        const dungeonCharacterActionRecord = this.resolver.resolveAction(
-            createDungeonCharacterActionEntity.action,
+        const createDungeonActionEntity = this.resolver.resolveAction(
+            sentence,
             records,
         );
-        if (!dungeonCharacterActionRecord) {
+        if (!createDungeonActionEntity) {
             throw new Error('Failed to resolve action');
         }
 
+        return createDungeonActionEntity;
+    }
+
+    async createDungeonCharacterAction(
+        createDungeonActionEntity: CreateDungeonActionEntity,
+    ): Promise<DungeonActionEntity> {
         // Create dungeon character action record
 
         // Update dungeon character record

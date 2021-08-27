@@ -14,11 +14,11 @@
         "data": {
             "type": "object",
             "properties": {
-                "action": {
+                "sentence": {
                     "type": "string"
                 }
             },
-            "required": ["action"]
+            "required": ["sentence"]
         }
     }
 }

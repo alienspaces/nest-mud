@@ -187,7 +187,6 @@ export class DungeonLocationService {
                 dungeonLocationRecord.down_dungeon_location_id,
             created_at: dungeonLocationRecord.created_at,
             updated_at: dungeonLocationRecord.updated_at,
-            deleted_at: dungeonLocationRecord.deleted_at,
         };
         return dungeonLocationEntity;
     }

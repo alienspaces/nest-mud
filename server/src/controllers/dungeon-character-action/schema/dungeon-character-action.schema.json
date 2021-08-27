@@ -19,9 +19,6 @@
                     "type": "string",
                     "format": "uuid"
                 },
-                "action": {
-                    "type": "number"
-                },
                 "created_at": {
                     "type": "string",
                     "format": "date"
@@ -31,7 +28,7 @@
                     "format": "date"
                 }
             },
-            "required": ["id", "action", "created_at", "updated_at"]
+            "required": ["id", "sentence", "created_at", "updated_at"]
         }
     }
 }

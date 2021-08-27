@@ -212,7 +212,6 @@ export class DungeonCharacterService {
             attribute_points: characterRecord.attribute_points,
             created_at: characterRecord.created_at,
             updated_at: characterRecord.updated_at,
-            deleted_at: characterRecord.deleted_at,
         };
         return dungeonCharacterEntity;
     }

@@ -7,7 +7,7 @@ import { DungeonLocationRepository } from './dungeon-location/dungeon-location.r
 import { DungeonCharacterRepository } from './dungeon-character/dungeon-character.repository';
 import { DungeonMonsterRepository } from './dungeon-monster/dungeon-monster.repository';
 import { DungeonObjectRepository } from './dungeon-object/dungeon-object.repository';
-import { DungeonCharacterActionRepository } from './dungeon-character-action/dungeon-character-action.repository';
+import { DungeonActionRepository } from './dungeon-action/dungeon-action.repository';
 
 @Module({
     imports: [LoggerModule, DatabaseModule],
@@ -17,7 +17,7 @@ import { DungeonCharacterActionRepository } from './dungeon-character-action/dun
         DungeonCharacterRepository,
         DungeonMonsterRepository,
         DungeonObjectRepository,
-        DungeonCharacterActionRepository,
+        DungeonActionRepository,
     ],
     providers: [
         DungeonRepository,
@@ -25,7 +25,7 @@ import { DungeonCharacterActionRepository } from './dungeon-character-action/dun
         DungeonCharacterRepository,
         DungeonMonsterRepository,
         DungeonObjectRepository,
-        DungeonCharacterActionRepository,
+        DungeonActionRepository,
     ],
 })
 export class RepositoriesModule {}

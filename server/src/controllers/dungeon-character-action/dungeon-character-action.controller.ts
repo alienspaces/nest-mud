@@ -14,8 +14,8 @@ import { LoggerService } from '@/core';
 import { ValidationPipe } from '@/pipes/validation/validation.pipe';
 import {
     DungeonCharacterActionService,
-    CreateDungeonCharacterActionEntity,
-    DungeonCharacterActionEntity,
+    CreateDungeonActionEntity,
+    DungeonActionEntity,
 } from '@/services';
 import * as createDungeonCharacterActionSchema from './schema/create-dungeon-character-action.schema.json';
 import {
@@ -49,34 +49,28 @@ export class DungeonCharacterActionController {
 
         logger.debug('Creating dungeon character action');
 
-        const createDungeonCharacterActionEntity: CreateDungeonCharacterActionEntity =
-            {
-                character_id: character_id,
-                action: requestData.data.action,
-            };
-
-        const dungeonCharacterActionEntity =
-            await this.dungeonCharacterActionService.createDungeonCharacterAction(
-                createDungeonCharacterActionEntity,
+        const createDungeonActionEntity =
+            await this.dungeonCharacterActionService.resolveDungeonCharacterAction(
+                character_id,
+                requestData.data.sentence,
             );
 
-        const responseData: DungeonCharacterActionDto = {
-            data: [
-                {
-                    id: dungeonCharacterActionEntity.id,
-                    action: dungeonCharacterActionEntity.action,
-                    created_at: dungeonCharacterActionEntity.created_at,
-                    updated_at: dungeonCharacterActionEntity.updated_at,
-                },
-            ],
-        };
+        const DungeonActionEntity =
+            await this.dungeonCharacterActionService.createDungeonCharacterAction(
+                createDungeonActionEntity,
+            );
+
+        const responseData = buildResponse(requestData.data.sentence, [
+            DungeonActionEntity,
+        ]);
 
         return responseData;
     }
 }
 
 function buildResponse(
-    dungeonCharacterActionEntities: DungeonCharacterActionEntity[],
+    sentence: string,
+    dungeonCharacterActionEntities: DungeonActionEntity[],
 ): DungeonCharacterActionDto {
     let returnData: DungeonCharacterActionDto;
     if (!dungeonCharacterActionEntities) {
@@ -88,7 +82,6 @@ function buildResponse(
     dungeonCharacterActionEntities.forEach((data) => {
         returnDataCharacterActions.push({
             id: data.id,
-            action: data.action,
             created_at: data.created_at,
             updated_at: data.updated_at || undefined,
         });

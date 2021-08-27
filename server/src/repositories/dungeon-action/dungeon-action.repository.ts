@@ -13,41 +13,42 @@ import {
     ColumnConfig,
 } from '@/core';
 
-export interface DungeonMonsterActionRepositoryRecord {
+export interface DungeonActionRepositoryRecord {
     id?: string;
     dungeon_id: string;
     dungeon_location_id: string;
-    dungeon_monster_id: string;
+    dungeon_character_id?: string;
+    dungeon_monster_id?: string;
     serial_id?: number;
-    command: string;
-    equipped_dungeon_object_name?: string;
-    equipped_dungeon_object_id?: string;
-    stashed_dungeon_object_name?: string;
-    stashed_dungeon_object_id?: string;
-    target_dungeon_object_name?: string;
-    target_dungeon_object_id?: string;
-    target_dungeon_character_name?: string;
-    target_dungeon_character_id?: string;
-    target_dungeon_monster_name?: string;
-    target_dungeon_monster_id?: string;
-    target_dungeon_location_direction?: string;
-    target_dungeon_location_name?: string;
-    target_dungeon_location_id?: string;
+    resolved_command: string;
+    resolved_equipped_dungeon_object_name?: string;
+    resolved_equipped_dungeon_object_id?: string;
+    resolved_stashed_dungeon_object_name?: string;
+    resolved_stashed_dungeon_object_id?: string;
+    resolved_target_dungeon_object_name?: string;
+    resolved_target_dungeon_object_id?: string;
+    resolved_target_dungeon_character_name?: string;
+    resolved_target_dungeon_character_id?: string;
+    resolved_target_dungeon_monster_name?: string;
+    resolved_target_dungeon_monster_id?: string;
+    resolved_target_dungeon_location_direction?: string;
+    resolved_target_dungeon_location_name?: string;
+    resolved_target_dungeon_location_id?: string;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
 }
 
-export interface DungeonMonsterActionRepositoryParameter
-    extends RepositoryParameter<DungeonMonsterActionRepositoryRecord> {}
+export interface DungeonActionRepositoryParameter
+    extends RepositoryParameter<DungeonActionRepositoryRecord> {}
 
 @Injectable()
-export class DungeonMonsterActionRepository extends Repository<DungeonMonsterActionRepositoryRecord> {
+export class DungeonActionRepository extends Repository<DungeonActionRepositoryRecord> {
     constructor(
         databaseService: DatabaseService,
         loggerService: LoggerService,
     ) {
-        super(databaseService, loggerService, 'dungeon_monster_action', [
+        super(databaseService, loggerService, 'dungeon_action', [
             {
                 name: 'id',
                 isPrimary: true,
@@ -64,9 +65,14 @@ export class DungeonMonsterActionRepository extends Repository<DungeonMonsterAct
                 isNullable: false,
             },
             {
+                name: 'dungeon_character_id',
+                isPrimary: false,
+                isNullable: true,
+            },
+            {
                 name: 'dungeon_monster_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'serial_id',
@@ -74,72 +80,72 @@ export class DungeonMonsterActionRepository extends Repository<DungeonMonsterAct
                 isNullable: false,
             },
             {
-                name: 'command',
+                name: 'resolved_command',
                 isPrimary: false,
                 isNullable: false,
             },
             {
-                name: 'equipped_dungeon_object_name',
+                name: 'resolved_equipped_dungeon_object_name',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'equipped_dungeon_object_id',
+                name: 'resolved_equipped_dungeon_object_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'stashed_dungeon_object_name',
+                name: 'resolved_stashed_dungeon_object_name',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'stashed_dungeon_object_id',
+                name: 'resolved_stashed_dungeon_object_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_object_name',
+                name: 'resolved_target_dungeon_object_name',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_object_id',
+                name: 'resolved_target_dungeon_object_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_character_name',
+                name: 'resolved_target_dungeon_character_name',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_character_id',
+                name: 'resolved_target_dungeon_character_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_monster_name',
+                name: 'resolved_target_dungeon_monster_name',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_monster_id',
+                name: 'resolved_target_dungeon_monster_id',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_location_direction',
+                name: 'resolved_target_dungeon_location_direction',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_location_name',
+                name: 'resolved_target_dungeon_location_name',
                 isPrimary: false,
                 isNullable: true,
             },
             {
-                name: 'target_dungeon_location_id',
+                name: 'resolved_target_dungeon_location_id',
                 isPrimary: false,
                 isNullable: true,
             },

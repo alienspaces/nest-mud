@@ -111,7 +111,6 @@ export class DungeonService {
             description: dungeonRecord.description,
             created_at: dungeonRecord.created_at,
             updated_at: dungeonRecord.updated_at,
-            deleted_at: dungeonRecord.deleted_at,
         };
         return dungeonEntity;
     }

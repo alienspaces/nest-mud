@@ -12,7 +12,7 @@ import {
     defaultDataConfig,
 } from '@/common/data';
 import { ServicesModule } from '@/services/services.module';
-import { DungeonCharacterActionService } from './dungeon-character-action.service';
+import { DungeonCharacterActionService } from './dungeon-action.service';
 
 describe('ActionsService', () => {
     let service: DungeonCharacterActionService;

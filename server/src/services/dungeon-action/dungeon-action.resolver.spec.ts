@@ -4,13 +4,13 @@ import * as faker from 'faker';
 import {
     DungeonCharacterActionResolver,
     ResolverRecords,
-} from './dungeon-character-action.resolver';
+} from './dungeon-action.resolver';
 import {
     DungeonCharacterRepositoryRecord,
     DungeonLocationRepositoryRecord,
     DungeonMonsterRepositoryRecord,
     DungeonObjectRepositoryRecord,
-    DungeonCharacterActionRepositoryRecord,
+    DungeonActionRepositoryRecord,
 } from '@/repositories';
 
 describe('DungeonCharacterActionResolver', () => {
@@ -105,7 +105,7 @@ describe('DungeonCharacterActionResolver', () => {
             name: string;
             sentence: string;
             records: ResolverRecords;
-            expectDungeonCharacterActionRecord: DungeonCharacterActionRepositoryRecord;
+            expectDungeonCharacterActionRecord: DungeonActionRepositoryRecord;
         };
 
         const testCases: TestCase[] = [
@@ -144,10 +144,10 @@ describe('DungeonCharacterActionResolver', () => {
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     dungeon_character_id:
                         'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
-                    command: 'move',
-                    target_dungeon_location_direction: 'north',
-                    target_dungeon_location_name: 'Burnt Loungeroom',
-                    target_dungeon_location_id:
+                    resolved_command: 'move',
+                    resolved_target_dungeon_location_direction: 'north',
+                    resolved_target_dungeon_location_name: 'Burnt Loungeroom',
+                    resolved_target_dungeon_location_id:
                         'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                 },
             },
@@ -186,10 +186,10 @@ describe('DungeonCharacterActionResolver', () => {
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     dungeon_character_id:
                         'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
-                    command: 'move',
-                    target_dungeon_location_direction: 'north',
-                    target_dungeon_location_name: 'Pond Room',
-                    target_dungeon_location_id:
+                    resolved_command: 'move',
+                    resolved_target_dungeon_location_direction: 'north',
+                    resolved_target_dungeon_location_name: 'Pond Room',
+                    resolved_target_dungeon_location_id:
                         'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                 },
             },
@@ -218,10 +218,10 @@ describe('DungeonCharacterActionResolver', () => {
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     dungeon_character_id:
                         'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
-                    command: undefined,
-                    target_dungeon_location_direction: undefined,
-                    target_dungeon_location_name: undefined,
-                    target_dungeon_location_id: undefined,
+                    resolved_command: undefined,
+                    resolved_target_dungeon_location_direction: undefined,
+                    resolved_target_dungeon_location_name: undefined,
+                    resolved_target_dungeon_location_id: undefined,
                 },
             },
             {
@@ -269,10 +269,10 @@ describe('DungeonCharacterActionResolver', () => {
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     dungeon_character_id:
                         'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
-                    command: 'move',
-                    target_dungeon_location_direction: 'northeast',
-                    target_dungeon_location_name: 'Dark Corridor',
-                    target_dungeon_location_id:
+                    resolved_command: 'move',
+                    resolved_target_dungeon_location_direction: 'northeast',
+                    resolved_target_dungeon_location_name: 'Dark Corridor',
+                    resolved_target_dungeon_location_id:
                         'e7e17ea8-3104-4198-a3eb-27a4330be0b4',
                 },
             },
