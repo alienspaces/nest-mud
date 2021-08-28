@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://gitlab.com/alienspaces/nest-mud/dungeon-character-action.schema.json",
-    "title": "Dungeon Character Action",
+    "$id": "https://gitlab.com/alienspaces/nest-mud/dungeon-action.schema.json",
+    "title": "Dungeon Action",
     "type": "object",
     "properties": {
         "data": {

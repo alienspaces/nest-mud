@@ -1,4 +1,4 @@
-export class CreateDungeonCharacterActionDto {
+export class CreateDungeonActionDto {
     data: {
         sentence: string;
     };

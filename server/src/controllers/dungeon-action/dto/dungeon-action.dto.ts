@@ -1,4 +1,4 @@
-export class DungeonCharacterActionDto {
+export class DungeonActionDto {
     data: {
         id: string;
         created_at: Date;

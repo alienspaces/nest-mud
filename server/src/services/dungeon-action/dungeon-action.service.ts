@@ -235,6 +235,7 @@ export class DungeonActionService {
             created_at: dungeonActionRecord.created_at,
             updated_at: dungeonActionRecord.updated_at,
         };
+
         return dungeonActionEntity;
     }
 }

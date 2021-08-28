@@ -17,11 +17,8 @@ import {
     CreateDungeonActionEntity,
     DungeonActionEntity,
 } from '@/services';
-import * as createDungeonCharacterActionSchema from './schema/create-dungeon-character-action.schema.json';
-import {
-    CreateDungeonCharacterActionDto,
-    DungeonCharacterActionDto,
-} from './dto';
+import * as createDungeonCharacterActionSchema from './schema/create-dungeon-action.schema.json';
+import { CreateDungeonActionDto, DungeonActionDto } from './dto';
 
 @Controller('/api/v1/dungeons/:dungeon_id/characters/:character_id/actions')
 export class DungeonCharacterActionController {
@@ -40,8 +37,8 @@ export class DungeonCharacterActionController {
     async create(
         @Param('dungeon_id') dungeon_id: string,
         @Param('character_id') character_id: string,
-        @Body() requestData: CreateDungeonCharacterActionDto,
-    ): Promise<DungeonCharacterActionDto> {
+        @Body() requestData: CreateDungeonActionDto,
+    ): Promise<DungeonActionDto> {
         const logger = this.loggerService.logger({
             class: 'DungeonCharacterActionController',
             function: 'create',
@@ -71,13 +68,13 @@ export class DungeonCharacterActionController {
 function buildResponse(
     sentence: string,
     dungeonCharacterActionEntities: DungeonActionEntity[],
-): DungeonCharacterActionDto {
-    let returnData: DungeonCharacterActionDto;
+): DungeonActionDto {
+    let returnData: DungeonActionDto;
     if (!dungeonCharacterActionEntities) {
         return returnData;
     }
 
-    let returnDataCharacterActions: DungeonCharacterActionDto['data'] = [];
+    let returnDataCharacterActions: DungeonActionDto['data'] = [];
 
     dungeonCharacterActionEntities.forEach((data) => {
         returnDataCharacterActions.push({
