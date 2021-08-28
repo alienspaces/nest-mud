@@ -18,6 +18,7 @@ import {
 export interface DungeonCharacterParameters {
     dungeon_id?: string;
 }
+
 const defaultCoins = 100;
 const defaultExperiencePoints = 0;
 const defaultAttributePoints = 30;
@@ -30,19 +31,14 @@ export class DungeonCharacterService {
     ) {}
 
     async getDungeonCharacter(id: string): Promise<DungeonCharacterEntity> {
-        const dungeonCharacterRecord =
-            await this.dungeonCharacterRepository.getOne({
-                id: id,
-            });
-        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(
-            dungeonCharacterRecord,
-        );
+        const dungeonCharacterRecord = await this.dungeonCharacterRepository.getOne({
+            id: id,
+        });
+        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(dungeonCharacterRecord);
         return dungeonCharacterEntity;
     }
 
-    async getDungeonCharacters(
-        parameters?: DungeonCharacterParameters,
-    ): Promise<DungeonCharacterEntity[]> {
+    async getDungeonCharacters(parameters?: DungeonCharacterParameters): Promise<DungeonCharacterEntity[]> {
         // TODO: Can probably write a generic function for this however directly
         // mapping service parameters to repository parameters is probably not
         // going to be a consistent pattern..
@@ -56,16 +52,13 @@ export class DungeonCharacterService {
             }
         }
 
-        const dungeonCharacterRecords =
-            await this.dungeonCharacterRepository.getMany({
-                parameters: repositoryParameters,
-            });
+        const dungeonCharacterRecords = await this.dungeonCharacterRepository.getMany({
+            parameters: repositoryParameters,
+        });
 
         const dungeonCharacterEntities: DungeonCharacterEntity[] = [];
         dungeonCharacterRecords.forEach((dungeonCharacterRecord) => {
-            dungeonCharacterEntities.push(
-                this.buildDungeonCharacterEntity(dungeonCharacterRecord),
-            );
+            dungeonCharacterEntities.push(this.buildDungeonCharacterEntity(dungeonCharacterRecord));
         });
 
         return dungeonCharacterEntities;
@@ -74,20 +67,17 @@ export class DungeonCharacterService {
     async createDungeonCharacter(
         CreateDungeonCharacterEntity: CreateDungeonCharacterEntity,
     ): Promise<DungeonCharacterEntity> {
-        const dungeonLocationRecords =
-            await this.dungeonLocationRepository.getMany({
-                parameters: [
-                    {
-                        column: 'dungeon_id',
-                        value: CreateDungeonCharacterEntity.dungeon_id,
-                    },
-                    { column: 'default', value: true },
-                ],
-            });
+        const dungeonLocationRecords = await this.dungeonLocationRepository.getMany({
+            parameters: [
+                {
+                    column: 'dungeon_id',
+                    value: CreateDungeonCharacterEntity.dungeon_id,
+                },
+                { column: 'default', value: true },
+            ],
+        });
         if (dungeonLocationRecords.length !== 1) {
-            throw new Error(
-                `Dungeon ${CreateDungeonCharacterEntity.dungeon_id} default location record not found`,
-            );
+            throw new Error(`Dungeon ${CreateDungeonCharacterEntity.dungeon_id} default location record not found`);
         }
 
         // TODO: Move to validation function and calculate max attributes based
@@ -98,9 +88,7 @@ export class DungeonCharacterService {
                 CreateDungeonCharacterEntity.intelligence >
             defaultAttributePoints
         ) {
-            throw new Error(
-                `New character attributes exceeds allowed maximum of ${defaultAttributePoints}`,
-            );
+            throw new Error(`New character attributes exceeds allowed maximum of ${defaultAttributePoints}`);
         }
 
         const dungeonCharacterRecord: DungeonCharacterRepositoryRecord = {
@@ -128,9 +116,7 @@ export class DungeonCharacterService {
             record: dungeonCharacterRecord,
         });
 
-        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(
-            dungeonCharacterRecord,
-        );
+        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(dungeonCharacterRecord);
         return dungeonCharacterEntity;
     }
 
@@ -147,39 +133,29 @@ export class DungeonCharacterService {
                 updateDungeonCharacterEntity.intelligence >
             allowedAttributePoints
         ) {
-            throw new Error(
-                `New character attributes exceeds allowed maximum of ${allowedAttributePoints}`,
-            );
+            throw new Error(`New character attributes exceeds allowed maximum of ${allowedAttributePoints}`);
         }
 
-        const dungeonCharacterRecord =
-            await this.dungeonCharacterRepository.getOne({
-                id: updateDungeonCharacterEntity.id,
-            });
+        const dungeonCharacterRecord = await this.dungeonCharacterRepository.getOne({
+            id: updateDungeonCharacterEntity.id,
+        });
 
         dungeonCharacterRecord.name = updateDungeonCharacterEntity.name;
-        dungeonCharacterRecord.dungeon_location_id =
-            updateDungeonCharacterEntity.dungeon_location_id;
+        dungeonCharacterRecord.dungeon_location_id = updateDungeonCharacterEntity.dungeon_location_id;
         dungeonCharacterRecord.strength = updateDungeonCharacterEntity.strength;
-        dungeonCharacterRecord.dexterity =
-            updateDungeonCharacterEntity.dexterity;
-        dungeonCharacterRecord.intelligence =
-            updateDungeonCharacterEntity.intelligence;
+        dungeonCharacterRecord.dexterity = updateDungeonCharacterEntity.dexterity;
+        dungeonCharacterRecord.intelligence = updateDungeonCharacterEntity.intelligence;
         dungeonCharacterRecord.health = updateDungeonCharacterEntity.health;
         dungeonCharacterRecord.fatigue = updateDungeonCharacterEntity.fatigue;
         dungeonCharacterRecord.coins = updateDungeonCharacterEntity.coins;
-        dungeonCharacterRecord.experience_points =
-            updateDungeonCharacterEntity.experience_points;
-        dungeonCharacterRecord.attribute_points =
-            updateDungeonCharacterEntity.attribute_points;
+        dungeonCharacterRecord.experience_points = updateDungeonCharacterEntity.experience_points;
+        dungeonCharacterRecord.attribute_points = updateDungeonCharacterEntity.attribute_points;
 
         await this.dungeonCharacterRepository.updateOne({
             record: dungeonCharacterRecord,
         });
 
-        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(
-            dungeonCharacterRecord,
-        );
+        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(dungeonCharacterRecord);
         return dungeonCharacterEntity;
     }
 
@@ -200,9 +176,7 @@ export class DungeonCharacterService {
         return defaultAttributePoints + (args.experiencePoints ^ (2 / 100));
     }
 
-    buildDungeonCharacterEntity(
-        dungeonCharacterRecord: DungeonCharacterRepositoryRecord,
-    ): DungeonCharacterEntity {
+    buildDungeonCharacterEntity(dungeonCharacterRecord: DungeonCharacterRepositoryRecord): DungeonCharacterEntity {
         const dungeonCharacterEntity: DungeonCharacterEntity = {
             id: dungeonCharacterRecord.id,
             dungeon_id: dungeonCharacterRecord.dungeon_id,

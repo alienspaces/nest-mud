@@ -5,13 +5,7 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import {
-    DatabaseService,
-    LoggerService,
-    Repository,
-    RepositoryParameter,
-    ColumnConfig,
-} from '@/core';
+import { DatabaseService, LoggerService, Repository, RepositoryParameter, ColumnConfig } from '@/core';
 
 export interface DungeonActionRepositoryRecord {
     id?: string;

@@ -4,12 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 // Application
 import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
 import { RepositoriesModule } from '@/repositories';
-import {
-    Data,
-    DataModule,
-    DataService,
-    defaultDataConfig,
-} from '@/common/data';
+import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
 import { DungeonService, ServicesModule } from '@/services';
 import { DungeonController } from './dungeon.controller';
 
@@ -42,13 +37,9 @@ describe('DungeonController', () => {
         it('should get one dungeon', async () => {
             const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await expect(
-                service.setup(defaultDataConfig(), data),
-            ).resolves.not.toThrow();
+            await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
-            let DungeonDto = await controller.getOne(
-                data.dungeonEntities[0].id,
-            );
+            let DungeonDto = await controller.getOne(data.dungeonEntities[0].id);
             expect(DungeonDto.data).toBeTruthy();
             expect(DungeonDto.data.length).toBeGreaterThan(0);
 
@@ -60,9 +51,7 @@ describe('DungeonController', () => {
         it('should get many dungeons', async () => {
             const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await expect(
-                service.setup(defaultDataConfig(), data),
-            ).resolves.not.toThrow();
+            await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
             let DungeonDto = await controller.getMany();
             expect(DungeonDto.data).toBeTruthy();

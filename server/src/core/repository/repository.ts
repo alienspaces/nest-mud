@@ -49,16 +49,11 @@ export abstract class Repository<TRecord extends Record> {
         this.databaseService = databaseService;
         this.table = table;
         this.columns = columns;
-        this.columnNames = this.columns.map(
-            (column: ColumnConfig) => column.name as keyof TRecord,
-        );
-        this.primaryColumnNames = this.columns.reduce(
-            (primaryColumnNames: string[], column: ColumnConfig) => {
-                column.isPrimary ? primaryColumnNames.push(column.name) : null;
-                return primaryColumnNames;
-            },
-            [],
-        );
+        this.columnNames = this.columns.map((column: ColumnConfig) => column.name as keyof TRecord);
+        this.primaryColumnNames = this.columns.reduce((primaryColumnNames: string[], column: ColumnConfig) => {
+            column.isPrimary ? primaryColumnNames.push(column.name) : null;
+            return primaryColumnNames;
+        }, []);
     }
 
     buildSelectSQL<TRecord>(args: {
@@ -84,10 +79,7 @@ export abstract class Repository<TRecord extends Record> {
             args.parameters.forEach((parameter) => {
                 parameterCount++;
                 // TODO: Implement ALL parameter operators
-                if (
-                    parameter.operator === RepositoryOperator.In &&
-                    Array.isArray(parameter.value)
-                ) {
+                if (parameter.operator === RepositoryOperator.In && Array.isArray(parameter.value)) {
                     sql += `"${parameter.column}" IN (`;
                     parameter.value.forEach((value) => {
                         placeholderCount++;
@@ -134,9 +126,7 @@ export abstract class Repository<TRecord extends Record> {
         return sql;
     }
 
-    buildUpdateSQL<TRecord>(args: {
-        parameters?: RepositoryParameter<TRecord>[];
-    }): string {
+    buildUpdateSQL<TRecord>(args: { parameters?: RepositoryParameter<TRecord>[] }): string {
         const logger = this.loggerService.logger({
             function: 'buildUpdateSQL',
         });
@@ -166,9 +156,7 @@ export abstract class Repository<TRecord extends Record> {
         return sql;
     }
 
-    buildDeleteSQL<TRecord>(args: {
-        parameters?: RepositoryParameter<TRecord>[];
-    }): string {
+    buildDeleteSQL<TRecord>(args: { parameters?: RepositoryParameter<TRecord>[] }): string {
         const logger = this.loggerService.logger({
             function: 'buildDeleteSQL',
         });
@@ -220,10 +208,7 @@ export abstract class Repository<TRecord extends Record> {
     }
 
     // getMany - Returns many records or null, optional *any* valid columns as parameters
-    async getMany(args: {
-        parameters?: RepositoryParameter<TRecord>[];
-        forUpdate?: boolean;
-    }): Promise<TRecord[]> {
+    async getMany(args: { parameters?: RepositoryParameter<TRecord>[]; forUpdate?: boolean }): Promise<TRecord[]> {
         const logger = this.loggerService.logger({
             function: 'getMany',
         });
@@ -268,9 +253,7 @@ export abstract class Repository<TRecord extends Record> {
 
         args.record.updated_at = new Date(new Date().toUTCString());
 
-        const values = this.columnNames.map(
-            (columnName: string) => args.record[columnName],
-        );
+        const values = this.columnNames.map((columnName: string) => args.record[columnName]);
         logger.debug(values);
         const result = await client.query(sql, values);
         await this.databaseService.end();
@@ -298,9 +281,7 @@ export abstract class Repository<TRecord extends Record> {
         }
         args.record.created_at = new Date(new Date().toUTCString());
 
-        const values = this.columnNames.map(
-            (columnName: string) => args.record[columnName],
-        );
+        const values = this.columnNames.map((columnName: string) => args.record[columnName]);
         logger.debug(values);
         const result = await client.query(sql, values);
         await this.databaseService.end();

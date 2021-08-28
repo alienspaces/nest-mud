@@ -2,17 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
-import {
-    DungeonRepository,
-    DungeonRepositoryRecord,
-    DungeonRepositoryParameter,
-} from '@/repositories';
+import { DungeonRepository, DungeonRepositoryRecord, DungeonRepositoryParameter } from '@/repositories';
 
-import {
-    CreateDungeonEntity,
-    UpdateDungeonEntity,
-    DungeonEntity,
-} from './dungeon.entities';
+import { CreateDungeonEntity, UpdateDungeonEntity, DungeonEntity } from './dungeon.entities';
 
 export interface DungeonParameters {
     name?: string;
@@ -21,10 +13,7 @@ export interface DungeonParameters {
 
 @Injectable()
 export class DungeonService {
-    constructor(
-        private loggerService: LoggerService,
-        private dungeonRepository: DungeonRepository,
-    ) {}
+    constructor(private loggerService: LoggerService, private dungeonRepository: DungeonRepository) {}
 
     async getDungeon(id: string): Promise<DungeonEntity> {
         const dungeonRecord = await this.dungeonRepository.getOne({
@@ -34,9 +23,7 @@ export class DungeonService {
         return dungeonEntity;
     }
 
-    async getDungeons(
-        parameters?: DungeonParameters,
-    ): Promise<DungeonEntity[]> {
+    async getDungeons(parameters?: DungeonParameters): Promise<DungeonEntity[]> {
         // TODO: Can probably write a generic function for this however directly
         // mapping service parameters to repository parameters is probably not
         // going to be a consistent pattern..
@@ -63,9 +50,7 @@ export class DungeonService {
         return dungeonEntities;
     }
 
-    async createDungeon(
-        createEntity: CreateDungeonEntity,
-    ): Promise<DungeonEntity> {
+    async createDungeon(createEntity: CreateDungeonEntity): Promise<DungeonEntity> {
         const dungeonRecord: DungeonRepositoryRecord = {
             id: createEntity.id || null,
             name: createEntity.name,
@@ -80,9 +65,7 @@ export class DungeonService {
         return dungeonEntity;
     }
 
-    async updateDungeon(
-        updateEntity: UpdateDungeonEntity,
-    ): Promise<DungeonEntity> {
+    async updateDungeon(updateEntity: UpdateDungeonEntity): Promise<DungeonEntity> {
         const dungeonRecord = await this.dungeonRepository.getOne({
             id: updateEntity.id,
         });

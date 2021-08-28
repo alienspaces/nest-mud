@@ -5,22 +5,16 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import {
-    DatabaseService,
-    LoggerService,
-    Repository,
-    RepositoryParameter,
-    ColumnConfig,
-} from '@/core';
+import { DatabaseService, LoggerService, Repository, RepositoryParameter, ColumnConfig } from '@/core';
 
 export interface DungeonObjectRepositoryRecord {
     id?: string;
     dungeon_id: string;
-    dungeon_location_id: string;
-    dungeon_character_id: string;
-    dungeon_monster_id: string;
+    dungeon_location_id?: string;
+    dungeon_character_id?: string;
+    dungeon_monster_id?: string;
     name: string;
-    description_short: string;
+    description: string;
     description_long: string;
     is_stashed?: boolean;
     is_equipped?: boolean;
@@ -52,17 +46,17 @@ export class DungeonObjectRepository extends Repository<DungeonObjectRepositoryR
             {
                 name: 'dungeon_location_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'dungeon_character_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'dungeon_monster_id',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'name',
@@ -70,7 +64,7 @@ export class DungeonObjectRepository extends Repository<DungeonObjectRepositoryR
                 isNullable: false,
             },
             {
-                name: 'description_short',
+                name: 'description',
                 isPrimary: false,
                 isNullable: false,
             },
@@ -82,12 +76,12 @@ export class DungeonObjectRepository extends Repository<DungeonObjectRepositoryR
             {
                 name: 'is_stashed',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'is_equipped',
                 isPrimary: false,
-                isNullable: false,
+                isNullable: true,
             },
             {
                 name: 'created_at',

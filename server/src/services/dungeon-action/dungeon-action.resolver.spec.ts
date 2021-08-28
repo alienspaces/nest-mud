@@ -1,10 +1,7 @@
 import * as faker from 'faker';
 
 // Application
-import {
-    DungeonCharacterActionResolver,
-    ResolverRecords,
-} from './dungeon-action.resolver';
+import { DungeonCharacterActionResolver, ResolverRecords } from './dungeon-action.resolver';
 import {
     DungeonCharacterRepositoryRecord,
     DungeonLocationRepositoryRecord,
@@ -87,15 +84,9 @@ describe('DungeonCharacterActionResolver', () => {
 
         testCases.forEach((testCase) => {
             it(testCase.name, () => {
-                const resolverSentence = resolver.resolveCommand(
-                    testCase.sentence,
-                );
-                expect(resolverSentence.command).toEqual(
-                    testCase.expectCommand,
-                );
-                expect(resolverSentence.sentence).toEqual(
-                    testCase.expectSentence,
-                );
+                const resolverSentence = resolver.resolveCommand(testCase.sentence);
+                expect(resolverSentence.command).toEqual(testCase.expectCommand);
+                expect(resolverSentence.sentence).toEqual(testCase.expectSentence);
             });
         });
     });
@@ -117,16 +108,14 @@ describe('DungeonCharacterActionResolver', () => {
                         id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                         name: faker.name.firstName(),
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
-                        dungeon_location_id:
-                            'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                        dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     },
                     location: {
                         id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                         name: 'Empty Hallway',
                         description: faker.lorem.sentence(),
-                        north_dungeon_location_id:
-                            'ced19f54-8a73-4d33-90ed-b92ea30407bd',
+                        north_dungeon_location_id: 'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                     },
                     locations: [
                         {
@@ -134,21 +123,18 @@ describe('DungeonCharacterActionResolver', () => {
                             dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                             name: 'Burnt Loungeroom',
                             description: faker.lorem.sentence(),
-                            south_dungeon_location_id:
-                                'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                            south_dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         },
                     ],
                 },
                 expectDungeonCharacterActionRecord: {
                     dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
-                    dungeon_character_id:
-                        'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
+                    dungeon_character_id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                     resolved_command: 'move',
                     resolved_target_dungeon_location_direction: 'north',
                     resolved_target_dungeon_location_name: 'Burnt Loungeroom',
-                    resolved_target_dungeon_location_id:
-                        'ced19f54-8a73-4d33-90ed-b92ea30407bd',
+                    resolved_target_dungeon_location_id: 'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                 },
             },
             {
@@ -159,16 +145,14 @@ describe('DungeonCharacterActionResolver', () => {
                         id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                         name: faker.name.firstName(),
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
-                        dungeon_location_id:
-                            'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                        dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     },
                     location: {
                         id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                         name: 'Dank Cavern',
                         description: faker.lorem.sentence(),
-                        north_dungeon_location_id:
-                            'ced19f54-8a73-4d33-90ed-b92ea30407bd',
+                        north_dungeon_location_id: 'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                     },
                     locations: [
                         {
@@ -176,21 +160,18 @@ describe('DungeonCharacterActionResolver', () => {
                             dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                             name: 'Pond Room',
                             description: faker.lorem.sentence(),
-                            south_dungeon_location_id:
-                                'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                            south_dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         },
                     ],
                 },
                 expectDungeonCharacterActionRecord: {
                     dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
-                    dungeon_character_id:
-                        'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
+                    dungeon_character_id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                     resolved_command: 'move',
                     resolved_target_dungeon_location_direction: 'north',
                     resolved_target_dungeon_location_name: 'Pond Room',
-                    resolved_target_dungeon_location_id:
-                        'ced19f54-8a73-4d33-90ed-b92ea30407bd',
+                    resolved_target_dungeon_location_id: 'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                 },
             },
             {
@@ -201,23 +182,20 @@ describe('DungeonCharacterActionResolver', () => {
                         id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                         name: faker.name.firstName(),
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
-                        dungeon_location_id:
-                            'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                        dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     },
                     location: {
                         id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                         name: 'Dark Room',
                         description: faker.lorem.sentence(),
-                        north_dungeon_location_id:
-                            'ced19f54-8a73-4d33-90ed-b92ea30407bd',
+                        north_dungeon_location_id: 'ced19f54-8a73-4d33-90ed-b92ea30407bd',
                     },
                 },
                 expectDungeonCharacterActionRecord: {
                     dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
-                    dungeon_character_id:
-                        'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
+                    dungeon_character_id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                     resolved_command: undefined,
                     resolved_target_dungeon_location_direction: undefined,
                     resolved_target_dungeon_location_name: undefined,
@@ -232,18 +210,15 @@ describe('DungeonCharacterActionResolver', () => {
                         id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                         name: faker.name.firstName(),
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
-                        dungeon_location_id:
-                            'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                        dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                     },
                     location: {
                         id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                         name: 'Dark Room',
                         description: faker.lorem.sentence(),
-                        north_dungeon_location_id:
-                            'ced19f54-8a73-4d33-90ed-b92ea30407bd',
-                        northeast_dungeon_location_id:
-                            'e7e17ea8-3104-4198-a3eb-27a4330be0b4',
+                        north_dungeon_location_id: 'ced19f54-8a73-4d33-90ed-b92ea30407bd',
+                        northeast_dungeon_location_id: 'e7e17ea8-3104-4198-a3eb-27a4330be0b4',
                     },
                     locations: [
                         {
@@ -251,42 +226,33 @@ describe('DungeonCharacterActionResolver', () => {
                             dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                             name: 'Slippery Corridor',
                             description: faker.lorem.sentence(),
-                            south_dungeon_location_id:
-                                'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                            south_dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         },
                         {
                             id: 'e7e17ea8-3104-4198-a3eb-27a4330be0b4',
                             dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                             name: 'Dark Corridor',
                             description: faker.lorem.sentence(),
-                            southwest_dungeon_location_id:
-                                'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
+                            southwest_dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
                         },
                     ],
                 },
                 expectDungeonCharacterActionRecord: {
                     dungeon_id: '6f8b385c-5cae-44a6-bb2f-76d30b660788',
                     dungeon_location_id: 'fb696f4a-fb81-4d6a-a3ef-e6cb8ea3ea47',
-                    dungeon_character_id:
-                        'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
+                    dungeon_character_id: 'ef052d03-c8a5-4d86-b1c5-253ca29d99b9',
                     resolved_command: 'move',
                     resolved_target_dungeon_location_direction: 'northeast',
                     resolved_target_dungeon_location_name: 'Dark Corridor',
-                    resolved_target_dungeon_location_id:
-                        'e7e17ea8-3104-4198-a3eb-27a4330be0b4',
+                    resolved_target_dungeon_location_id: 'e7e17ea8-3104-4198-a3eb-27a4330be0b4',
                 },
             },
         ];
 
         testCases.forEach((testCase) => {
             it(testCase.name, () => {
-                const dungeonCharacterActionRecord = resolver.resolveMoveAction(
-                    testCase.sentence,
-                    testCase.records,
-                );
-                expect(dungeonCharacterActionRecord).toEqual(
-                    testCase.expectDungeonCharacterActionRecord,
-                );
+                const dungeonCharacterActionRecord = resolver.resolveMoveAction(testCase.sentence, testCase.records);
+                expect(dungeonCharacterActionRecord).toEqual(testCase.expectDungeonCharacterActionRecord);
             });
         });
     });

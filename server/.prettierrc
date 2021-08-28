@@ -2,5 +2,6 @@
     "singleQuote": true,
     "trailingComma": "all",
     "tabWidth": 4,
-    "maxWidth": 160
+    "maxWidth": 120,
+    "printWidth": 120
 }

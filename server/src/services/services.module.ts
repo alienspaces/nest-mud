@@ -5,6 +5,8 @@ import { LoggerModule } from '@/core';
 import { DungeonService } from './dungeon/dungeon.service';
 import { DungeonLocationService } from './dungeon-location/dungeon-location.service';
 import { DungeonCharacterService } from './dungeon-character/dungeon-character.service';
+import { DungeonMonsterService } from './dungeon-monster/dungeon-monster.service';
+import { DungeonObjectService } from './dungeon-object/dungeon-object.service';
 import { DungeonActionService } from './dungeon-action/dungeon-action.service';
 import { RepositoriesModule } from '@/repositories';
 
@@ -14,12 +16,16 @@ import { RepositoriesModule } from '@/repositories';
         DungeonService,
         DungeonLocationService,
         DungeonCharacterService,
+        DungeonMonsterService,
+        DungeonObjectService,
         DungeonActionService,
     ],
     providers: [
         DungeonService,
         DungeonLocationService,
         DungeonCharacterService,
+        DungeonMonsterService,
+        DungeonObjectService,
         DungeonActionService,
     ],
 })

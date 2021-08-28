@@ -26,9 +26,7 @@ describe('DungeonLocationsController', () => {
             providers: [LoggerService, DataService],
         }).compile();
 
-        controller = await module.resolve<DungeonLocationsController>(
-            DungeonLocationsController,
-        );
+        controller = await module.resolve<DungeonLocationsController>(DungeonLocationsController);
     });
 
     it('should be defined', () => {
@@ -39,14 +37,9 @@ describe('DungeonLocationsController', () => {
         it('should return one location', async () => {
             const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await expect(
-                service.setup(defaultDataConfig(), data),
-            ).resolves.not.toThrow();
+            await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
-            let response = await controller.get(
-                data.dungeonEntities[0].id,
-                data.dungeonLocationEntities[0].id,
-            );
+            let response = await controller.get(data.dungeonEntities[0].id, data.dungeonLocationEntities[0].id);
             expect(response.data).toBeTruthy();
             expect(response.data.length).toEqual(1);
 

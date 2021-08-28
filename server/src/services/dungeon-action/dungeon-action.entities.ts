@@ -25,6 +25,7 @@ export interface DungeonActionEntity {
     dungeon_location_id: string;
     dungeon_character_id?: string;
     dungeon_monster_id?: string;
+    serial_id: number;
     resolved_command: string;
     resolved_equipped_dungeon_object_name?: string;
     resolved_equipped_dungeon_object_id?: string;

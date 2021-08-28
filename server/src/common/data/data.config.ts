@@ -1,19 +1,25 @@
+import * as crypto from 'crypto';
+
+// Application
 import {
-    DungeonCharacterEntity,
     DungeonEntity,
     DungeonLocationEntity,
+    DungeonCharacterEntity,
+    DungeonMonsterEntity,
+    DungeonObjectEntity,
 } from '@/services';
 
 export interface DungeonConfig {
     entity: Partial<DungeonEntity> & Required<Pick<DungeonEntity, 'name'>>;
     defaultDungeonLocationName: string;
     dungeonLocationConfig?: DungeonLocationConfig[];
-    dungeonDungeonCharacterConfig?: DungeonCharacterConfig[];
+    dungeonCharacterConfig?: DungeonCharacterConfig[];
+    dungeonMonsterConfig?: DungeonMonsterConfig[];
+    dungeonObjectConfig?: DungeonObjectConfig[];
 }
 
 export interface DungeonLocationConfig {
-    entity: Partial<DungeonLocationEntity> &
-        Required<Pick<DungeonLocationEntity, 'name'>>;
+    entity: Partial<DungeonLocationEntity> & Required<Pick<DungeonLocationEntity, 'name'>>;
     north_location_name?: string;
     northeast_location_name?: string;
     east_location_name?: string;
@@ -28,6 +34,16 @@ export interface DungeonLocationConfig {
 
 export interface DungeonCharacterConfig {
     entity: Partial<DungeonCharacterEntity>;
+    location_name: string;
+}
+
+export interface DungeonMonsterConfig {
+    entity: Partial<DungeonMonsterEntity>;
+    location_name: string;
+}
+
+export interface DungeonObjectConfig {
+    entity: Partial<DungeonObjectEntity>;
     location_name: string;
 }
 
@@ -54,8 +70,7 @@ export function defaultDataConfig(): DataConfig {
                     {
                         entity: {
                             name: 'Cave Tunnel',
-                            description:
-                                'A cave tunnel descends into the mountain.',
+                            description: 'A cave tunnel descends into the mountain.',
                         },
                         north_location_name: 'Cave Room',
                         south_location_name: 'Cave Entrance',
@@ -68,12 +83,28 @@ export function defaultDataConfig(): DataConfig {
                         south_location_name: 'Cave Tunnel',
                     },
                 ],
-                dungeonDungeonCharacterConfig: [
+                dungeonCharacterConfig: [
                     {
                         entity: {
-                            name: 'Hero',
+                            name: 'Hero ' + crypto.randomUUID(),
                         },
                         location_name: 'Cave Entrance',
+                    },
+                ],
+                dungeonMonsterConfig: [
+                    {
+                        entity: {
+                            name: 'Kobold ' + crypto.randomUUID(),
+                        },
+                        location_name: 'Cave Tunnel',
+                    },
+                ],
+                dungeonObjectConfig: [
+                    {
+                        entity: {
+                            name: 'Sword ' + crypto.randomUUID(),
+                        },
+                        location_name: 'Cave Room',
                     },
                 ],
             },

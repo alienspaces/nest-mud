@@ -10,11 +10,7 @@ export class LoggerService {
         });
     }
 
-    logger(context: {
-        correlation?: string;
-        class?: string;
-        function?: string;
-    }): pino.Logger {
+    logger(context: { correlation?: string; class?: string; function?: string }): pino.Logger {
         if (context) {
             return this._logger.child(context);
         }

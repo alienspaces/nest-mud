@@ -17,9 +17,7 @@ const config: Config = {
         password: configService.get<string>('APP_SERVER_DB_PASSWORD'),
         database: configService.get<string>('APP_SERVER_DB_NAME'),
     },
-    template:
-        path.resolve(__dirname, '') +
-        '/repository.handlebars'.replace('dist', 'src'),
+    template: path.resolve(__dirname, '') + '/repository.handlebars'.replace('dist', 'src'),
     interfaceNameFormat: '${table}',
     tableNameCasing: 'pascal',
     excludedTables: ['public.migrations'],
@@ -58,10 +56,7 @@ class Main {
             const output = sqlts.fromObject(tableDefinitions, tableConfig);
 
             const fileName = `${tableName.replace(/_/g, '-')}.repository.ts`;
-            const directory = `src/repositories/${tableName.replace(
-                /_/g,
-                '-',
-            )}`;
+            const directory = `src/repositories/${tableName.replace(/_/g, '-')}`;
             if (!fs.existsSync(directory)) {
                 fs.mkdirSync(directory);
             }
@@ -76,17 +71,11 @@ class Main {
     }
 
     loadSpecTemplate(): string {
-        var content = fs.readFileSync(
-            __dirname + '/repository.spec.handlebars',
-        );
+        var content = fs.readFileSync(__dirname + '/repository.spec.handlebars');
         return content.toString();
     }
 
-    writeSpecSource(
-        template: string,
-        tableName: string,
-        tableDefinitions: DecoratedDatabase,
-    ): void {
+    writeSpecSource(template: string, tableName: string, tableDefinitions: DecoratedDatabase): void {
         const logger = loggerService.logger({
             function: 'generateTestSource',
         });
@@ -98,10 +87,7 @@ class Main {
         const directory = `src/repositories/${tableName.replace(/_/g, '-')}`;
         const outFile = path.join(directory, fileName);
 
-        var result = result.replace(
-            `${tableName}.repository`,
-            `${tableName.replace(/_/g, '-')}.repository`,
-        );
+        var result = result.replace(`${tableName}.repository`, `${tableName.replace(/_/g, '-')}.repository`);
 
         logger.debug(`Writing spec ${outFile}`);
         fs.writeFileSync(outFile, result);

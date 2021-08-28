@@ -29,12 +29,28 @@
                     "south_location_name": "Cave Tunnel"
                 }
             ],
-            "dungeonDungeonCharacterConfig": [
+            "dungeonCharacterConfig": [
                 {
                     "entity": {
                         "name": "Hero"
                     },
                     "location_name": "Cave Entrance"
+                }
+            ],
+            "dungeonMonsterConfig": [
+                {
+                    "entity": {
+                        "name": "Goblin"
+                    },
+                    "location_name": "Cave Tunnel"
+                }
+            ],
+            "dungeonObjectConfig": [
+                {
+                    "entity": {
+                        "name": "Silver Chain"
+                    },
+                    "location_name": "Cave Room"
                 }
             ]
         }

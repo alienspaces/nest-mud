@@ -21,25 +21,17 @@ export interface DungeonLocationParameters {
 
 @Injectable()
 export class DungeonLocationService {
-    constructor(
-        private loggerService: LoggerService,
-        private dungeonLocationRepository: DungeonLocationRepository,
-    ) {}
+    constructor(private loggerService: LoggerService, private dungeonLocationRepository: DungeonLocationRepository) {}
 
     async getDungeonLocation(id: string): Promise<DungeonLocationEntity> {
-        const dungeonLocationRecord =
-            await this.dungeonLocationRepository.getOne({
-                id: id,
-            });
-        const locationEntity = this.buildDungeonLocationEntity(
-            dungeonLocationRecord,
-        );
+        const dungeonLocationRecord = await this.dungeonLocationRepository.getOne({
+            id: id,
+        });
+        const locationEntity = this.buildDungeonLocationEntity(dungeonLocationRecord);
         return locationEntity;
     }
 
-    async getDungeonLocations(
-        parameters?: DungeonLocationParameters,
-    ): Promise<DungeonLocationEntity[]> {
+    async getDungeonLocations(parameters?: DungeonLocationParameters): Promise<DungeonLocationEntity[]> {
         // TODO: Can probably write a generic function for this however directly
         // mapping service parameters to repository parameters is probably not
         // going to be a consistent pattern..
@@ -53,101 +45,70 @@ export class DungeonLocationService {
             }
         }
 
-        const dungeonLocationRecords =
-            await this.dungeonLocationRepository.getMany({
-                parameters: repositoryParameters,
-            });
+        const dungeonLocationRecords = await this.dungeonLocationRepository.getMany({
+            parameters: repositoryParameters,
+        });
 
         const locationEntities: DungeonLocationEntity[] = [];
         dungeonLocationRecords.forEach((dungeonLocationRecord) => {
-            locationEntities.push(
-                this.buildDungeonLocationEntity(dungeonLocationRecord),
-            );
+            locationEntities.push(this.buildDungeonLocationEntity(dungeonLocationRecord));
         });
 
         return locationEntities;
     }
 
-    async createDungeonLocation(
-        createLocationEntity: CreateDungeonLocationEntity,
-    ): Promise<DungeonLocationEntity> {
+    async createDungeonLocation(createLocationEntity: CreateDungeonLocationEntity): Promise<DungeonLocationEntity> {
         const dungeonLocationRecord: DungeonLocationRepositoryRecord = {
             id: createLocationEntity.id || null,
             dungeon_id: createLocationEntity.dungeon_id,
             name: createLocationEntity.name,
             description: createLocationEntity.description,
             default: createLocationEntity.default,
-            north_dungeon_location_id:
-                createLocationEntity.north_dungeon_location_id,
-            northeast_dungeon_location_id:
-                createLocationEntity.northeast_dungeon_location_id,
-            east_dungeon_location_id:
-                createLocationEntity.east_dungeon_location_id,
-            southeast_dungeon_location_id:
-                createLocationEntity.southeast_dungeon_location_id,
-            south_dungeon_location_id:
-                createLocationEntity.south_dungeon_location_id,
-            southwest_dungeon_location_id:
-                createLocationEntity.southwest_dungeon_location_id,
-            west_dungeon_location_id:
-                createLocationEntity.west_dungeon_location_id,
-            northwest_dungeon_location_id:
-                createLocationEntity.northwest_dungeon_location_id,
+            north_dungeon_location_id: createLocationEntity.north_dungeon_location_id,
+            northeast_dungeon_location_id: createLocationEntity.northeast_dungeon_location_id,
+            east_dungeon_location_id: createLocationEntity.east_dungeon_location_id,
+            southeast_dungeon_location_id: createLocationEntity.southeast_dungeon_location_id,
+            south_dungeon_location_id: createLocationEntity.south_dungeon_location_id,
+            southwest_dungeon_location_id: createLocationEntity.southwest_dungeon_location_id,
+            west_dungeon_location_id: createLocationEntity.west_dungeon_location_id,
+            northwest_dungeon_location_id: createLocationEntity.northwest_dungeon_location_id,
             up_dungeon_location_id: createLocationEntity.up_dungeon_location_id,
-            down_dungeon_location_id:
-                createLocationEntity.down_dungeon_location_id,
+            down_dungeon_location_id: createLocationEntity.down_dungeon_location_id,
         };
 
         await this.dungeonLocationRepository.insertOne({
             record: dungeonLocationRecord,
         });
 
-        const locationEntity = this.buildDungeonLocationEntity(
-            dungeonLocationRecord,
-        );
+        const locationEntity = this.buildDungeonLocationEntity(dungeonLocationRecord);
         return locationEntity;
     }
 
-    async updateDungeonLocation(
-        updateLocationEntity: UpdateDungeonLocationEntity,
-    ): Promise<DungeonLocationEntity> {
-        const dungeonLocationRecord =
-            await this.dungeonLocationRepository.getOne({
-                id: updateLocationEntity.id,
-            });
+    async updateDungeonLocation(updateLocationEntity: UpdateDungeonLocationEntity): Promise<DungeonLocationEntity> {
+        const dungeonLocationRecord = await this.dungeonLocationRepository.getOne({
+            id: updateLocationEntity.id,
+        });
 
         dungeonLocationRecord.id = updateLocationEntity.id;
         dungeonLocationRecord.name = updateLocationEntity.name;
         dungeonLocationRecord.description = updateLocationEntity.description;
         dungeonLocationRecord.default = updateLocationEntity.default;
-        dungeonLocationRecord.north_dungeon_location_id =
-            updateLocationEntity.north_dungeon_location_id;
-        dungeonLocationRecord.northeast_dungeon_location_id =
-            updateLocationEntity.northeast_dungeon_location_id;
-        dungeonLocationRecord.east_dungeon_location_id =
-            updateLocationEntity.east_dungeon_location_id;
-        dungeonLocationRecord.southeast_dungeon_location_id =
-            updateLocationEntity.southeast_dungeon_location_id;
-        dungeonLocationRecord.south_dungeon_location_id =
-            updateLocationEntity.south_dungeon_location_id;
-        dungeonLocationRecord.southwest_dungeon_location_id =
-            updateLocationEntity.southwest_dungeon_location_id;
-        dungeonLocationRecord.west_dungeon_location_id =
-            updateLocationEntity.west_dungeon_location_id;
-        dungeonLocationRecord.northwest_dungeon_location_id =
-            updateLocationEntity.northwest_dungeon_location_id;
-        dungeonLocationRecord.up_dungeon_location_id =
-            updateLocationEntity.up_dungeon_location_id;
-        dungeonLocationRecord.down_dungeon_location_id =
-            updateLocationEntity.down_dungeon_location_id;
+        dungeonLocationRecord.north_dungeon_location_id = updateLocationEntity.north_dungeon_location_id;
+        dungeonLocationRecord.northeast_dungeon_location_id = updateLocationEntity.northeast_dungeon_location_id;
+        dungeonLocationRecord.east_dungeon_location_id = updateLocationEntity.east_dungeon_location_id;
+        dungeonLocationRecord.southeast_dungeon_location_id = updateLocationEntity.southeast_dungeon_location_id;
+        dungeonLocationRecord.south_dungeon_location_id = updateLocationEntity.south_dungeon_location_id;
+        dungeonLocationRecord.southwest_dungeon_location_id = updateLocationEntity.southwest_dungeon_location_id;
+        dungeonLocationRecord.west_dungeon_location_id = updateLocationEntity.west_dungeon_location_id;
+        dungeonLocationRecord.northwest_dungeon_location_id = updateLocationEntity.northwest_dungeon_location_id;
+        dungeonLocationRecord.up_dungeon_location_id = updateLocationEntity.up_dungeon_location_id;
+        dungeonLocationRecord.down_dungeon_location_id = updateLocationEntity.down_dungeon_location_id;
 
         await this.dungeonLocationRepository.updateOne({
             record: dungeonLocationRecord,
         });
 
-        const locationEntity = this.buildDungeonLocationEntity(
-            dungeonLocationRecord,
-        );
+        const locationEntity = this.buildDungeonLocationEntity(dungeonLocationRecord);
         return locationEntity;
     }
 
@@ -156,35 +117,23 @@ export class DungeonLocationService {
         return;
     }
 
-    buildDungeonLocationEntity(
-        dungeonLocationRecord: DungeonLocationRepositoryRecord,
-    ): DungeonLocationEntity {
+    buildDungeonLocationEntity(dungeonLocationRecord: DungeonLocationRepositoryRecord): DungeonLocationEntity {
         const dungeonLocationEntity: DungeonLocationEntity = {
             id: dungeonLocationRecord.id,
             dungeon_id: dungeonLocationRecord.dungeon_id,
             name: dungeonLocationRecord.name,
             description: dungeonLocationRecord.description,
             default: dungeonLocationRecord.default,
-            north_dungeon_location_id:
-                dungeonLocationRecord.north_dungeon_location_id,
-            northeast_dungeon_location_id:
-                dungeonLocationRecord.northeast_dungeon_location_id,
-            east_dungeon_location_id:
-                dungeonLocationRecord.east_dungeon_location_id,
-            southeast_dungeon_location_id:
-                dungeonLocationRecord.southeast_dungeon_location_id,
-            south_dungeon_location_id:
-                dungeonLocationRecord.south_dungeon_location_id,
-            southwest_dungeon_location_id:
-                dungeonLocationRecord.southwest_dungeon_location_id,
-            west_dungeon_location_id:
-                dungeonLocationRecord.west_dungeon_location_id,
-            northwest_dungeon_location_id:
-                dungeonLocationRecord.northwest_dungeon_location_id,
-            up_dungeon_location_id:
-                dungeonLocationRecord.up_dungeon_location_id,
-            down_dungeon_location_id:
-                dungeonLocationRecord.down_dungeon_location_id,
+            north_dungeon_location_id: dungeonLocationRecord.north_dungeon_location_id,
+            northeast_dungeon_location_id: dungeonLocationRecord.northeast_dungeon_location_id,
+            east_dungeon_location_id: dungeonLocationRecord.east_dungeon_location_id,
+            southeast_dungeon_location_id: dungeonLocationRecord.southeast_dungeon_location_id,
+            south_dungeon_location_id: dungeonLocationRecord.south_dungeon_location_id,
+            southwest_dungeon_location_id: dungeonLocationRecord.southwest_dungeon_location_id,
+            west_dungeon_location_id: dungeonLocationRecord.west_dungeon_location_id,
+            northwest_dungeon_location_id: dungeonLocationRecord.northwest_dungeon_location_id,
+            up_dungeon_location_id: dungeonLocationRecord.up_dungeon_location_id,
+            down_dungeon_location_id: dungeonLocationRecord.down_dungeon_location_id,
             created_at: dungeonLocationRecord.created_at,
             updated_at: dungeonLocationRecord.updated_at,
         };

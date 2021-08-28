@@ -20,23 +20,13 @@ describe('Repository', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [
-                ConfigModule.forRoot({ ignoreEnvFile: false }),
-                DatabaseModule,
-                LoggerModule,
-            ],
+            imports: [ConfigModule.forRoot({ ignoreEnvFile: false }), DatabaseModule, LoggerModule],
             providers: [TestRepository],
         }).compile();
 
         const contextId = ContextIdFactory.create();
-        databaseService = await module.resolve<DatabaseService>(
-            DatabaseService,
-            contextId,
-        );
-        repository = await module.resolve<TestRepository>(
-            TestRepository,
-            contextId,
-        );
+        databaseService = await module.resolve<DatabaseService>(DatabaseService, contextId);
+        repository = await module.resolve<TestRepository>(TestRepository, contextId);
 
         const client = await databaseService.connect();
         await client.query(`
@@ -61,9 +51,9 @@ CREATE TABLE IF NOT EXISTS "test" (
     beforeEach(async () => {
         const client = await databaseService.connect();
         await client.query(`
-INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${
-            record.name
-        }', ${record.age}, '${record.created_at.toISOString()}');
+INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${record.name}', ${
+            record.age
+        }, '${record.created_at.toISOString()}');
         `);
         await databaseService.end();
     });

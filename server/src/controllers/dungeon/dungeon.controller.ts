@@ -1,13 +1,4 @@
-import {
-    Controller,
-    Post,
-    Put,
-    Body,
-    Param,
-    UsePipes,
-    NotFoundException,
-    Get,
-} from '@nestjs/common';
+import { Controller, Post, Put, Body, Param, UsePipes, NotFoundException, Get } from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
@@ -16,10 +7,7 @@ import { DungeonDto } from './dto';
 
 @Controller('/api/v1/dungeons/')
 export class DungeonController {
-    constructor(
-        private loggerService: LoggerService,
-        private dungeonService: DungeonService,
-    ) {}
+    constructor(private loggerService: LoggerService, private dungeonService: DungeonService) {}
 
     @Get(':dungeon_id')
     async getOne(@Param('dungeon_id') dungeon_id: string): Promise<DungeonDto> {
@@ -28,7 +16,7 @@ export class DungeonController {
             function: 'getOne',
         });
 
-        logger.info(`Getting dungeon ID ${dungeon_id}`);
+        logger.debug(`Getting dungeon ID ${dungeon_id}`);
 
         const dungeonEntity = await this.dungeonService.getDungeon(dungeon_id);
 
@@ -43,7 +31,7 @@ export class DungeonController {
             function: 'getMany',
         });
 
-        logger.info(`Getting dungeons`);
+        logger.debug(`Getting dungeons`);
 
         const dungeonEntities = await this.dungeonService.getDungeons();
 

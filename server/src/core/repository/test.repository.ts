@@ -15,10 +15,7 @@ export interface TestRecord {
 
 @Injectable()
 export class TestRepository extends Repository<TestRecord> {
-    constructor(
-        databaseService: DatabaseService,
-        loggerService: LoggerService,
-    ) {
+    constructor(databaseService: DatabaseService, loggerService: LoggerService) {
         super(databaseService, loggerService, 'test', [
             {
                 name: 'id',

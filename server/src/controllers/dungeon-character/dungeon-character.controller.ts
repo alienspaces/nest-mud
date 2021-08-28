@@ -1,13 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Put,
-    Body,
-    Param,
-    UsePipes,
-    NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UsePipes, NotFoundException } from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
@@ -20,27 +11,17 @@ import {
 } from '@/services';
 import * as createCharacterSchema from './schema/create-dungeon-character.schema.json';
 import * as updateCharacterSchema from './schema/update-dungeon-character.schema.json';
-import {
-    CreateDungeonCharacterDto,
-    UpdateDungeonCharacterDto,
-    DungeonCharacterDto,
-} from './dto';
+import { CreateDungeonCharacterDto, UpdateDungeonCharacterDto, DungeonCharacterDto } from './dto';
 
 @Controller('/api/v1/dungeons/:dungeon_id/characters')
 export class DungeonCharactersController {
-    constructor(
-        private loggerService: LoggerService,
-        private dungeonCharacterService: DungeonCharacterService,
-    ) {}
+    constructor(private loggerService: LoggerService, private dungeonCharacterService: DungeonCharacterService) {}
 
     @Get()
-    async getMany(
-        @Param('dungeon_id') dungeon_id: string,
-    ): Promise<DungeonCharacterDto> {
-        const characterEntities =
-            await this.dungeonCharacterService.getDungeonCharacters({
-                dungeon_id: dungeon_id,
-            });
+    async getMany(@Param('dungeon_id') dungeon_id: string): Promise<DungeonCharacterDto> {
+        const characterEntities = await this.dungeonCharacterService.getDungeonCharacters({
+            dungeon_id: dungeon_id,
+        });
         const responseData = buildResponse(characterEntities);
         return responseData;
     }
@@ -55,31 +36,22 @@ export class DungeonCharactersController {
             function: 'get',
         });
 
-        logger.debug(
-            `Getting dungeon ID ${dungeon_id} character ID ${character_id}`,
-        );
+        logger.debug(`Getting dungeon ID ${dungeon_id} character ID ${character_id}`);
 
-        const characterEntity =
-            await this.dungeonCharacterService.getDungeonCharacter(
-                character_id,
-            );
+        const characterEntity = await this.dungeonCharacterService.getDungeonCharacter(character_id);
         if (!characterEntity) {
             logger.error('Failed getting dungeon character entity');
             throw new NotFoundException();
         }
         if (characterEntity.dungeon_id !== dungeon_id) {
-            logger.error(
-                'Dungeon character entity requested does not belong to requested dungeon',
-            );
+            logger.error('Dungeon character entity requested does not belong to requested dungeon');
             throw new NotFoundException();
         }
         const responseData = buildResponse([characterEntity]);
         return responseData;
     }
 
-    @UsePipes(
-        new ValidationPipe(createCharacterSchema.$id, createCharacterSchema),
-    )
+    @UsePipes(new ValidationPipe(createCharacterSchema.$id, createCharacterSchema))
     @Post()
     async create(
         @Param('dungeon_id') dungeon_id: string,
@@ -100,18 +72,16 @@ export class DungeonCharactersController {
             intelligence: requestData.data.intelligence,
         };
 
-        const dungeonCharacterEntity =
-            await this.dungeonCharacterService.createDungeonCharacter(
-                CreateDungeonCharacterEntity,
-            );
+        const dungeonCharacterEntity = await this.dungeonCharacterService.createDungeonCharacter(
+            CreateDungeonCharacterEntity,
+        );
 
         const responseData: DungeonCharacterDto = {
             data: [
                 {
                     id: dungeonCharacterEntity.id,
                     dungeon_id: dungeonCharacterEntity.dungeon_id,
-                    dungeon_location_id:
-                        dungeonCharacterEntity.dungeon_location_id,
+                    dungeon_location_id: dungeonCharacterEntity.dungeon_location_id,
                     name: dungeonCharacterEntity.name,
                     strength: dungeonCharacterEntity.strength,
                     dexterity: dungeonCharacterEntity.dexterity,
@@ -130,9 +100,7 @@ export class DungeonCharactersController {
         return responseData;
     }
 
-    @UsePipes(
-        new ValidationPipe(updateCharacterSchema.$id, updateCharacterSchema),
-    )
+    @UsePipes(new ValidationPipe(updateCharacterSchema.$id, updateCharacterSchema))
     @Put(':id')
     async update(
         @Param('dungeon_id') dungeon_id: string,
@@ -145,8 +113,7 @@ export class DungeonCharactersController {
         });
         logger.debug('Updating character');
 
-        let dungeonCharacterEntity: DungeonCharacterEntity =
-            await this.dungeonCharacterService.getDungeonCharacter(id);
+        let dungeonCharacterEntity: DungeonCharacterEntity = await this.dungeonCharacterService.getDungeonCharacter(id);
 
         if (!dungeonCharacterEntity) {
             throw new NotFoundException();
@@ -171,10 +138,9 @@ export class DungeonCharactersController {
             attribute_points: dungeonCharacterEntity.attribute_points,
         };
 
-        dungeonCharacterEntity =
-            await this.dungeonCharacterService.updateDungeonCharacter(
-                UpdateDungeonCharacterEntity,
-            );
+        dungeonCharacterEntity = await this.dungeonCharacterService.updateDungeonCharacter(
+            UpdateDungeonCharacterEntity,
+        );
 
         const responseData = buildResponse([dungeonCharacterEntity]);
 
@@ -182,9 +148,7 @@ export class DungeonCharactersController {
     }
 }
 
-function buildResponse(
-    dungeonCharacterEntities: DungeonCharacterEntity[],
-): DungeonCharacterDto {
+function buildResponse(dungeonCharacterEntities: DungeonCharacterEntity[]): DungeonCharacterDto {
     let returnData: DungeonCharacterDto;
     if (!dungeonCharacterEntities) {
         return returnData;
