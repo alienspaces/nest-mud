@@ -32,14 +32,14 @@ type Action = {
 };
 
 @Injectable()
-export class DungeonCharacterActionService {
+export class DungeonActionService {
     private resolver: DungeonCharacterActionResolver;
     constructor(
         private dungeonCharacterRepository: DungeonCharacterRepository,
         private dungeonLocationRepository: DungeonLocationRepository,
         private dungeonMonsterRepository: DungeonMonsterRepository,
         private dungeonObjectRepository: DungeonObjectRepository,
-        private DungeonActionRepository: DungeonActionRepository,
+        private dungeonActionRepository: DungeonActionRepository,
     ) {
         this.resolver = new DungeonCharacterActionResolver();
     }
@@ -146,10 +146,95 @@ export class DungeonCharacterActionService {
     async createDungeonCharacterAction(
         createDungeonActionEntity: CreateDungeonActionEntity,
     ): Promise<DungeonActionEntity> {
-        // Create dungeon character action record
+        let dungeonActionRecord: DungeonActionRepositoryRecord = {
+            dungeon_id: createDungeonActionEntity.dungeon_id,
+            dungeon_location_id: createDungeonActionEntity.dungeon_location_id,
+            dungeon_character_id:
+                createDungeonActionEntity.dungeon_character_id,
+            dungeon_monster_id: createDungeonActionEntity.dungeon_monster_id,
+            resolved_command: createDungeonActionEntity.resolved_command,
+            resolved_equipped_dungeon_object_name:
+                createDungeonActionEntity.resolved_equipped_dungeon_object_name,
+            resolved_equipped_dungeon_object_id:
+                createDungeonActionEntity.resolved_equipped_dungeon_object_id,
+            resolved_stashed_dungeon_object_name:
+                createDungeonActionEntity.resolved_stashed_dungeon_object_name,
+            resolved_stashed_dungeon_object_id:
+                createDungeonActionEntity.resolved_stashed_dungeon_object_id,
+            resolved_target_dungeon_object_name:
+                createDungeonActionEntity.resolved_target_dungeon_object_name,
+            resolved_target_dungeon_object_id:
+                createDungeonActionEntity.resolved_target_dungeon_object_id,
+            resolved_target_dungeon_character_name:
+                createDungeonActionEntity.resolved_target_dungeon_character_name,
+            resolved_target_dungeon_character_id:
+                createDungeonActionEntity.resolved_target_dungeon_character_id,
+            resolved_target_dungeon_monster_name:
+                createDungeonActionEntity.resolved_target_dungeon_monster_name,
+            resolved_target_dungeon_monster_id:
+                createDungeonActionEntity.resolved_target_dungeon_monster_id,
+            resolved_target_dungeon_location_direction:
+                createDungeonActionEntity.resolved_target_dungeon_location_direction,
+            resolved_target_dungeon_location_name:
+                createDungeonActionEntity.resolved_target_dungeon_location_name,
+            resolved_target_dungeon_location_id:
+                createDungeonActionEntity.resolved_target_dungeon_location_id,
+        };
 
-        // Update dungeon character record
+        dungeonActionRecord = await this.dungeonActionRepository.insertOne({
+            record: dungeonActionRecord,
+        });
 
+        const dungeonActionEntity =
+            this.buildDungeonActionEntity(dungeonActionRecord);
+        return dungeonActionEntity;
+    }
+
+    async performDungeonCharacterAction(
+        dungeonActionEntity: DungeonActionEntity,
+    ): Promise<DungeonActionEntity> {
         throw new Error('Method not implemented');
+    }
+
+    buildDungeonActionEntity(
+        dungeonActionRecord: DungeonActionRepositoryRecord,
+    ): DungeonActionEntity {
+        const dungeonActionEntity: DungeonActionEntity = {
+            id: dungeonActionRecord.id,
+            dungeon_id: dungeonActionRecord.dungeon_id,
+            dungeon_location_id: dungeonActionRecord.dungeon_location_id,
+            dungeon_character_id: dungeonActionRecord.dungeon_character_id,
+            dungeon_monster_id: dungeonActionRecord.dungeon_monster_id,
+            resolved_command: dungeonActionRecord.resolved_command,
+            resolved_equipped_dungeon_object_name:
+                dungeonActionRecord.resolved_equipped_dungeon_object_name,
+            resolved_equipped_dungeon_object_id:
+                dungeonActionRecord.resolved_equipped_dungeon_object_id,
+            resolved_stashed_dungeon_object_name:
+                dungeonActionRecord.resolved_stashed_dungeon_object_name,
+            resolved_stashed_dungeon_object_id:
+                dungeonActionRecord.resolved_stashed_dungeon_object_id,
+            resolved_target_dungeon_object_name:
+                dungeonActionRecord.resolved_target_dungeon_object_name,
+            resolved_target_dungeon_object_id:
+                dungeonActionRecord.resolved_target_dungeon_object_id,
+            resolved_target_dungeon_character_name:
+                dungeonActionRecord.resolved_target_dungeon_character_name,
+            resolved_target_dungeon_character_id:
+                dungeonActionRecord.resolved_target_dungeon_character_id,
+            resolved_target_dungeon_monster_name:
+                dungeonActionRecord.resolved_target_dungeon_monster_name,
+            resolved_target_dungeon_monster_id:
+                dungeonActionRecord.resolved_target_dungeon_monster_id,
+            resolved_target_dungeon_location_direction:
+                dungeonActionRecord.resolved_target_dungeon_location_direction,
+            resolved_target_dungeon_location_name:
+                dungeonActionRecord.resolved_target_dungeon_location_name,
+            resolved_target_dungeon_location_id:
+                dungeonActionRecord.resolved_target_dungeon_location_id,
+            created_at: dungeonActionRecord.created_at,
+            updated_at: dungeonActionRecord.updated_at,
+        };
+        return dungeonActionEntity;
     }
 }

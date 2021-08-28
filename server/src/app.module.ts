@@ -17,7 +17,7 @@ import {
     DungeonService,
     DungeonLocationService,
     DungeonCharacterService,
-    DungeonCharacterActionService,
+    DungeonActionService,
 } from '@/services';
 
 @Module({
@@ -40,7 +40,7 @@ import {
         DungeonService,
         DungeonLocationService,
         DungeonCharacterService,
-        DungeonCharacterActionService,
+        DungeonActionService,
     ],
 })
 export class AppModule {}

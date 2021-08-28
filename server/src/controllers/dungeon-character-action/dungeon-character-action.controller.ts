@@ -13,7 +13,7 @@ import {
 import { LoggerService } from '@/core';
 import { ValidationPipe } from '@/pipes/validation/validation.pipe';
 import {
-    DungeonCharacterActionService,
+    DungeonActionService,
     CreateDungeonActionEntity,
     DungeonActionEntity,
 } from '@/services';
@@ -27,7 +27,7 @@ import {
 export class DungeonCharacterActionController {
     constructor(
         private loggerService: LoggerService,
-        private dungeonCharacterActionService: DungeonCharacterActionService,
+        private dungeonActionService: DungeonActionService,
     ) {}
 
     @UsePipes(
@@ -50,18 +50,18 @@ export class DungeonCharacterActionController {
         logger.debug('Creating dungeon character action');
 
         const createDungeonActionEntity =
-            await this.dungeonCharacterActionService.resolveDungeonCharacterAction(
+            await this.dungeonActionService.resolveDungeonCharacterAction(
                 character_id,
                 requestData.data.sentence,
             );
 
-        const DungeonActionEntity =
-            await this.dungeonCharacterActionService.createDungeonCharacterAction(
+        const dungeonActionEntity =
+            await this.dungeonActionService.createDungeonCharacterAction(
                 createDungeonActionEntity,
             );
 
         const responseData = buildResponse(requestData.data.sentence, [
-            DungeonActionEntity,
+            dungeonActionEntity,
         ]);
 
         return responseData;

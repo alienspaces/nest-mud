@@ -30,7 +30,9 @@ cd server
 
 ## TODO
 
-- Complete services
+- Implement common dungeon action storage for all character and monster actions so that for every action
+  submitted a history of actions that have occurred in any of the same dungeon locations as the character
+  since the characters last action can be returned.
 - Implement move [location] action
 - Implement look [object] action
 - Implement equip [object], stash [object] and drop [object] actions

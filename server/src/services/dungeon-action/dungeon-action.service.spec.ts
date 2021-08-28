@@ -12,10 +12,10 @@ import {
     defaultDataConfig,
 } from '@/common/data';
 import { ServicesModule } from '@/services/services.module';
-import { DungeonCharacterActionService } from './dungeon-action.service';
+import { DungeonActionService } from './dungeon-action.service';
 
 describe('ActionsService', () => {
-    let service: DungeonCharacterActionService;
+    let service: DungeonActionService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -27,11 +27,11 @@ describe('ActionsService', () => {
                 RepositoriesModule,
                 DataModule,
             ],
-            providers: [DungeonCharacterActionService],
+            providers: [DungeonActionService],
         }).compile();
 
-        service = await module.resolve<DungeonCharacterActionService>(
-            DungeonCharacterActionService,
+        service = await module.resolve<DungeonActionService>(
+            DungeonActionService,
         );
     });
 

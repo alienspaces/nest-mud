@@ -1,7 +1,8 @@
 export interface CreateDungeonActionEntity {
     dungeon_id: string;
     dungeon_location_id: string;
-    dungeon_character_id: string;
+    dungeon_character_id?: string;
+    dungeon_monster_id?: string;
     resolved_command: string;
     resolved_equipped_dungeon_object_name?: string;
     resolved_equipped_dungeon_object_id?: string;
@@ -22,7 +23,8 @@ export interface DungeonActionEntity {
     id: string;
     dungeon_id: string;
     dungeon_location_id: string;
-    dungeon_character_id: string;
+    dungeon_character_id?: string;
+    dungeon_monster_id?: string;
     resolved_command: string;
     resolved_equipped_dungeon_object_name?: string;
     resolved_equipped_dungeon_object_id?: string;

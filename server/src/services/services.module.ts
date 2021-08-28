@@ -5,7 +5,7 @@ import { LoggerModule } from '@/core';
 import { DungeonService } from './dungeon/dungeon.service';
 import { DungeonLocationService } from './dungeon-location/dungeon-location.service';
 import { DungeonCharacterService } from './dungeon-character/dungeon-character.service';
-import { DungeonCharacterActionService } from './dungeon-action/dungeon-action.service';
+import { DungeonActionService } from './dungeon-action/dungeon-action.service';
 import { RepositoriesModule } from '@/repositories';
 
 @Module({
@@ -14,13 +14,13 @@ import { RepositoriesModule } from '@/repositories';
         DungeonService,
         DungeonLocationService,
         DungeonCharacterService,
-        DungeonCharacterActionService,
+        DungeonActionService,
     ],
     providers: [
         DungeonService,
         DungeonLocationService,
         DungeonCharacterService,
-        DungeonCharacterActionService,
+        DungeonActionService,
     ],
 })
 export class ServicesModule {}

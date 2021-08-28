@@ -30,11 +30,13 @@ export class DungeonCharacterService {
     ) {}
 
     async getDungeonCharacter(id: string): Promise<DungeonCharacterEntity> {
-        const characterRecord = await this.dungeonCharacterRepository.getOne({
-            id: id,
-        });
-        const dungeonCharacterEntity =
-            this.buildDungeonCharacterEntity(characterRecord);
+        const dungeonCharacterRecord =
+            await this.dungeonCharacterRepository.getOne({
+                id: id,
+            });
+        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(
+            dungeonCharacterRecord,
+        );
         return dungeonCharacterEntity;
     }
 
@@ -101,7 +103,7 @@ export class DungeonCharacterService {
             );
         }
 
-        const characterRecord: DungeonCharacterRepositoryRecord = {
+        const dungeonCharacterRecord: DungeonCharacterRepositoryRecord = {
             id: CreateDungeonCharacterEntity.id || null,
             dungeon_id: CreateDungeonCharacterEntity.dungeon_id,
             dungeon_location_id: dungeonLocationRecords[0].id,
@@ -123,11 +125,12 @@ export class DungeonCharacterService {
         };
 
         await this.dungeonCharacterRepository.insertOne({
-            record: characterRecord,
+            record: dungeonCharacterRecord,
         });
 
-        const dungeonCharacterEntity =
-            this.buildDungeonCharacterEntity(characterRecord);
+        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(
+            dungeonCharacterRecord,
+        );
         return dungeonCharacterEntity;
     }
 
@@ -149,31 +152,34 @@ export class DungeonCharacterService {
             );
         }
 
-        const characterRecord = await this.dungeonCharacterRepository.getOne({
-            id: updateDungeonCharacterEntity.id,
-        });
+        const dungeonCharacterRecord =
+            await this.dungeonCharacterRepository.getOne({
+                id: updateDungeonCharacterEntity.id,
+            });
 
-        characterRecord.name = updateDungeonCharacterEntity.name;
-        characterRecord.dungeon_location_id =
+        dungeonCharacterRecord.name = updateDungeonCharacterEntity.name;
+        dungeonCharacterRecord.dungeon_location_id =
             updateDungeonCharacterEntity.dungeon_location_id;
-        characterRecord.strength = updateDungeonCharacterEntity.strength;
-        characterRecord.dexterity = updateDungeonCharacterEntity.dexterity;
-        characterRecord.intelligence =
+        dungeonCharacterRecord.strength = updateDungeonCharacterEntity.strength;
+        dungeonCharacterRecord.dexterity =
+            updateDungeonCharacterEntity.dexterity;
+        dungeonCharacterRecord.intelligence =
             updateDungeonCharacterEntity.intelligence;
-        characterRecord.health = updateDungeonCharacterEntity.health;
-        characterRecord.fatigue = updateDungeonCharacterEntity.fatigue;
-        characterRecord.coins = updateDungeonCharacterEntity.coins;
-        characterRecord.experience_points =
+        dungeonCharacterRecord.health = updateDungeonCharacterEntity.health;
+        dungeonCharacterRecord.fatigue = updateDungeonCharacterEntity.fatigue;
+        dungeonCharacterRecord.coins = updateDungeonCharacterEntity.coins;
+        dungeonCharacterRecord.experience_points =
             updateDungeonCharacterEntity.experience_points;
-        characterRecord.attribute_points =
+        dungeonCharacterRecord.attribute_points =
             updateDungeonCharacterEntity.attribute_points;
 
         await this.dungeonCharacterRepository.updateOne({
-            record: characterRecord,
+            record: dungeonCharacterRecord,
         });
 
-        const dungeonCharacterEntity =
-            this.buildDungeonCharacterEntity(characterRecord);
+        const dungeonCharacterEntity = this.buildDungeonCharacterEntity(
+            dungeonCharacterRecord,
+        );
         return dungeonCharacterEntity;
     }
 
@@ -195,23 +201,23 @@ export class DungeonCharacterService {
     }
 
     buildDungeonCharacterEntity(
-        characterRecord: DungeonCharacterRepositoryRecord,
+        dungeonCharacterRecord: DungeonCharacterRepositoryRecord,
     ): DungeonCharacterEntity {
         const dungeonCharacterEntity: DungeonCharacterEntity = {
-            id: characterRecord.id,
-            dungeon_id: characterRecord.dungeon_id,
-            dungeon_location_id: characterRecord.dungeon_location_id,
-            name: characterRecord.name,
-            strength: characterRecord.strength,
-            dexterity: characterRecord.dexterity,
-            intelligence: characterRecord.intelligence,
-            health: characterRecord.health,
-            fatigue: characterRecord.fatigue,
-            coins: characterRecord.coins,
-            experience_points: characterRecord.experience_points,
-            attribute_points: characterRecord.attribute_points,
-            created_at: characterRecord.created_at,
-            updated_at: characterRecord.updated_at,
+            id: dungeonCharacterRecord.id,
+            dungeon_id: dungeonCharacterRecord.dungeon_id,
+            dungeon_location_id: dungeonCharacterRecord.dungeon_location_id,
+            name: dungeonCharacterRecord.name,
+            strength: dungeonCharacterRecord.strength,
+            dexterity: dungeonCharacterRecord.dexterity,
+            intelligence: dungeonCharacterRecord.intelligence,
+            health: dungeonCharacterRecord.health,
+            fatigue: dungeonCharacterRecord.fatigue,
+            coins: dungeonCharacterRecord.coins,
+            experience_points: dungeonCharacterRecord.experience_points,
+            attribute_points: dungeonCharacterRecord.attribute_points,
+            created_at: dungeonCharacterRecord.created_at,
+            updated_at: dungeonCharacterRecord.updated_at,
         };
         return dungeonCharacterEntity;
     }

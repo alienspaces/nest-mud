@@ -10,7 +10,7 @@ import {
     DataService,
     defaultDataConfig,
 } from '@/common/data';
-import { ServicesModule, DungeonCharacterActionService } from '@/services';
+import { ServicesModule, DungeonActionService } from '@/services';
 import { DungeonCharacterActionController } from './dungeon-character-action.controller';
 
 describe('DungeonCharacterActionController', () => {
@@ -27,11 +27,7 @@ describe('DungeonCharacterActionController', () => {
                 DataModule,
             ],
             controllers: [DungeonCharacterActionController],
-            providers: [
-                LoggerService,
-                DataService,
-                DungeonCharacterActionService,
-            ],
+            providers: [LoggerService, DataService, DungeonActionService],
         }).compile();
 
         controller = module.get<DungeonCharacterActionController>(
