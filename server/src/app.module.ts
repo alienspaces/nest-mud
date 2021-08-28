@@ -11,7 +11,7 @@ import { AppService } from './app.service';
 import { DungeonController } from './controllers/dungeon/dungeon.controller';
 import { DungeonLocationsController } from './controllers/dungeon-location/dungeon-location.controller';
 import { DungeonCharactersController } from './controllers/dungeon-character/dungeon-character.controller';
-import { DungeonCharacterActionController } from './controllers/dungeon-character-action/dungeon-character-action.controller';
+import { DungeonCharacterActionController } from './controllers/dungeon-action/dungeon-character-action.controller';
 import {
     ServicesModule,
     DungeonService,
