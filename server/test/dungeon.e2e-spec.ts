@@ -4,12 +4,7 @@ import * as request from 'supertest';
 
 // Application
 import { AppModule } from '@/app.module';
-import {
-    Data,
-    DataModule,
-    DataService,
-    defaultDataConfig,
-} from '@/common/data';
+import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
 import { Schema } from '@/core/schema/schema';
 import * as dungeonSchema from '@/controllers/dungeon/schema/dungeon.schema.json';
 
@@ -31,19 +26,13 @@ describe('Dungeon (e2e)', () => {
     it('/api/v1/dungeons (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
-        await expect(
-            service.setup(defaultDataConfig(), data),
-        ).resolves.not.toThrow();
+        await expect(service.setup(defaultDataConfig(), data, true)).resolves.not.toThrow();
 
-        const response = await request(app.getHttpServer()).get(
-            '/api/v1/dungeons',
-        );
+        const response = await request(app.getHttpServer()).get('/api/v1/dungeons');
         expect(response).toBeDefined();
         expect(response.statusCode).toEqual(200);
         expect(response.body).toBeDefined();
-        expect(
-            Schema.validate(dungeonSchema.$id, dungeonSchema, response.body),
-        ).toBeNull();
+        expect(Schema.validate(dungeonSchema.$id, dungeonSchema, response.body)).toBeNull();
 
         await expect(service.teardown(data)).resolves.not.toThrow();
     });
@@ -51,19 +40,13 @@ describe('Dungeon (e2e)', () => {
     it('/api/v1/dungeons/:dungeon_id (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
-        await expect(
-            service.setup(defaultDataConfig(), data),
-        ).resolves.not.toThrow();
+        await expect(service.setup(defaultDataConfig(), data, true)).resolves.not.toThrow();
 
-        const response = await request(app.getHttpServer()).get(
-            '/api/v1/dungeons/' + data.dungeonEntities[0].id,
-        );
+        const response = await request(app.getHttpServer()).get('/api/v1/dungeons/' + data.dungeonEntities[0].id);
         expect(response).toBeDefined();
         expect(response.statusCode).toEqual(200);
         expect(response.body).toBeDefined();
-        expect(
-            Schema.validate(dungeonSchema.$id, dungeonSchema, response.body),
-        ).toBeNull();
+        expect(Schema.validate(dungeonSchema.$id, dungeonSchema, response.body)).toBeNull();
 
         await expect(service.teardown(data)).resolves.not.toThrow();
     });

@@ -4,12 +4,7 @@ import * as request from 'supertest';
 
 // Application
 import { AppModule } from '@/app.module';
-import {
-    Data,
-    DataModule,
-    DataService,
-    defaultDataConfig,
-} from '@/common/data';
+import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
 import { Schema } from '@/core/schema/schema';
 import * as dungeonCharacterSchema from '@/controllers/dungeon-character/schema/dungeon-character.schema.json';
 
@@ -31,9 +26,7 @@ describe('Dungeon Character (e2e)', () => {
     it('/api/v1/dungeons/:dungeon_id/characters (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
-        await expect(
-            service.setup(defaultDataConfig(), data),
-        ).resolves.not.toThrow();
+        await expect(service.setup(defaultDataConfig(), data, true)).resolves.not.toThrow();
 
         const response = await request(app.getHttpServer()).get(
             `/api/v1/dungeons/${data.dungeonEntities[0].id}/characters`,
@@ -41,13 +34,7 @@ describe('Dungeon Character (e2e)', () => {
         expect(response).toBeDefined();
         expect(response.statusCode).toEqual(200);
         expect(response.body).toBeDefined();
-        expect(
-            Schema.validate(
-                dungeonCharacterSchema.$id,
-                dungeonCharacterSchema,
-                response.body,
-            ),
-        ).toBeNull();
+        expect(Schema.validate(dungeonCharacterSchema.$id, dungeonCharacterSchema, response.body)).toBeNull();
 
         await expect(service.teardown(data)).resolves.not.toThrow();
     });
@@ -55,9 +42,7 @@ describe('Dungeon Character (e2e)', () => {
     it('/api/v1/dungeons/:dungeon_id/characters/:character_id (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
-        await expect(
-            service.setup(defaultDataConfig(), data),
-        ).resolves.not.toThrow();
+        await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
         const response = await request(app.getHttpServer()).get(
             `/api/v1/dungeons/${data.dungeonEntities[0].id}/characters/${data.dungeonCharacterEntities[0].id}`,
@@ -65,13 +50,7 @@ describe('Dungeon Character (e2e)', () => {
         expect(response).toBeDefined();
         expect(response.statusCode).toEqual(200);
         expect(response.body).toBeDefined();
-        expect(
-            Schema.validate(
-                dungeonCharacterSchema.$id,
-                dungeonCharacterSchema,
-                response.body,
-            ),
-        ).toBeNull();
+        expect(Schema.validate(dungeonCharacterSchema.$id, dungeonCharacterSchema, response.body)).toBeNull();
 
         await expect(service.teardown(data)).resolves.not.toThrow();
     });

@@ -5,12 +5,7 @@ import * as request from 'supertest';
 // Application
 import { AppModule } from '../src/app.module';
 import { AppService } from '../src/app.service';
-import {
-    Data,
-    DataModule,
-    DataService,
-    defaultDataConfig,
-} from '@/common/data';
+import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
 
 describe('App (e2e)', () => {
     let app: INestApplication;
@@ -30,9 +25,7 @@ describe('App (e2e)', () => {
     it('/ (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
-        await expect(
-            service.setup(defaultDataConfig(), data),
-        ).resolves.not.toThrow();
+        await expect(service.setup(defaultDataConfig(), data, true)).resolves.not.toThrow();
 
         const response = await request(app.getHttpServer()).get('/');
         expect(response).toBeDefined();
