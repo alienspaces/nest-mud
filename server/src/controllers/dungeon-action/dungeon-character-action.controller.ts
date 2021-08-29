@@ -41,12 +41,18 @@ export class DungeonCharacterActionController {
             createDungeonActionEntity,
         );
 
-        // TODO: Fetch all dungeon actions that occurred in the same
-        // locations as this character since their previous action
-        const dungeonActionEntities = await this.dungeonActionService.getDungeonActions({
-            characterID: character_id,
-            serialID: dungeonActionEntity.serial_id,
-        });
+        // Fetch all dungeon actions that occurred
+        const previousDungeonActionEntities =
+            await this.dungeonActionService.getPreviousDungeonCharacterLocationActions(
+                dungeonActionEntity.dungeon_character_id,
+                dungeonActionEntity.serial_id,
+            );
+
+        const currentDungeonActionEntities = await this.dungeonActionService.getDungeonCharacterLocationActions(
+            dungeonActionEntity.dungeon_character_id,
+        );
+
+        // TODO: Fetch all dungeon action related records to build response
 
         const responseData = buildResponse(requestData.data.sentence, []);
 

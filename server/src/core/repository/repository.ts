@@ -26,13 +26,21 @@ export enum RepositoryOperator {
     LessThanEqual,
     GreaterThanEqual,
     In,
+    Between,
+}
+
+export enum RepositoryOrder {
+    Ascending,
+    Descending,
 }
 
 export interface RepositoryParameter<T> {
-    column: keyof T;
+    column: RepositoryColumn<T>;
     value: any | any[];
     operator?: RepositoryOperator;
 }
+
+export type RepositoryColumn<T> = Extract<keyof T, string>;
 
 export abstract class Repository<TRecord extends Record> {
     table: string;
@@ -59,6 +67,8 @@ export abstract class Repository<TRecord extends Record> {
     buildSelectSQL<TRecord>(args: {
         parameters?: RepositoryParameter<TRecord>[];
         forUpdate?: boolean;
+        orderByColumn?: string;
+        orderByDirection?: RepositoryOrder;
         offset?: number;
         limit?: number;
     }): string {
@@ -78,18 +88,25 @@ export abstract class Repository<TRecord extends Record> {
             let placeholderCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
-                // TODO: Implement ALL parameter operators
                 if (parameter.operator === RepositoryOperator.In && Array.isArray(parameter.value)) {
                     sql += `"${parameter.column}" IN (`;
                     parameter.value.forEach((value) => {
-                        placeholderCount++;
-                        sql += `$${placeholderCount}, `;
+                        sql += `$${++placeholderCount}, `;
                     });
                     sql = sql.substring(0, sql.length - 2);
                     sql += ') ';
+                } else if (parameter.operator === RepositoryOperator.Between && Array.isArray(parameter.value)) {
+                    sql += `"${parameter.column}" BETWEEN $${++placeholderCount} AND $${++placeholderCount}`;
+                } else if (parameter.operator == RepositoryOperator.LessThan) {
+                    sql += `"${parameter.column}" < $${++placeholderCount}`;
+                } else if (parameter.operator == RepositoryOperator.LessThanEqual) {
+                    sql += `"${parameter.column}" <+ $${++placeholderCount}`;
+                } else if (parameter.operator == RepositoryOperator.GreaterThan) {
+                    sql += `"${parameter.column}" > $${++placeholderCount}`;
+                } else if (parameter.operator == RepositoryOperator.GreaterThanEqual) {
+                    sql += `"${parameter.column}" >= $${++placeholderCount}`;
                 } else {
-                    placeholderCount++;
-                    sql += `"${parameter.column}" = $${placeholderCount}`;
+                    sql += `"${parameter.column}" = $${++placeholderCount}`;
                 }
                 if (parameterCount <= args.parameters.length) {
                     sql += ' AND ';
@@ -97,6 +114,18 @@ export abstract class Repository<TRecord extends Record> {
             });
         }
         sql += '"deleted_at" IS NULL';
+
+        if (args.orderByColumn) {
+            const orderByDirection = args.orderByDirection || RepositoryOrder.Ascending;
+            sql += ` ORDER BY "${args.orderByColumn}" ${
+                orderByDirection == RepositoryOrder.Ascending ? 'ASC' : 'DESC'
+            }`;
+        }
+
+        if (args.limit) {
+            sql += ` LIMIT ${args.limit}`;
+        }
+
         logger.debug(sql);
         return sql;
     }
@@ -208,7 +237,13 @@ export abstract class Repository<TRecord extends Record> {
     }
 
     // getMany - Returns many records or null, optional *any* valid columns as parameters
-    async getMany(args: { parameters?: RepositoryParameter<TRecord>[]; forUpdate?: boolean }): Promise<TRecord[]> {
+    async getMany(args: {
+        parameters?: RepositoryParameter<TRecord>[];
+        forUpdate?: boolean;
+        orderByColumn?: RepositoryColumn<TRecord>;
+        orderByDirection?: RepositoryOrder;
+        limit?: number;
+    }): Promise<TRecord[]> {
         const logger = this.loggerService.logger({
             function: 'getMany',
         });
@@ -216,6 +251,9 @@ export abstract class Repository<TRecord extends Record> {
         const sql = this.buildSelectSQL({
             parameters: args.parameters,
             forUpdate: args.forUpdate,
+            orderByColumn: args.orderByColumn,
+            orderByDirection: args.orderByDirection,
+            limit: args.limit,
         });
         let values: any[] = [];
         args.parameters.forEach((parameter: RepositoryParameter<TRecord>) => {

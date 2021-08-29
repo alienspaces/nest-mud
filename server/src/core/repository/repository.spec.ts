@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, DatabaseService, LoggerModule } from '@/core';
-import { RepositoryOperator } from './repository';
+import { RepositoryOperator, RepositoryOrder } from './repository';
 import { TestRepository, TestRecord } from './test.repository';
 
 const record: TestRecord = {
@@ -83,6 +83,54 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${record.n
             });
             expect(sql).toEqual(
                 'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "id" = $1 AND "deleted_at" IS NULL',
+            );
+        });
+
+        it('should build select SQL with limit', () => {
+            const sql = repository.buildSelectSQL({
+                parameters: [
+                    {
+                        column: 'id',
+                        value: '635e27fe-9bc0-4dfb-b2a1-844faa2965b2',
+                        operator: RepositoryOperator.Equal,
+                    },
+                ],
+                limit: 1,
+            });
+            expect(sql).toEqual(
+                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "id" = $1 AND "deleted_at" IS NULL LIMIT 1',
+            );
+        });
+
+        it('should build select SQL with order by', () => {
+            const sql = repository.buildSelectSQL({
+                parameters: [
+                    {
+                        column: 'id',
+                        value: '635e27fe-9bc0-4dfb-b2a1-844faa2965b2',
+                        operator: RepositoryOperator.Equal,
+                    },
+                ],
+                orderByColumn: 'age',
+                orderByDirection: RepositoryOrder.Descending,
+            });
+            expect(sql).toEqual(
+                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "id" = $1 AND "deleted_at" IS NULL ORDER BY "age" DESC',
+            );
+        });
+
+        it('should build select SQL with between operator', () => {
+            const sql = repository.buildSelectSQL({
+                parameters: [
+                    {
+                        column: 'age',
+                        value: [10, 20],
+                        operator: RepositoryOperator.Between,
+                    },
+                ],
+            });
+            expect(sql).toEqual(
+                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "age" BETWEEN $1 AND $2 AND "deleted_at" IS NULL',
             );
         });
     });

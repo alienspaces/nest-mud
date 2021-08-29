@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
+import { LoggerService, RepositoryOperator, RepositoryOrder } from '@/core';
 import {
     DungeonCharacterRepository,
     DungeonCharacterRepositoryRecord,
@@ -13,11 +14,9 @@ import {
     DungeonActionRepository,
     DungeonActionRepositoryRecord,
 } from '@/repositories';
-
 import { CreateDungeonActionEntity, DungeonActionEntity } from './dungeon-action.entities';
-
 import { DungeonCharacterActionResolver, ResolverRecords } from './dungeon-action.resolver';
-import { RepositoryOperator } from '@/core';
+
 type Action = {
     action: string;
     dungeon_location_id: string;
@@ -29,6 +28,7 @@ type Action = {
 export class DungeonActionService {
     private resolver: DungeonCharacterActionResolver;
     constructor(
+        private loggerService: LoggerService,
         private dungeonCharacterRepository: DungeonCharacterRepository,
         private dungeonLocationRepository: DungeonLocationRepository,
         private dungeonMonsterRepository: DungeonMonsterRepository,
@@ -169,10 +169,98 @@ export class DungeonActionService {
         throw new Error('Method not implemented');
     }
 
-    async getDungeonActions(args: { characterID: string; serialID: number }): Promise<DungeonActionEntity[]> {
-        //
+    async getPreviousDungeonCharacterLocationActions(
+        characterID: string,
+        serialID: number,
+    ): Promise<DungeonActionEntity[]> {
+        const logger = this.loggerService.logger({
+            function: 'getPreviousDungeonCharacterLocationActions',
+        });
 
-        throw new Error('Method not implemented');
+        const previousDungeonActionRecords = await this.dungeonActionRepository.getMany({
+            parameters: [
+                {
+                    column: 'dungeon_character_id',
+                    value: characterID,
+                },
+                {
+                    column: 'serial_id',
+                    value: serialID,
+                    operator: RepositoryOperator.LessThan,
+                },
+            ],
+            limit: 1,
+        });
+
+        if (!previousDungeonActionRecords || !previousDungeonActionRecords.length) {
+            logger.info('No previous dungeon character actions, returning...');
+            return;
+        }
+
+        const dungeonActionRecords = await this.dungeonActionRepository.getMany({
+            parameters: [
+                {
+                    column: 'dungeon_location_id',
+                    value: previousDungeonActionRecords[0].dungeon_location_id,
+                },
+                {
+                    column: 'serial_id',
+                    value: [previousDungeonActionRecords[0].serial_id, serialID],
+                    operator: RepositoryOperator.Between,
+                },
+            ],
+        });
+
+        const returnDungeonActionEntities: DungeonActionEntity[] = [];
+        [previousDungeonActionRecords[0], ...dungeonActionRecords].forEach((dungeonActionRecord) => {
+            returnDungeonActionEntities.push(this.buildDungeonActionEntity(dungeonActionRecord));
+        });
+
+        return returnDungeonActionEntities;
+    }
+
+    async getDungeonCharacterLocationActions(characterID: string): Promise<DungeonActionEntity[]> {
+        const logger = this.loggerService.logger({
+            function: 'getDungeonCharacterLocationActions',
+        });
+
+        const mostRecentDungeonActionRecords = await this.dungeonActionRepository.getMany({
+            parameters: [
+                {
+                    column: 'dungeon_character_id',
+                    value: characterID,
+                },
+            ],
+            limit: 1,
+            orderByColumn: 'serial_id',
+            orderByDirection: RepositoryOrder.Descending,
+        });
+
+        if (!mostRecentDungeonActionRecords || !mostRecentDungeonActionRecords.length) {
+            logger.info('No most recent dungeon character actions, returning...');
+            return;
+        }
+
+        const dungeonActionRecords = await this.dungeonActionRepository.getMany({
+            parameters: [
+                {
+                    column: 'dungeon_location_id',
+                    value: mostRecentDungeonActionRecords[0].dungeon_location_id,
+                },
+                {
+                    column: 'serial_id',
+                    value: [mostRecentDungeonActionRecords[0].serial_id],
+                    operator: RepositoryOperator.GreaterThan,
+                },
+            ],
+        });
+
+        const returnDungeonActionEntities: DungeonActionEntity[] = [];
+        [mostRecentDungeonActionRecords[0], ...dungeonActionRecords].forEach((dungeonActionRecord) => {
+            returnDungeonActionEntities.push(this.buildDungeonActionEntity(dungeonActionRecord));
+        });
+
+        return returnDungeonActionEntities;
     }
 
     buildDungeonActionEntity(dungeonActionRecord: DungeonActionRepositoryRecord): DungeonActionEntity {
