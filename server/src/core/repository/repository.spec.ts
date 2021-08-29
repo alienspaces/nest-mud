@@ -133,6 +133,21 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${record.n
                 'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "age" BETWEEN $1 AND $2 AND "deleted_at" IS NULL',
             );
         });
+
+        it('should build select SQL for update', () => {
+            const sql = repository.buildSelectSQL({
+                parameters: [
+                    {
+                        column: 'age',
+                        value: 10,
+                    },
+                ],
+                forUpdate: true,
+            });
+            expect(sql).toEqual(
+                'SELECT "id", "name", "age", "created_at", "updated_at", "deleted_at" FROM test WHERE "age" = $1 AND "deleted_at" IS NULL FOR UPDATE',
+            );
+        });
     });
 
     describe('buildInsertSQL', () => {

@@ -126,6 +126,10 @@ export abstract class Repository<TRecord extends Record> {
             sql += ` LIMIT ${args.limit}`;
         }
 
+        if (args.forUpdate) {
+            sql += ' FOR UPDATE';
+        }
+
         logger.debug(sql);
         return sql;
     }

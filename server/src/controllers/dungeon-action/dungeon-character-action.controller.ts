@@ -32,13 +32,9 @@ export class DungeonCharacterActionController {
 
         logger.debug('Creating dungeon character action');
 
-        const createDungeonActionEntity = await this.dungeonActionService.resolveDungeonCharacterAction(
+        const dungeonActionEntity = await this.dungeonActionService.processDungeonCharacterAction(
             character_id,
             requestData.data.sentence,
-        );
-
-        const dungeonActionEntity = await this.dungeonActionService.createDungeonCharacterAction(
-            createDungeonActionEntity,
         );
 
         // Fetch all dungeon actions that occurred
