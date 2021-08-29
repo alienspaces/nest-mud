@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 // Application
 import { DatabaseService } from './database.service';
+import { LoggerModule } from '@/core/logger/logger.module';
 
 describe('DatabaseService', () => {
     let service: DatabaseService;
@@ -10,7 +11,7 @@ describe('DatabaseService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ConfigModule.forRoot({ ignoreEnvFile: false })],
+            imports: [ConfigModule.forRoot({ ignoreEnvFile: false }), LoggerModule],
             providers: [DatabaseService, ConfigService],
         }).compile();
 

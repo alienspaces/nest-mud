@@ -22,14 +22,7 @@ describe('DataService', () => {
                 RepositoriesModule,
                 ServicesModule,
             ],
-            providers: [
-                LoggerService,
-                DatabaseService,
-                DungeonService,
-                DungeonLocationService,
-                DungeonCharacterService,
-                DataService,
-            ],
+            providers: [DataService],
         }).compile();
     });
 
@@ -38,7 +31,7 @@ describe('DataService', () => {
         expect(service).toBeDefined();
     });
 
-    it('should setup and teardown default data', async () => {
+    it.only('should setup and teardown default data', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
         await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();

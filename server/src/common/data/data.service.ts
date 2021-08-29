@@ -117,7 +117,8 @@ export class Data {
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class DataService {
-    private instanceId: string;
+    private _instanceID: string;
+    private _dataPersisted: boolean;
 
     constructor(
         private loggerService: LoggerService,
@@ -128,16 +129,19 @@ export class DataService {
         private dungeonMonsterService: DungeonMonsterService,
         private dungeonObjectService: DungeonObjectService,
     ) {
-        this.instanceId = uuidv4();
+        this._instanceID = uuidv4();
     }
 
-    async setup(config: DataConfig, data: Data) {
+    async setup(config: DataConfig, data: Data, commit?: boolean) {
         const logger = this.loggerService.logger({
             class: 'DataService',
             function: 'setup',
         });
 
-        logger.debug(`Setting up >${this.instanceId}<`);
+        logger.debug(`Setting up >${this._instanceID}<`);
+
+        // Establish database service client connection
+        await this.databaseService.connect();
 
         // Assign identifiers to all entities
         this.assignConfigIdentifiers(config);
@@ -218,15 +222,29 @@ export class DataService {
             }
         }
 
+        // Close database service client connection with commit when persisting data
+        if (commit) {
+            await this.databaseService.end(true);
+            this._dataPersisted = true;
+        }
+
         logger.debug('Done');
     }
 
     async teardown(data: Data) {
+        // Re-establish database service client connection when data has been persisted
+        if (this._dataPersisted) {
+            await this.databaseService.connect();
+        }
+
         await this.removeObjectEntities(data);
         await this.removeMonsterEntities(data);
         await this.removeCharacterEntities(data);
         await this.removeDungeonLocationEntities(data);
         await this.removeDungeonEntities(data);
+
+        // Close database service client connection
+        await this.databaseService.end();
     }
 
     private async addDungeonEntity(data: Data, dungeon: CreateDungeonEntity): Promise<DungeonEntity[]> {
@@ -321,7 +339,6 @@ export class DataService {
             logger.error(e);
             await this.databaseService.end();
         }
-        await this.databaseService.end();
 
         data.clearDungeonEntities();
     }
@@ -348,7 +365,6 @@ export class DataService {
             logger.error(e);
             await this.databaseService.end();
         }
-        await this.databaseService.end();
 
         data.clearDungeonLocationEntities();
     }
@@ -375,7 +391,6 @@ export class DataService {
             logger.error(e);
             await this.databaseService.end();
         }
-        await this.databaseService.end();
 
         data.clearCharacterEntities();
     }
@@ -402,7 +417,6 @@ export class DataService {
             logger.error(e);
             await this.databaseService.end();
         }
-        await this.databaseService.end();
 
         data.clearMonsterEntities();
     }
@@ -429,7 +443,6 @@ export class DataService {
             logger.error(e);
             await this.databaseService.end();
         }
-        await this.databaseService.end();
 
         data.clearObjectEntities();
     }

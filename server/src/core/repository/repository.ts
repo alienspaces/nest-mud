@@ -218,7 +218,7 @@ export abstract class Repository<TRecord extends Record> {
         const logger = this.loggerService.logger({
             function: 'getOne',
         });
-        const client = await this.databaseService.connect();
+        const client = this.databaseService.client;
         const sql = this.buildSelectSQL({
             parameters: [
                 {
@@ -231,7 +231,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = [args.id];
         logger.debug(values);
         const result = await client.query(sql, values);
-        await this.databaseService.end();
+        // await this.databaseService.end();
 
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -251,7 +251,7 @@ export abstract class Repository<TRecord extends Record> {
         const logger = this.loggerService.logger({
             function: 'getMany',
         });
-        const client = await this.databaseService.connect();
+        const client = this.databaseService.client;
         const sql = this.buildSelectSQL({
             parameters: args.parameters,
             forUpdate: args.forUpdate,
@@ -271,7 +271,7 @@ export abstract class Repository<TRecord extends Record> {
         });
         logger.debug(values);
         const result = await client.query(sql, values);
-        await this.databaseService.end();
+        // await this.databaseService.end();
 
         return result.rows as TRecord[];
     }
@@ -281,7 +281,7 @@ export abstract class Repository<TRecord extends Record> {
         const logger = this.loggerService.logger({
             function: 'updateOne',
         });
-        const client = await this.databaseService.connect();
+        const client = this.databaseService.client;
         const parameters = this.primaryColumnNames.map((primaryColumnName) => {
             return {
                 column: primaryColumnName,
@@ -298,7 +298,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map((columnName: string) => args.record[columnName]);
         logger.debug(values);
         const result = await client.query(sql, values);
-        await this.databaseService.end();
+        // await this.databaseService.end();
 
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
@@ -312,7 +312,7 @@ export abstract class Repository<TRecord extends Record> {
         const logger = this.loggerService.logger({
             function: 'insertOne',
         });
-        const client = await this.databaseService.connect();
+        const client = this.databaseService.client;
 
         // TODO: Only include non null record properties in insert SQL column list and values
 
@@ -326,7 +326,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map((columnName: string) => args.record[columnName]);
         logger.debug(values);
         const result = await client.query(sql, values);
-        await this.databaseService.end();
+        // await this.databaseService.end();
 
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -340,7 +340,7 @@ export abstract class Repository<TRecord extends Record> {
         const logger = this.loggerService.logger({
             function: 'deleteOne',
         });
-        const client = await this.databaseService.connect();
+        const client = this.databaseService.client;
         const parameters = [
             {
                 column: 'id',
@@ -354,7 +354,7 @@ export abstract class Repository<TRecord extends Record> {
         const values = [args.id];
         logger.debug(values);
         const result = await client.query(sql, values);
-        await this.databaseService.end();
+        // await this.databaseService.end();
 
         if (result.rowCount != 1) {
             // TODO: Data layer exception type

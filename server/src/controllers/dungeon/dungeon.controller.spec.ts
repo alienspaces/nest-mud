@@ -1,16 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { ContextIdFactory } from '@nestjs/core';
 
 // Application
-import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
+import { DatabaseModule, LoggerModule } from '@/core';
 import { RepositoriesModule } from '@/repositories';
 import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
-import { DungeonService, ServicesModule } from '@/services';
+import { ServicesModule } from '@/services';
 import { DungeonController } from './dungeon.controller';
 
 describe('DungeonController', () => {
-    let controller: DungeonController;
     let module: TestingModule;
+    let controller: DungeonController;
+    let dataService: DataService;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
@@ -23,10 +25,13 @@ describe('DungeonController', () => {
                 DataModule,
             ],
             controllers: [DungeonController],
-            providers: [LoggerService, DataService, DungeonService],
         }).compile();
+    });
 
-        controller = await module.resolve<DungeonController>(DungeonController);
+    beforeEach(async () => {
+        const contextId = ContextIdFactory.create();
+        dataService = await module.resolve<DataService>(DataService, contextId);
+        controller = await module.resolve<DungeonController>(DungeonController, contextId);
     });
 
     it('should be defined', () => {
@@ -35,29 +40,27 @@ describe('DungeonController', () => {
 
     describe('getOne', () => {
         it('should get one dungeon', async () => {
-            const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+            await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
             let DungeonDto = await controller.getOne(data.dungeonEntities[0].id);
             expect(DungeonDto.data).toBeTruthy();
             expect(DungeonDto.data.length).toBeGreaterThan(0);
 
-            await expect(service.teardown(data)).resolves.not.toThrow();
+            await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
 
     describe('getMany', () => {
         it('should get many dungeons', async () => {
-            const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+            await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
             let DungeonDto = await controller.getMany();
             expect(DungeonDto.data).toBeTruthy();
             expect(DungeonDto.data.length).toBeGreaterThan(0);
 
-            await expect(service.teardown(data)).resolves.not.toThrow();
+            await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
 });

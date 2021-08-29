@@ -1,17 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { ContextIdFactory } from '@nestjs/core';
 
 // Application
-import { DatabaseModule, LoggerModule, LoggerService } from '@/core';
-import { ServicesModule } from '@/services';
-import { Data, DataService, defaultDataConfig } from '@/common/data';
-
-import { DungeonLocationsController } from './dungeon-location.controller';
+import { DatabaseModule, LoggerModule } from '@/core';
 import { RepositoriesModule } from '@/repositories';
+import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
+import { ServicesModule } from '@/services';
+import { DungeonLocationsController } from './dungeon-location.controller';
 
 describe('DungeonLocationsController', () => {
     let module: TestingModule;
     let controller: DungeonLocationsController;
+    let dataService: DataService;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
@@ -21,12 +22,16 @@ describe('DungeonLocationsController', () => {
                 DatabaseModule,
                 RepositoriesModule,
                 ServicesModule,
+                DataModule,
             ],
             controllers: [DungeonLocationsController],
-            providers: [LoggerService, DataService],
         }).compile();
+    });
 
-        controller = await module.resolve<DungeonLocationsController>(DungeonLocationsController);
+    beforeEach(async () => {
+        const contextId = ContextIdFactory.create();
+        dataService = await module.resolve<DataService>(DataService, contextId);
+        controller = await module.resolve<DungeonLocationsController>(DungeonLocationsController, contextId);
     });
 
     it('should be defined', () => {
@@ -35,15 +40,14 @@ describe('DungeonLocationsController', () => {
 
     describe('get', () => {
         it('should return one location', async () => {
-            const service = await module.resolve<DataService>(DataService);
             const data = new Data();
-            await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+            await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
             let response = await controller.get(data.dungeonEntities[0].id, data.dungeonLocationEntities[0].id);
             expect(response.data).toBeTruthy();
             expect(response.data.length).toEqual(1);
 
-            await expect(service.teardown(data)).resolves.not.toThrow();
+            await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
 });

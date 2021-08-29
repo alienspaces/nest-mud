@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { ContextIdFactory } from '@nestjs/core';
 import * as crypto from 'crypto';
 
 // Application
@@ -12,6 +13,7 @@ import { DungeonService } from './dungeon.service';
 describe('DungeonService', () => {
     let module: TestingModule;
     let service: DungeonService;
+    let dataService: DataService;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
@@ -23,10 +25,13 @@ describe('DungeonService', () => {
                 RepositoriesModule,
                 DataModule,
             ],
-            providers: [LoggerService, DataService, DungeonService],
         }).compile();
+    });
 
-        service = await module.resolve<DungeonService>(DungeonService);
+    beforeEach(async () => {
+        const contextId = ContextIdFactory.create();
+        dataService = await module.resolve<DataService>(DataService, contextId);
+        service = await module.resolve<DungeonService>(DungeonService, contextId);
     });
 
     it('should be defined', () => {
@@ -35,7 +40,6 @@ describe('DungeonService', () => {
 
     describe('getDungeon', () => {
         it('should return a DungeonEntity with a valid identifier', async () => {
-            const dataService = await module.resolve<DataService>(DataService);
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
@@ -46,7 +50,12 @@ describe('DungeonService', () => {
         });
 
         it('should throw with an invalid identifier', async () => {
+            const data = new Data();
+            await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+
             await expect(service.getDungeon(crypto.randomUUID())).rejects.toThrow('Record does not exist');
+
+            await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
 });

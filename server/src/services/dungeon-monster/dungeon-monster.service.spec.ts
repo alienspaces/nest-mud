@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { ContextIdFactory } from '@nestjs/core';
 import * as crypto from 'crypto';
 
 // Application
@@ -12,6 +13,7 @@ import { DungeonMonsterService } from './dungeon-monster.service';
 describe('MonsterService', () => {
     let module: TestingModule;
     let service: DungeonMonsterService;
+    let dataService: DataService;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
@@ -23,10 +25,13 @@ describe('MonsterService', () => {
                 RepositoriesModule,
                 DataModule,
             ],
-            providers: [LoggerService, DataService, DungeonMonsterService],
         }).compile();
+    });
 
-        service = await module.resolve<DungeonMonsterService>(DungeonMonsterService);
+    beforeEach(async () => {
+        const contextId = ContextIdFactory.create();
+        dataService = await module.resolve<DataService>(DataService, contextId);
+        service = await module.resolve<DungeonMonsterService>(DungeonMonsterService, contextId);
     });
 
     it('should be defined', () => {
@@ -35,7 +40,6 @@ describe('MonsterService', () => {
 
     describe('getDungeonMonster', () => {
         it('should return a DungeonMonsterEntity with a valid identifier', async () => {
-            const dataService = await module.resolve<DataService>(DataService);
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
@@ -46,7 +50,12 @@ describe('MonsterService', () => {
         });
 
         it('should throw with an invalid identifier', async () => {
+            const data = new Data();
+            await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+
             await expect(service.getDungeonMonster(crypto.randomUUID())).rejects.toThrow('Record does not exist');
+
+            await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
 });

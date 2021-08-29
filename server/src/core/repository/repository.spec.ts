@@ -39,13 +39,13 @@ CREATE TABLE IF NOT EXISTS "test" (
     "deleted_at" timestamp DEFAULT null
 );        
         `);
-        await databaseService.end();
+        await databaseService.end(true);
     });
 
     afterAll(async () => {
         const client = await databaseService.connect();
         await client.query('DROP TABLE IF EXISTS "test";');
-        await databaseService.end();
+        await databaseService.end(true);
     });
 
     beforeEach(async () => {
@@ -55,15 +55,14 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${record.n
             record.age
         }, '${record.created_at.toISOString()}');
         `);
-        await databaseService.end();
     });
 
     afterEach(async () => {
-        const client = await databaseService.connect();
+        const client = databaseService.client;
         await client.query(`
         DELETE FROM test;
                 `);
-        await databaseService.end();
+        await databaseService.end(true);
     });
 
     it('should be defined', () => {

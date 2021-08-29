@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { ContextIdFactory } from '@nestjs/core';
 import * as crypto from 'crypto';
 
 // Application
@@ -12,6 +13,7 @@ import { DungeonCharacterService } from './dungeon-character.service';
 describe('CharacterService', () => {
     let module: TestingModule;
     let service: DungeonCharacterService;
+    let dataService: DataService;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
@@ -23,10 +25,13 @@ describe('CharacterService', () => {
                 RepositoriesModule,
                 DataModule,
             ],
-            providers: [LoggerService, DataService, DungeonCharacterService],
         }).compile();
+    });
 
-        service = await module.resolve<DungeonCharacterService>(DungeonCharacterService);
+    beforeEach(async () => {
+        const contextId = ContextIdFactory.create();
+        dataService = await module.resolve<DataService>(DataService, contextId);
+        service = await module.resolve<DungeonCharacterService>(DungeonCharacterService, contextId);
     });
 
     it('should be defined', () => {
@@ -35,7 +40,6 @@ describe('CharacterService', () => {
 
     describe('getDungeonCharacter', () => {
         it('should return a DungeonCharacterEntity with a valid identifier', async () => {
-            const dataService = await module.resolve<DataService>(DataService);
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
@@ -46,7 +50,12 @@ describe('CharacterService', () => {
         });
 
         it('should throw with an invalid identifier', async () => {
+            const data = new Data();
+            await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+
             await expect(service.getDungeonCharacter(crypto.randomUUID())).rejects.toThrow('Record does not exist');
+
+            await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
 });

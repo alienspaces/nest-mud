@@ -48,7 +48,7 @@ class Main {
         logger.info('Loading game data..');
         let config: DataConfig = require('./game.data.json');
         let data = new Data();
-        await this.dataService.setup(config, data);
+        await this.dataService.setup(config, data, true);
         logger.info('Done!');
     }
 

@@ -1,5 +1,8 @@
 import { Injectable, Scope } from '@nestjs/common';
+import P from 'pino';
 import pino from 'pino';
+
+export type Logger = P.Logger;
 
 @Injectable({ scope: Scope.REQUEST })
 export class LoggerService {
