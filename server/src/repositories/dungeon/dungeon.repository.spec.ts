@@ -30,11 +30,4 @@ describe('DungeonRepository', () => {
     it('should be defined', () => {
         expect(repository).toBeDefined();
     });
-
-    describe('buildInserSQL', () => {
-        it('should return SQL', () => {
-            const sql = repository.buildInsertSQL();
-            expect(sql).toBeTruthy();
-        });
-    });
 });

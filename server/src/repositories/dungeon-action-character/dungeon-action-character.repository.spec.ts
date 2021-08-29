@@ -7,10 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 
 // Application
 import { DatabaseModule, LoggerModule } from '@/core';
-import { DungeonObjectRepositoryRecord, DungeonObjectRepository } from './dungeon-object.repository';
+import { DungeonActionCharacterRepositoryRecord, DungeonActionCharacterRepository } from './dungeon-action-character.repository';
 
-describe('DungeonObjectRepository', () => {
-    let repository: DungeonObjectRepository;
+describe('DungeonActionCharacterRepository', () => {
+    let repository: DungeonActionCharacterRepository;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -19,11 +19,11 @@ describe('DungeonObjectRepository', () => {
                 DatabaseModule,
                 LoggerModule,
             ],
-            providers: [DungeonObjectRepository],
+            providers: [DungeonActionCharacterRepository],
         }).compile();
 
-        repository = await module.resolve<DungeonObjectRepository>(
-            DungeonObjectRepository,
+        repository = await module.resolve<DungeonActionCharacterRepository>(
+            DungeonActionCharacterRepository,
         );
     });
 

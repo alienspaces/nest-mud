@@ -155,3 +155,39 @@ CREATE TABLE "dungeon_action" (
     num_nonnulls(resolved_target_dungeon_object_name, resolved_target_dungeon_character_name, resolved_target_dungeon_monster_name, resolved_target_dungeon_location_name) = 1
   )
 );
+
+-- table dungeon_action_character
+CREATE TABLE "dungeon_action_character" (
+  "id"                   uuid CONSTRAINT dungeon_action_character_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_action_id"    uuid NOT NULL,
+  "dungeon_character_id" uuid NOT NULL,
+  "created_at"           timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"           timestamp WITH TIME ZONE,
+  "deleted_at"           timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_action_character_dungeon_action_id_fk" FOREIGN KEY (dungeon_action_id) REFERENCES dungeon_action(id),
+  CONSTRAINT "dungeon_action_character_dungeon_character_id_fk" FOREIGN KEY (dungeon_character_id) REFERENCES dungeon_character(id)
+);
+
+-- table dungeon_action_monster
+CREATE TABLE "dungeon_action_monster" (
+  "id"                 uuid CONSTRAINT dungeon_action_monster_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_action_id"  uuid NOT NULL,
+  "dungeon_monster_id" uuid NOT NULL,
+  "created_at"         timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"         timestamp WITH TIME ZONE,
+  "deleted_at"         timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_action_monster_dungeon_action_id_fk" FOREIGN KEY (dungeon_action_id) REFERENCES dungeon_action(id),
+  CONSTRAINT "dungeon_action_monster_dungeon_monster_id_fk" FOREIGN KEY (dungeon_monster_id) REFERENCES dungeon_monster(id)
+);
+
+-- table dungeon_action_object
+CREATE TABLE "dungeon_action_object" (
+  "id"                uuid CONSTRAINT dungeon_action_object_pk PRIMARY KEY DEFAULT gen_random_uuid(),
+  "dungeon_action_id" uuid NOT NULL,
+  "dungeon_object_id" uuid NOT NULL,
+  "created_at"        timestamp WITH TIME ZONE NOT NULL DEFAULT (current_timestamp),
+  "updated_at"        timestamp WITH TIME ZONE,
+  "deleted_at"        timestamp WITH TIME ZONE,
+  CONSTRAINT "dungeon_action_object_dungeon_action_id_fk" FOREIGN KEY (dungeon_action_id) REFERENCES dungeon_action(id),
+  CONSTRAINT "dungeon_action_object_dungeon_object_id_fk" FOREIGN KEY (dungeon_object_id) REFERENCES dungeon_object(id)
+);
