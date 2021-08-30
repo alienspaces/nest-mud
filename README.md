@@ -30,8 +30,6 @@ cd server
 
 ## TODO
 
-- Implement database transaction middleware..
-  - Fix e2e tests
 - Implement move [location] action
 - Implement look [object] action
 - Implement equip [object], stash [object] and drop [object] actions
