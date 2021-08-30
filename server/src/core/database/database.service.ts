@@ -22,7 +22,7 @@ export class DatabaseService {
     constructor(private configService: ConfigService, loggerService: LoggerService) {
         this._instanceID = uuidv4();
         this.logger = loggerService.logger({ class: DatabaseService.name });
-        this.logger.debug(`Instance ${this._instanceID}`);
+        this.logger.info(`Instance ${this._instanceID}`);
     }
 
     static poolBegin(config: ConfigService) {
@@ -52,7 +52,7 @@ export class DatabaseService {
 
     get client() {
         if (!this._client) {
-            this.logger.debug(`client - ${this._instanceID} - ${this._client} - not defined`);
+            this.logger.info(`client - ${this._instanceID} - ${this._client} - not defined`);
             throw new Error('Not connected, cannot return client');
         }
         return this._client;
@@ -60,7 +60,7 @@ export class DatabaseService {
 
     get pooledClient() {
         if (!this._pooledClient) {
-            this.logger.debug(`pooledClient - ${this._instanceID} - not defined`);
+            this.logger.info(`pooledClient - ${this._instanceID} - not defined`);
             throw new Error('Not connected, cannot return pooled client');
         }
         return this._pooledClient;
@@ -90,11 +90,11 @@ export class DatabaseService {
 
     async connect(): Promise<Client> {
         if (this._client != null) {
-            this.logger.debug(`connect - ${this._instanceID} - client defined, returning client`);
+            this.logger.info(`connect - ${this._instanceID} - client defined, returning client`);
             return this._client;
         }
 
-        this.logger.debug(`connect - ${this._instanceID} - connecting new client`);
+        this.logger.info(`connect - ${this._instanceID} - connecting new client`);
 
         const config = this.configService;
         const dbUser = config.get<string>('APP_SERVER_DB_USER');
@@ -119,10 +119,10 @@ export class DatabaseService {
     async end(commit?: boolean): Promise<void> {
         if (this._client != null) {
             if (commit) {
-                this.logger.debug(`end - ${this._instanceID} - disconnecting with commit`);
+                this.logger.info(`end - ${this._instanceID} - disconnecting with commit`);
                 await this._client.query('COMMIT');
             } else {
-                this.logger.debug(`end - ${this._instanceID} - disconnecting with rollback`);
+                this.logger.info(`end - ${this._instanceID} - disconnecting with rollback`);
                 await this._client.query('ROLLBACK');
             }
             await this._client.end();
