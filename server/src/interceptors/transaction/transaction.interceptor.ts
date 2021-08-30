@@ -14,7 +14,7 @@ export class TransactionInterceptor implements NestInterceptor {
     }
 
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-        this.logger.info('Starting database transaction');
+        this.logger.debug('Starting database transaction');
 
         // Establish client connection
         await this.databaseService.connect();
@@ -25,12 +25,12 @@ export class TransactionInterceptor implements NestInterceptor {
                     // Commit or rollback
                     const { statusCode } = context.switchToHttp().getResponse();
                     const commit = statusCode < 400;
-                    this.logger.info(`Commit >${commit}<`);
+                    this.logger.debug(`Commit database transaction >${commit}<`);
                     await this.databaseService.end(commit);
                 },
                 error: async (e) => {
                     // Rollback
-                    this.logger.warn(`Rolling back >${e}<`);
+                    this.logger.warn(`Rolling back database transaction >${e}<`);
                     try {
                         await this.databaseService.end(false);
                     } catch (e) {

@@ -138,7 +138,7 @@ export class DataService {
             function: 'setup',
         });
 
-        logger.info(`Setting up >${this._instanceID}<`);
+        logger.debug(`Setting up >${this._instanceID}<`);
 
         // Establish database service client connection
         await this.databaseService.connect();
@@ -180,7 +180,7 @@ export class DataService {
 
             // Update dungeon location entities
             if (dungeonConfig.dungeonLocationConfig) {
-                logger.info(`Adding ${dungeonConfig.dungeonLocationConfig.length} dungeon locations`);
+                logger.debug(`Adding ${dungeonConfig.dungeonLocationConfig.length} dungeon locations`);
                 for (var idx = 0; idx < dungeonConfig.dungeonLocationConfig.length; idx++) {
                     await this.updateDungeonLocationEntity(
                         dungeonConfig.dungeonLocationConfig[idx].entity as DungeonLocationEntity,
@@ -190,7 +190,7 @@ export class DataService {
 
             // Add character entities
             if (dungeonConfig.dungeonCharacterConfig) {
-                logger.info(`Adding ${dungeonConfig.dungeonCharacterConfig.length} dungeon characters`);
+                logger.debug(`Adding ${dungeonConfig.dungeonCharacterConfig.length} dungeon characters`);
                 for (var idx = 0; idx < dungeonConfig.dungeonCharacterConfig.length; idx++) {
                     await this.addCharacterEntity(
                         data,
@@ -201,7 +201,7 @@ export class DataService {
 
             // Add monster entities
             if (dungeonConfig.dungeonMonsterConfig) {
-                logger.info(`Adding ${dungeonConfig.dungeonMonsterConfig.length} dungeon monsters`);
+                logger.debug(`Adding ${dungeonConfig.dungeonMonsterConfig.length} dungeon monsters`);
                 for (var idx = 0; idx < dungeonConfig.dungeonMonsterConfig.length; idx++) {
                     await this.addMonsterEntity(
                         data,
@@ -212,7 +212,7 @@ export class DataService {
 
             // Add object entities
             if (dungeonConfig.dungeonObjectConfig) {
-                logger.info(`Adding ${dungeonConfig.dungeonObjectConfig.length} dungeon objects`);
+                logger.debug(`Adding ${dungeonConfig.dungeonObjectConfig.length} dungeon objects`);
                 for (var idx = 0; idx < dungeonConfig.dungeonObjectConfig.length; idx++) {
                     await this.addObjectEntity(
                         data,
@@ -228,7 +228,7 @@ export class DataService {
             this._dataPersisted = true;
         }
 
-        logger.info('Done');
+        logger.debug('Done');
     }
 
     async teardown(data: Data) {
@@ -244,7 +244,7 @@ export class DataService {
         await this.removeDungeonEntities(data);
 
         // Close database service client connection
-        await this.databaseService.end();
+        await this.databaseService.end(this._dataPersisted);
     }
 
     private async addDungeonEntity(data: Data, dungeon: CreateDungeonEntity): Promise<DungeonEntity[]> {
@@ -331,7 +331,7 @@ export class DataService {
 
         const client = await this.databaseService.connect();
         const sql = `DELETE FROM dungeon WHERE id IN (${data.getDungeonTeardownIds().join(',')});`;
-        logger.info(sql);
+        logger.debug(sql);
 
         try {
             await client.query(sql);
@@ -351,13 +351,13 @@ export class DataService {
 
         const teardownIDs = data.getDungeonLocationTeardownIds();
         if (!teardownIDs.length) {
-            logger.info('No dungeon locations to teardown, skipping...');
+            logger.debug('No dungeon locations to teardown, skipping...');
             return;
         }
 
         const client = await this.databaseService.connect();
         const sql = `DELETE FROM dungeon_location WHERE id IN (${teardownIDs.join(',')});`;
-        logger.info(sql);
+        logger.debug(sql);
 
         try {
             await client.query(sql);
@@ -377,13 +377,13 @@ export class DataService {
 
         const teardownIDs = data.getCharacterTeardownIds();
         if (!teardownIDs.length) {
-            logger.info('No dungeon characters to teardown, skipping...');
+            logger.debug('No dungeon characters to teardown, skipping...');
             return;
         }
 
         const client = await this.databaseService.connect();
         const sql = `DELETE FROM dungeon_character WHERE id IN (${teardownIDs.join(',')});`;
-        logger.info(sql);
+        logger.debug(sql);
 
         try {
             await client.query(sql);
@@ -403,13 +403,13 @@ export class DataService {
 
         const teardownIDs = data.getMonsterTeardownIds();
         if (!teardownIDs.length) {
-            logger.info('No dungeon monsters to teardown, skipping...');
+            logger.debug('No dungeon monsters to teardown, skipping...');
             return;
         }
 
         const client = await this.databaseService.connect();
         const sql = `DELETE FROM dungeon_monster WHERE id IN (${teardownIDs.join(',')});`;
-        logger.info(sql);
+        logger.debug(sql);
 
         try {
             await client.query(sql);
@@ -429,13 +429,13 @@ export class DataService {
 
         const teardownIDs = data.getObjectTeardownIds();
         if (!teardownIDs.length) {
-            logger.info('No dungeon objects to teardown, skipping...');
+            logger.debug('No dungeon objects to teardown, skipping...');
             return;
         }
 
         const client = await this.databaseService.connect();
         const sql = `DELETE FROM dungeon_object WHERE id IN (${teardownIDs.join(',')});`;
-        logger.info(sql);
+        logger.debug(sql);
 
         try {
             await client.query(sql);

@@ -39,16 +39,6 @@ import { InterceptorsModule } from './interceptors';
         DungeonLocationsController,
         DungeonCharacterActionController,
     ],
-    providers: [
-        AppService,
-        DungeonService,
-        DungeonLocationService,
-        DungeonCharacterService,
-        DungeonActionService,
-        {
-            provide: APP_INTERCEPTOR,
-            useClass: TransactionInterceptor,
-        },
-    ],
+    providers: [AppService, DungeonService, DungeonLocationService, DungeonCharacterService, DungeonActionService],
 })
 export class AppModule {}

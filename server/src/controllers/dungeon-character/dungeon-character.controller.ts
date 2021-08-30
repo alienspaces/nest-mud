@@ -24,13 +24,13 @@ export class DungeonCharactersController {
             function: 'get',
         });
 
-        logger.info(`Getting dungeon ID ${dungeon_id} characters`);
+        logger.debug(`Getting dungeon ID ${dungeon_id} characters`);
 
         const characterEntities = await this.dungeonCharacterService.getDungeonCharacters({
             dungeon_id: dungeon_id,
         });
 
-        logger.info(`Have ${characterEntities ? characterEntities.length : 0} characters`);
+        logger.debug(`Have ${characterEntities ? characterEntities.length : 0} characters`);
 
         const responseData = buildResponse(characterEntities);
         return responseData;

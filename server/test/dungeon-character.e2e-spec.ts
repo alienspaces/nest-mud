@@ -23,7 +23,7 @@ describe('Dungeon Character (e2e)', () => {
         await app.init();
     });
 
-    it.only('/api/v1/dungeons/:dungeon_id/characters (GET)', async () => {
+    it('/api/v1/dungeons/:dungeon_id/characters (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
         await expect(service.setup(defaultDataConfig(), data, true)).resolves.not.toThrow();
@@ -42,7 +42,7 @@ describe('Dungeon Character (e2e)', () => {
     it('/api/v1/dungeons/:dungeon_id/characters/:character_id (GET)', async () => {
         const service = await module.resolve<DataService>(DataService);
         const data = new Data();
-        await expect(service.setup(defaultDataConfig(), data)).resolves.not.toThrow();
+        await expect(service.setup(defaultDataConfig(), data, true)).resolves.not.toThrow();
 
         const response = await request(app.getHttpServer()).get(
             `/api/v1/dungeons/${data.dungeonEntities[0].id}/characters/${data.dungeonCharacterEntities[0].id}`,
