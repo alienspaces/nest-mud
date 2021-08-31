@@ -5,7 +5,7 @@ import {
     DungeonMonsterRepositoryRecord,
     DungeonObjectRepositoryRecord,
 } from '@/repositories';
-import { CreateDungeonActionEntity } from './dungeon-action.entities';
+import { CreateDungeonActionEntity, DUNGEON_ACTIONS } from './dungeon-action.entities';
 
 export interface ResolverRecords {
     character: DungeonCharacterRepositoryRecord;
@@ -42,7 +42,7 @@ export class DungeonCharacterActionResolver {
         const parts = sentence.split(' ');
         let resolved: ResolverSentence = {};
 
-        ['move', 'look', 'equip', 'stash', 'drop'].some((findAction) => {
+        [...DUNGEON_ACTIONS].some((findAction) => {
             const index = parts.indexOf(findAction);
             if (index === -1) {
                 return;
@@ -70,7 +70,7 @@ export class DungeonCharacterActionResolver {
             down_dungeon_location_id: 'down',
         };
 
-        let command: string;
+        let command: CreateDungeonActionEntity['resolved_command'];
         let targetDungeonLocationId: string;
         let targetDungeonLocationDirection: string;
         for (var prop in directionMap) {

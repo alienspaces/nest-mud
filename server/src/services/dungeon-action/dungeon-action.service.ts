@@ -171,6 +171,34 @@ export class DungeonActionService {
     }
 
     async performDungeonCharacterAction(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+        const actionFuncs = {
+            move: this.performDungeonActionMove,
+            look: this.performDungeonActionLook,
+            equip: this.performDungeonActionEquip,
+            stash: this.performDungeonActionStash,
+            drop: this.performDungeonActionDrop,
+        };
+
+        await actionFuncs[dungeonActionEntity.resolved_command](dungeonActionEntity);
+    }
+
+    async performDungeonActionMove(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+        throw new Error('Method not implemented');
+    }
+
+    async performDungeonActionLook(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+        throw new Error('Method not implemented');
+    }
+
+    async performDungeonActionEquip(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+        throw new Error('Method not implemented');
+    }
+
+    async performDungeonActionStash(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+        throw new Error('Method not implemented');
+    }
+
+    async performDungeonActionDrop(dungeonActionEntity: DungeonActionEntity): Promise<void> {
         throw new Error('Method not implemented');
     }
 
@@ -276,7 +304,7 @@ export class DungeonActionService {
             dungeon_character_id: dungeonActionRecord.dungeon_character_id,
             dungeon_monster_id: dungeonActionRecord.dungeon_monster_id,
             serial_id: dungeonActionRecord.serial_id,
-            resolved_command: dungeonActionRecord.resolved_command,
+            resolved_command: dungeonActionRecord.resolved_command as DungeonActionEntity['resolved_command'],
             resolved_equipped_dungeon_object_name: dungeonActionRecord.resolved_equipped_dungeon_object_name,
             resolved_equipped_dungeon_object_id: dungeonActionRecord.resolved_equipped_dungeon_object_id,
             resolved_stashed_dungeon_object_name: dungeonActionRecord.resolved_stashed_dungeon_object_name,
