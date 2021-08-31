@@ -14,8 +14,9 @@ import {
     DungeonActionRepository,
     DungeonActionRepositoryRecord,
 } from '@/repositories';
-import { CreateDungeonActionEntity, DungeonActionEntity } from './dungeon-action.entities';
-import { DungeonCharacterActionResolver, ResolverRecords } from './dungeon-action.resolver';
+import { CreateDungeonActionEntity, DungeonActionEntities, DungeonActionEntity } from './dungeon-action.entities';
+import { DungeonCharacterActionResolver } from './dungeon-action.resolver';
+import { DungeonActionRecords } from './dungeon-action.types';
 
 type Action = {
     action: string;
@@ -39,6 +40,21 @@ export class DungeonActionService {
     }
 
     async processDungeonCharacterAction(dungeonCharacterID: string, sentence: string): Promise<DungeonActionEntity> {
+        const records = await this.getDungeonCharacterActionRecords(dungeonCharacterID);
+
+        const createDungeonActionEntity = this.resolver.resolveAction(sentence, records);
+        if (!createDungeonActionEntity) {
+            throw new Error('Failed to resolve action');
+        }
+
+        const dungeonActionEntity = await this.createDungeonCharacterAction(createDungeonActionEntity);
+
+        await this.performDungeonCharacterAction(dungeonActionEntity, records);
+
+        return dungeonActionEntity;
+    }
+
+    async getDungeonCharacterActionRecords(dungeonCharacterID: string): Promise<DungeonActionRecords> {
         // Character record
         const characterRecord = await this.dungeonCharacterRepository.getOne({
             id: dungeonCharacterID,
@@ -116,7 +132,7 @@ export class DungeonActionService {
         });
 
         // Resolve action sentence
-        const records: ResolverRecords = {
+        const records: DungeonActionRecords = {
             character: characterRecord,
             location: locationRecord,
             characters: characterRecords,
@@ -125,16 +141,7 @@ export class DungeonActionService {
             locations: locationRecords,
         };
 
-        const createDungeonActionEntity = this.resolver.resolveAction(sentence, records);
-        if (!createDungeonActionEntity) {
-            throw new Error('Failed to resolve action');
-        }
-
-        const dungeonActionEntity = await this.createDungeonCharacterAction(createDungeonActionEntity);
-
-        await this.performDungeonCharacterAction(dungeonActionEntity);
-
-        return dungeonActionEntity;
+        return records;
     }
 
     async createDungeonCharacterAction(
@@ -166,11 +173,13 @@ export class DungeonActionService {
             record: dungeonActionRecord,
         });
 
-        const dungeonActionEntity = this.buildDungeonActionEntity(dungeonActionRecord);
-        return dungeonActionEntity;
+        return this.buildDungeonActionEntity(dungeonActionRecord);
     }
 
-    async performDungeonCharacterAction(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+    async performDungeonCharacterAction(
+        dungeonActionEntity: DungeonActionEntity,
+        records: DungeonActionRecords,
+    ): Promise<DungeonActionEntities> {
         const actionFuncs = {
             move: this.performDungeonActionMove,
             look: this.performDungeonActionLook,
@@ -179,26 +188,46 @@ export class DungeonActionService {
             drop: this.performDungeonActionDrop,
         };
 
-        await actionFuncs[dungeonActionEntity.resolved_command](dungeonActionEntity);
+        return await actionFuncs[dungeonActionEntity.resolved_command](dungeonActionEntity, records);
     }
 
-    async performDungeonActionMove(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+    async performDungeonActionMove(
+        dungeonActionEntity: DungeonActionEntity,
+        records: DungeonActionRecords,
+    ): Promise<DungeonActionEntities> {
+        if (dungeonActionEntity.dungeon_character_id) {
+            // Move character
+        } else if (dungeonActionEntity.dungeon_monster_id) {
+            // Move monster
+        }
         throw new Error('Method not implemented');
     }
 
-    async performDungeonActionLook(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+    async performDungeonActionLook(
+        dungeonActionEntity: DungeonActionEntity,
+        records: DungeonActionRecords,
+    ): Promise<DungeonActionEntities> {
         throw new Error('Method not implemented');
     }
 
-    async performDungeonActionEquip(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+    async performDungeonActionEquip(
+        dungeonActionEntity: DungeonActionEntity,
+        records: DungeonActionRecords,
+    ): Promise<DungeonActionEntities> {
         throw new Error('Method not implemented');
     }
 
-    async performDungeonActionStash(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+    async performDungeonActionStash(
+        dungeonActionEntity: DungeonActionEntity,
+        records: DungeonActionRecords,
+    ): Promise<DungeonActionEntities> {
         throw new Error('Method not implemented');
     }
 
-    async performDungeonActionDrop(dungeonActionEntity: DungeonActionEntity): Promise<void> {
+    async performDungeonActionDrop(
+        dungeonActionEntity: DungeonActionEntity,
+        records: DungeonActionRecords,
+    ): Promise<DungeonActionEntities> {
         throw new Error('Method not implemented');
     }
 

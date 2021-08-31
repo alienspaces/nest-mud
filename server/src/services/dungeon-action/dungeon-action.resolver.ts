@@ -1,20 +1,6 @@
 // Application
-import {
-    DungeonCharacterRepositoryRecord,
-    DungeonLocationRepositoryRecord,
-    DungeonMonsterRepositoryRecord,
-    DungeonObjectRepositoryRecord,
-} from '@/repositories';
-import { CreateDungeonActionEntity, DUNGEON_ACTIONS } from './dungeon-action.entities';
-
-export interface ResolverRecords {
-    character: DungeonCharacterRepositoryRecord;
-    location: DungeonLocationRepositoryRecord;
-    characters?: DungeonCharacterRepositoryRecord[];
-    monsters?: DungeonMonsterRepositoryRecord[];
-    objects?: DungeonObjectRepositoryRecord[];
-    locations?: DungeonLocationRepositoryRecord[];
-}
+import { CreateDungeonActionEntity } from './dungeon-action.entities';
+import { DUNGEON_ACTIONS, DungeonActionRecords } from './dungeon-action.types';
 
 interface ResolverSentence {
     command?: string;
@@ -22,7 +8,7 @@ interface ResolverSentence {
 }
 
 export class DungeonCharacterActionResolver {
-    resolveAction(sentence: string, records: ResolverRecords): CreateDungeonActionEntity {
+    resolveAction(sentence: string, records: DungeonActionRecords): CreateDungeonActionEntity {
         const resolved = this.resolveCommand(sentence);
 
         const resolveFuncs = {
@@ -56,7 +42,7 @@ export class DungeonCharacterActionResolver {
         return resolved;
     }
 
-    resolveMoveAction(sentence: string, records: ResolverRecords): CreateDungeonActionEntity {
+    resolveMoveAction(sentence: string, records: DungeonActionRecords): CreateDungeonActionEntity {
         const directionMap = {
             north_dungeon_location_id: 'north',
             northeast_dungeon_location_id: 'northeast',
@@ -105,7 +91,7 @@ export class DungeonCharacterActionResolver {
         return createDungeonActionEntity;
     }
 
-    resolveLookAction(sentence: string, records: ResolverRecords): CreateDungeonActionEntity {
+    resolveLookAction(sentence: string, records: DungeonActionRecords): CreateDungeonActionEntity {
         let createDungeonActionEntity: Partial<CreateDungeonActionEntity> = {
             dungeon_id: records.character.dungeon_id,
             dungeon_location_id: records.character.dungeon_location_id,
@@ -113,7 +99,7 @@ export class DungeonCharacterActionResolver {
         };
         return null;
     }
-    resolveEquipAction(sentence: string, records: ResolverRecords): CreateDungeonActionEntity {
+    resolveEquipAction(sentence: string, records: DungeonActionRecords): CreateDungeonActionEntity {
         let createDungeonActionEntity: Partial<CreateDungeonActionEntity> = {
             dungeon_id: records.character.dungeon_id,
             dungeon_location_id: records.character.dungeon_location_id,
@@ -121,7 +107,7 @@ export class DungeonCharacterActionResolver {
         };
         return null;
     }
-    resolveStashAction(sentence: string, records: ResolverRecords): CreateDungeonActionEntity {
+    resolveStashAction(sentence: string, records: DungeonActionRecords): CreateDungeonActionEntity {
         let createDungeonActionEntity: Partial<CreateDungeonActionEntity> = {
             dungeon_id: records.character.dungeon_id,
             dungeon_location_id: records.character.dungeon_location_id,
@@ -129,7 +115,7 @@ export class DungeonCharacterActionResolver {
         };
         return null;
     }
-    resolveDropAction(sentence: string, records: ResolverRecords): CreateDungeonActionEntity {
+    resolveDropAction(sentence: string, records: DungeonActionRecords): CreateDungeonActionEntity {
         let createDungeonActionEntity: Partial<CreateDungeonActionEntity> = {
             dungeon_id: records.character.dungeon_id,
             dungeon_location_id: records.character.dungeon_location_id,

@@ -1,7 +1,8 @@
 import * as faker from 'faker';
 
 // Application
-import { DungeonCharacterActionResolver, ResolverRecords } from './dungeon-action.resolver';
+import { DungeonCharacterActionResolver } from './dungeon-action.resolver';
+import { DungeonActionRecords } from './dungeon-action.types';
 import {
     DungeonCharacterRepositoryRecord,
     DungeonLocationRepositoryRecord,
@@ -95,7 +96,7 @@ describe('DungeonCharacterActionResolver', () => {
         type TestCase = {
             name: string;
             sentence: string;
-            records: ResolverRecords;
+            records: DungeonActionRecords;
             expectDungeonCharacterActionRecord: DungeonActionRepositoryRecord;
         };
 
