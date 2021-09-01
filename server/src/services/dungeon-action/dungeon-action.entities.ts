@@ -22,8 +22,8 @@ export interface CreateDungeonActionEntity {
 export interface DungeonActionEntities {
     dungeonActionEntity: DungeonActionEntity;
     dungeonActionCharacterEntities: DungeonActionCharacterEntity[];
-    dungeonActionMonsterEntities: DungeonActionMonsterEntity[];
-    dungeonActionObjectEntities: DungeonActionObjectEntity[];
+    dungeonActionMonsterEntities?: DungeonActionMonsterEntity[];
+    dungeonActionObjectEntities?: DungeonActionObjectEntity[];
 }
 
 export interface DungeonActionEntity {

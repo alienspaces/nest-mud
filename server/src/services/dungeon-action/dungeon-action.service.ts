@@ -39,22 +39,32 @@ export class DungeonActionService {
         this.resolver = new DungeonCharacterActionResolver();
     }
 
-    async processDungeonCharacterAction(dungeonCharacterID: string, sentence: string): Promise<DungeonActionEntity> {
-        const records = await this.getDungeonCharacterActionRecords(dungeonCharacterID);
+    async processDungeonCharacterAction(dungeonCharacterID: string, sentence: string): Promise<DungeonActionEntities> {
+        // Current dungeon character location records
+        let records = await this.getDungeonCharacterLocationRecords(dungeonCharacterID);
 
+        // Resolve character action
         const createDungeonActionEntity = this.resolver.resolveAction(sentence, records);
         if (!createDungeonActionEntity) {
             throw new Error('Failed to resolve action');
         }
 
+        // Create dungeon character action
         const dungeonActionEntity = await this.createDungeonCharacterAction(createDungeonActionEntity);
 
+        // Perform dungeon character action
         await this.performDungeonCharacterAction(dungeonActionEntity, records);
 
-        return dungeonActionEntity;
+        // Updated dungeon character location records
+        records = await this.getDungeonCharacterLocationRecords(dungeonCharacterID);
+
+        // Build dungeon action entities
+        const dungeonActionEntities = this.buildDungeonActionEntities(dungeonActionEntity, records);
+
+        return dungeonActionEntities;
     }
 
-    async getDungeonCharacterActionRecords(dungeonCharacterID: string): Promise<DungeonActionRecords> {
+    async getDungeonCharacterLocationRecords(dungeonCharacterID: string): Promise<DungeonActionRecords> {
         // Character record
         const characterRecord = await this.dungeonCharacterRepository.getOne({
             id: dungeonCharacterID,
@@ -197,8 +207,11 @@ export class DungeonActionService {
     ): Promise<DungeonActionEntities> {
         if (dungeonActionEntity.dungeon_character_id) {
             // Move character
+            let characterRecord = records.character;
+            characterRecord.dungeon_location_id = dungeonActionEntity.resolved_target_dungeon_location_id;
+            characterRecord = await this.dungeonCharacterRepository.updateOne({ record: characterRecord });
         } else if (dungeonActionEntity.dungeon_monster_id) {
-            // Move monster
+            // TODO: Move monster
         }
         throw new Error('Method not implemented');
     }
@@ -323,6 +336,13 @@ export class DungeonActionService {
         });
 
         return returnDungeonActionEntities;
+    }
+
+    buildDungeonActionEntities(
+        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionRecords: DungeonActionRecords,
+    ): DungeonActionEntities {
+        throw new Error('Method not implemented');
     }
 
     buildDungeonActionEntity(dungeonActionRecord: DungeonActionRepositoryRecord): DungeonActionEntity {
