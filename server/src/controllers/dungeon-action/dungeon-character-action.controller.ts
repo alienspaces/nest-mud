@@ -32,20 +32,17 @@ export class DungeonCharacterActionController {
 
         logger.debug('Creating dungeon character action');
 
-        const dungeonActionEntities = await this.dungeonActionService.processDungeonCharacterAction(
+        const dungeonActionEntity = await this.dungeonActionService.processDungeonCharacterAction(
             character_id,
             requestData.data.sentence,
         );
 
         // Fetch all dungeon actions that occurred
-        const previousDungeonActionEntities =
-            await this.dungeonActionService.getPreviousDungeonCharacterLocationActions(
-                dungeonActionEntities.dungeonActionEntity.dungeon_character_id,
-                dungeonActionEntities.dungeonActionEntity.serial_id,
-            );
+        const previousDungeonActionEntitySets =
+            await this.dungeonActionService.getPreviousCharacterDungeonActionEntitySets(dungeonActionEntity);
 
-        const currentDungeonActionEntities = await this.dungeonActionService.getDungeonCharacterLocationActions(
-            dungeonActionEntities.dungeonActionEntity.dungeon_character_id,
+        const currentDungeonActionEntitySets = await this.dungeonActionService.getCharacterDungeonActionEntitySets(
+            dungeonActionEntity,
         );
 
         // TODO: Fetch all dungeon action related records to build response
