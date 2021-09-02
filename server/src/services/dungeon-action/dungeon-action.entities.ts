@@ -19,16 +19,9 @@ export interface CreateDungeonActionEntity {
     resolved_target_dungeon_location_id?: string;
 }
 
-export interface DungeonActionEntitySet {
-    dungeonActionEntity: DungeonActionEntity;
-    dungeonLocationEntity: DungeonActionLocationEntity;
-    dungeonCharacterEntity: DungeonActionCharacterEntity;
-    dungeonMonsterEntity: DungeonActionMonsterEntity;
-    dungeonActionCharacterEntities: DungeonActionCharacterEntity[];
-    dungeonActionMonsterEntities?: DungeonActionMonsterEntity[];
-    dungeonActionObjectEntities?: DungeonActionObjectEntity[];
-}
-
+/*
+ * The result of a dungeon action
+ */
 export interface DungeonActionEntity {
     id: string;
     dungeon_id: string;
@@ -52,6 +45,19 @@ export interface DungeonActionEntity {
     resolved_target_dungeon_location_id?: string;
     created_at: Date;
     updated_at?: Date;
+}
+
+/*
+ * A complete record set of a resulting dungeon action
+ */
+export interface DungeonActionEntitySet {
+    dungeonActionEntity: DungeonActionEntity;
+    dungeonLocationEntity: DungeonActionLocationEntity;
+    dungeonCharacterEntity: DungeonActionCharacterEntity;
+    dungeonMonsterEntity: DungeonActionMonsterEntity;
+    dungeonActionCharacterEntities: DungeonActionCharacterEntity[];
+    dungeonActionMonsterEntities?: DungeonActionMonsterEntity[];
+    dungeonActionObjectEntities?: DungeonActionObjectEntity[];
 }
 
 export interface DungeonActionLocationEntity {

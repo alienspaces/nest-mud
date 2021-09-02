@@ -44,16 +44,16 @@ export class DungeonActionService {
         let records = await this.getDungeonActionProcessRecords(dungeonCharacterID);
 
         // Resolve character action
-        const createDungeonActionEntity = this.resolver.resolveAction(sentence, records);
+        let createDungeonActionEntity = this.resolver.resolveAction(sentence, records);
         if (!createDungeonActionEntity) {
             throw new Error('Failed to resolve action');
         }
 
-        // Create dungeon character action
-        const dungeonActionEntity = await this.createDungeonCharacterAction(createDungeonActionEntity);
-
         // Perform dungeon character action
-        await this.performDungeonCharacterAction(dungeonActionEntity, records);
+        createDungeonActionEntity = await this.performDungeonCharacterAction(createDungeonActionEntity, records);
+
+        // Create dungeon character action
+        const dungeonActionEntity = await this.createDungeonAction(createDungeonActionEntity);
 
         return dungeonActionEntity;
     }
@@ -148,9 +148,7 @@ export class DungeonActionService {
         return records;
     }
 
-    async createDungeonCharacterAction(
-        createDungeonActionEntity: CreateDungeonActionEntity,
-    ): Promise<DungeonActionEntity> {
+    async createDungeonAction(createDungeonActionEntity: CreateDungeonActionEntity): Promise<DungeonActionEntity> {
         let dungeonActionRecord: DungeonActionRepositoryRecord = {
             dungeon_id: createDungeonActionEntity.dungeon_id,
             dungeon_location_id: createDungeonActionEntity.dungeon_location_id,
@@ -181,9 +179,9 @@ export class DungeonActionService {
     }
 
     async performDungeonCharacterAction(
-        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionEntity: CreateDungeonActionEntity,
         records: DungeonActionProcessRecordSet,
-    ): Promise<void> {
+    ): Promise<CreateDungeonActionEntity> {
         const actionFuncs = {
             move: this.performDungeonActionMove,
             look: this.performDungeonActionLook,
@@ -196,46 +194,52 @@ export class DungeonActionService {
     }
 
     async performDungeonActionMove(
-        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionEntity: CreateDungeonActionEntity,
         records: DungeonActionProcessRecordSet,
-    ): Promise<void> {
+    ): Promise<CreateDungeonActionEntity> {
         if (dungeonActionEntity.dungeon_character_id) {
             // Move character
             let characterRecord = records.character;
             characterRecord.dungeon_location_id = dungeonActionEntity.resolved_target_dungeon_location_id;
             characterRecord = await this.dungeonCharacterRepository.updateOne({ record: characterRecord });
+            // Update dungeon action entity
+            dungeonActionEntity.dungeon_location_id = dungeonActionEntity.resolved_target_dungeon_location_id;
         } else if (dungeonActionEntity.dungeon_monster_id) {
             // TODO: Move monster
         }
-        return;
+        return dungeonActionEntity;
     }
 
     async performDungeonActionLook(
-        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionEntity: CreateDungeonActionEntity,
         records: DungeonActionProcessRecordSet,
-    ): Promise<void> {
+    ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
+        return dungeonActionEntity;
     }
 
     async performDungeonActionEquip(
-        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionEntity: CreateDungeonActionEntity,
         records: DungeonActionProcessRecordSet,
-    ): Promise<void> {
+    ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
+        return dungeonActionEntity;
     }
 
     async performDungeonActionStash(
-        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionEntity: CreateDungeonActionEntity,
         records: DungeonActionProcessRecordSet,
-    ): Promise<void> {
+    ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
+        return dungeonActionEntity;
     }
 
     async performDungeonActionDrop(
-        dungeonActionEntity: DungeonActionEntity,
+        dungeonActionEntity: CreateDungeonActionEntity,
         records: DungeonActionProcessRecordSet,
-    ): Promise<void> {
+    ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
+        return dungeonActionEntity;
     }
 
     async getPreviousCharacterDungeonActionEntitySets(
@@ -298,61 +302,6 @@ export class DungeonActionService {
     buildDungeonActionEntitySet(dungeonActionRecordSet: DungeonActionRecordSet): DungeonActionEntitySet {
         throw new Error('Method not implemented');
     }
-
-    async getCharacterDungeonActionEntitySets(
-        dungeonActionEntity: DungeonActionEntity,
-    ): Promise<DungeonActionEntitySet[]> {
-        const logger = this.loggerService.logger({
-            function: 'getCharacterDungeonActionEntitySets',
-        });
-
-        const mostRecentDungeonActionRecords = await this.dungeonActionRepository.getMany({
-            parameters: [
-                {
-                    column: 'dungeon_character_id',
-                    value: dungeonActionEntity.dungeon_character_id,
-                },
-            ],
-            limit: 1,
-            orderByColumn: 'serial_id',
-            orderByDirection: RepositoryOrder.Descending,
-        });
-
-        if (!mostRecentDungeonActionRecords || !mostRecentDungeonActionRecords.length) {
-            logger.info('No most recent dungeon character actions, returning...');
-            return;
-        }
-
-        const dungeonActionRecords = await this.dungeonActionRepository.getMany({
-            parameters: [
-                {
-                    column: 'dungeon_location_id',
-                    value: mostRecentDungeonActionRecords[0].dungeon_location_id,
-                },
-                {
-                    column: 'serial_id',
-                    value: [mostRecentDungeonActionRecords[0].serial_id],
-                    operator: RepositoryOperator.GreaterThan,
-                },
-            ],
-        });
-
-        const returnDungeonActionEntitySets: DungeonActionEntitySet[] = [];
-        [mostRecentDungeonActionRecords[0], ...dungeonActionRecords].forEach((dungeonActionRecord) => {
-            // TODO
-            // const dungeonActionRecordSet = await this.getDungeonActionRecordSet(dungeonActionRecord.id);
-            // returnDungeonActionEntitySets.push(this.buildDungeonActionEntitySet(dungeonActionRecordSet));
-        });
-
-        return returnDungeonActionEntitySets;
-    }
-
-    // buildDungeonActionEntitySet(
-    //     dungeonActionRecordSet: DungeonActionRecordSet,
-    // ): DungeonActionEntitySet {
-    //     // TODO: Fill out all dungeon action entities
-    //     throw new Error('Method not implemented');
-    // }
 
     buildDungeonActionEntity(dungeonActionRecord: DungeonActionRepositoryRecord): DungeonActionEntity {
         const dungeonActionEntity: DungeonActionEntity = {
