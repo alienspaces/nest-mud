@@ -1,7 +1,3 @@
-import { DungeonCharacterEntity } from '../dungeon-character/dungeon-character.entities';
-import { DungeonLocationEntity } from '../dungeon-location/dungeon-location.entities';
-import { DungeonMonsterEntity } from '../dungeon-monster/dungeon-monster.entities';
-
 export interface CreateDungeonActionEntity {
     dungeon_id: string;
     dungeon_location_id: string;
@@ -25,9 +21,9 @@ export interface CreateDungeonActionEntity {
 
 export interface DungeonActionEntitySet {
     dungeonActionEntity: DungeonActionEntity;
-    dungeonLocationEntity: DungeonLocationEntity;
-    dungeonCharacterEntity: DungeonCharacterEntity;
-    dungeonMonsterEntity: DungeonMonsterEntity;
+    dungeonLocationEntity: DungeonActionLocationEntity;
+    dungeonCharacterEntity: DungeonActionCharacterEntity;
+    dungeonMonsterEntity: DungeonActionMonsterEntity;
     dungeonActionCharacterEntities: DungeonActionCharacterEntity[];
     dungeonActionMonsterEntities?: DungeonActionMonsterEntity[];
     dungeonActionObjectEntities?: DungeonActionObjectEntity[];
@@ -58,7 +54,13 @@ export interface DungeonActionEntity {
     updated_at?: Date;
 }
 
-export interface DungeonActionLocationEntity {}
+export interface DungeonActionLocationEntity {
+    id: string;
+    dungeon_action_id: string;
+    dungeon_character_id: string;
+    created_at: Date;
+    updated_at?: Date;
+}
 
 export interface DungeonActionCharacterEntity {
     id: string;
