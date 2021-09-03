@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import { LoggerService, RepositoryOperator, RepositoryOrder } from '@/core';
+import { LoggerService, RepositoryOperator } from '@/core';
 import {
     DungeonCharacterRepository,
     DungeonCharacterRepositoryRecord,

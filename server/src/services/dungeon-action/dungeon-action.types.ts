@@ -6,7 +6,6 @@ import {
     DungeonActionCharacterRepositoryRecord,
     DungeonActionMonsterRepositoryRecord,
     DungeonActionObjectRepositoryRecord,
-    DungeonActionRepository,
     DungeonActionRepositoryRecord,
 } from '@/repositories';
 

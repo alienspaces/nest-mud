@@ -9,12 +9,6 @@ import { RepositoriesModule } from '@/repositories';
 import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
 import { ServicesModule } from '@/services/services.module';
 import { DungeonActionService } from './dungeon-action.service';
-// import {
-//     DungeonLocationService,
-//     DungeonCharacterService,
-//     DungeonMonsterService,
-//     DungeonObjectService,
-// } from '@/services';
 
 describe('ActionsService', () => {
     let module: TestingModule;
@@ -31,7 +25,6 @@ describe('ActionsService', () => {
                 RepositoriesModule,
                 DataModule,
             ],
-            // providers: [DungeonCharacterService, DungeonLocationService, DungeonMonsterService, DungeonObjectService],
         }).compile();
     });
 
