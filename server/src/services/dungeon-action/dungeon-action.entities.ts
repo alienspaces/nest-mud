@@ -55,9 +55,9 @@ export interface DungeonActionEntity {
 export interface DungeonActionEntitySet {
     dungeonActionEntity: DungeonActionEntity;
     dungeonLocationEntity: DungeonLocationEntity;
-    dungeonCharacterEntity: DungeonCharacterEntity;
-    dungeonMonsterEntity: DungeonMonsterEntity;
-    dungeonCharacterEntities: DungeonCharacterEntity[];
+    dungeonCharacterEntity?: DungeonCharacterEntity;
+    dungeonMonsterEntity?: DungeonMonsterEntity;
+    dungeonCharacterEntities?: DungeonCharacterEntity[];
     dungeonMonsterEntities?: DungeonMonsterEntity[];
     dungeonObjectEntities?: DungeonObjectEntity[];
 }

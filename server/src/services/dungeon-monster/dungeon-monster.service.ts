@@ -17,6 +17,7 @@ import {
 
 export interface DungeonMonsterParameters {
     dungeon_id?: string;
+    dungeon_location_id?: string;
 }
 
 const defaultCoins = 10;

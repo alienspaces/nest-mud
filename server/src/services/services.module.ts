@@ -14,19 +14,19 @@ import { RepositoriesModule } from '@/repositories';
     imports: [LoggerModule, RepositoriesModule],
     exports: [
         DungeonService,
-        DungeonLocationService,
+        DungeonActionService,
         DungeonCharacterService,
+        DungeonLocationService,
         DungeonMonsterService,
         DungeonObjectService,
-        DungeonActionService,
     ],
     providers: [
         DungeonService,
-        DungeonLocationService,
+        DungeonActionService,
         DungeonCharacterService,
+        DungeonLocationService,
         DungeonMonsterService,
         DungeonObjectService,
-        DungeonActionService,
     ],
 })
 export class ServicesModule {}

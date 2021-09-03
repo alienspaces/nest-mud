@@ -13,6 +13,7 @@ import { CreateDungeonObjectEntity, UpdateDungeonObjectEntity, DungeonObjectEnti
 
 export interface DungeonObjectParameters {
     dungeon_id?: string;
+    dungeon_location_id?: string;
 }
 
 @Injectable()

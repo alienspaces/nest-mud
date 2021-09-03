@@ -8,6 +8,9 @@ import { DungeonCharacterRepository } from './dungeon-character/dungeon-characte
 import { DungeonMonsterRepository } from './dungeon-monster/dungeon-monster.repository';
 import { DungeonObjectRepository } from './dungeon-object/dungeon-object.repository';
 import { DungeonActionRepository } from './dungeon-action/dungeon-action.repository';
+import { DungeonActionCharacterRepository } from './dungeon-action-character/dungeon-action-character.repository';
+import { DungeonActionMonsterRepository } from './dungeon-action-monster/dungeon-action-monster.repository';
+import { DungeonActionObjectRepository } from './dungeon-action-object/dungeon-action-object.repository';
 
 @Module({
     imports: [LoggerModule, DatabaseModule],
@@ -18,6 +21,9 @@ import { DungeonActionRepository } from './dungeon-action/dungeon-action.reposit
         DungeonMonsterRepository,
         DungeonObjectRepository,
         DungeonActionRepository,
+        DungeonActionCharacterRepository,
+        DungeonActionMonsterRepository,
+        DungeonActionObjectRepository,
     ],
     providers: [
         DungeonRepository,
@@ -26,6 +32,9 @@ import { DungeonActionRepository } from './dungeon-action/dungeon-action.reposit
         DungeonMonsterRepository,
         DungeonObjectRepository,
         DungeonActionRepository,
+        DungeonActionCharacterRepository,
+        DungeonActionMonsterRepository,
+        DungeonActionObjectRepository,
     ],
 })
 export class RepositoriesModule {}
