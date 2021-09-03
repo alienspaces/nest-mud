@@ -16,7 +16,7 @@ import {
 } from '@/repositories';
 import { CreateDungeonActionEntity, DungeonActionEntitySet, DungeonActionEntity } from './dungeon-action.entities';
 import { DungeonCharacterActionResolver } from './dungeon-action.resolver';
-import { DungeonActionProcessRecordSet, DungeonActionRecordSet } from './dungeon-action.types';
+import { DungeonLocationRecordSet, DungeonActionEventRecordSet } from './dungeon-action.types';
 
 type Action = {
     action: string;
@@ -40,8 +40,8 @@ export class DungeonActionService {
     }
 
     async processDungeonCharacterAction(dungeonCharacterID: string, sentence: string): Promise<DungeonActionEntity> {
-        // Current dungeon character location records
-        let records = await this.getDungeonActionProcessRecords(dungeonCharacterID);
+        // Current dungeon location record set
+        let records = await this.getDungeonLocationRecordSet(dungeonCharacterID);
 
         // Resolve character action
         let createDungeonActionEntity = this.resolver.resolveAction(sentence, records);
@@ -52,13 +52,34 @@ export class DungeonActionService {
         // Perform dungeon character action
         createDungeonActionEntity = await this.performDungeonCharacterAction(createDungeonActionEntity, records);
 
-        // Create dungeon character action
+        // Refetch current dungeon location record set
+        records = await this.getDungeonLocationRecordSet(dungeonCharacterID);
+
+        // Create dungeon action events
         const dungeonActionEntity = await this.createDungeonAction(createDungeonActionEntity);
+
+        if (records.characters) {
+            for (var idx = 0; idx < records.characters.length; idx++) {
+                this.createDungeonActionCharacter(records.characters[idx]);
+            }
+        }
+
+        if (records.monsters) {
+            for (var idx = 0; idx < records.monsters.length; idx++) {
+                this.createDungeonActionMonster(records.monsters[idx]);
+            }
+        }
+
+        if (records.objects) {
+            for (var idx = 0; idx < records.objects.length; idx++) {
+                this.createDungeonActionObject(records.objects[idx]);
+            }
+        }
 
         return dungeonActionEntity;
     }
 
-    async getDungeonActionProcessRecords(dungeonCharacterID: string): Promise<DungeonActionProcessRecordSet> {
+    async getDungeonLocationRecordSet(dungeonCharacterID: string): Promise<DungeonLocationRecordSet> {
         // Character record
         const characterRecord = await this.dungeonCharacterRepository.getOne({
             id: dungeonCharacterID,
@@ -136,7 +157,7 @@ export class DungeonActionService {
         });
 
         // Resolve action sentence
-        const records: DungeonActionProcessRecordSet = {
+        const records: DungeonLocationRecordSet = {
             character: characterRecord,
             location: locationRecord,
             characters: characterRecords,
@@ -178,9 +199,21 @@ export class DungeonActionService {
         return this.buildDungeonActionEntity(dungeonActionRecord);
     }
 
+    async createDungeonActionCharacter(dungeonCharacterRecord: DungeonCharacterRepositoryRecord): Promise<void> {
+        return;
+    }
+
+    async createDungeonActionMonster(dungeonMonsterRecord: DungeonMonsterRepositoryRecord): Promise<void> {
+        return;
+    }
+
+    async createDungeonActionObject(dungeonObjectRecord: DungeonObjectRepositoryRecord): Promise<void> {
+        return;
+    }
+
     async performDungeonCharacterAction(
         dungeonActionEntity: CreateDungeonActionEntity,
-        records: DungeonActionProcessRecordSet,
+        records: DungeonLocationRecordSet,
     ): Promise<CreateDungeonActionEntity> {
         const actionFuncs = {
             move: this.performDungeonActionMove,
@@ -195,7 +228,7 @@ export class DungeonActionService {
 
     async performDungeonActionMove(
         dungeonActionEntity: CreateDungeonActionEntity,
-        records: DungeonActionProcessRecordSet,
+        records: DungeonLocationRecordSet,
     ): Promise<CreateDungeonActionEntity> {
         if (dungeonActionEntity.dungeon_character_id) {
             // Move character
@@ -212,7 +245,7 @@ export class DungeonActionService {
 
     async performDungeonActionLook(
         dungeonActionEntity: CreateDungeonActionEntity,
-        records: DungeonActionProcessRecordSet,
+        records: DungeonLocationRecordSet,
     ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
         return dungeonActionEntity;
@@ -220,7 +253,7 @@ export class DungeonActionService {
 
     async performDungeonActionEquip(
         dungeonActionEntity: CreateDungeonActionEntity,
-        records: DungeonActionProcessRecordSet,
+        records: DungeonLocationRecordSet,
     ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
         return dungeonActionEntity;
@@ -228,7 +261,7 @@ export class DungeonActionService {
 
     async performDungeonActionStash(
         dungeonActionEntity: CreateDungeonActionEntity,
-        records: DungeonActionProcessRecordSet,
+        records: DungeonLocationRecordSet,
     ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
         return dungeonActionEntity;
@@ -236,17 +269,17 @@ export class DungeonActionService {
 
     async performDungeonActionDrop(
         dungeonActionEntity: CreateDungeonActionEntity,
-        records: DungeonActionProcessRecordSet,
+        records: DungeonLocationRecordSet,
     ): Promise<CreateDungeonActionEntity> {
         throw new Error('Method not implemented');
         return dungeonActionEntity;
     }
 
-    async getPreviousCharacterDungeonActionEntitySets(
+    async getCharacterDungeonActionEntitySet(
         dungeonActionEntity: DungeonActionEntity,
     ): Promise<DungeonActionEntitySet[]> {
         const logger = this.loggerService.logger({
-            function: 'getPreviousCharacterDungeonActionEntitySets',
+            function: 'getCharacterDungeonActionEntitySet',
         });
 
         const previousDungeonActionRecords = await this.dungeonActionRepository.getMany({
@@ -288,18 +321,18 @@ export class DungeonActionService {
         const returnDungeonActionEntitySets: DungeonActionEntitySet[] = [];
         for (var idx = 0; idx < allDungeonActionRecords.length; idx++) {
             const dungeonActionRecord = allDungeonActionRecords[idx];
-            const dungeonActionRecordSet = await this.getDungeonActionRecordSet(dungeonActionRecord.id);
+            const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(dungeonActionRecord.id);
             returnDungeonActionEntitySets.push(this.buildDungeonActionEntitySet(dungeonActionRecordSet));
         }
 
         return returnDungeonActionEntitySets;
     }
 
-    async getDungeonActionRecordSet(dungeonActionRecordID: string): Promise<DungeonActionRecordSet> {
+    async getDungeonActionEventRecordSet(dungeonActionRecordID: string): Promise<DungeonActionEventRecordSet> {
         throw new Error('Method not implemented');
     }
 
-    buildDungeonActionEntitySet(dungeonActionRecordSet: DungeonActionRecordSet): DungeonActionEntitySet {
+    buildDungeonActionEntitySet(dungeonActionRecordSet: DungeonActionEventRecordSet): DungeonActionEntitySet {
         throw new Error('Method not implemented');
     }
 

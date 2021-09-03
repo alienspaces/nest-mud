@@ -12,7 +12,7 @@ import {
 
 export const DUNGEON_ACTIONS = ['move', 'look', 'equip', 'stash', 'drop'];
 
-export interface DungeonActionProcessRecordSet {
+export interface DungeonLocationRecordSet {
     character: DungeonCharacterRepositoryRecord;
     location: DungeonLocationRepositoryRecord;
     characters?: DungeonCharacterRepositoryRecord[];
@@ -21,7 +21,7 @@ export interface DungeonActionProcessRecordSet {
     locations?: DungeonLocationRepositoryRecord[];
 }
 
-export interface DungeonActionRecordSet {
+export interface DungeonActionEventRecordSet {
     dungeonAction: DungeonActionRepositoryRecord;
     characters?: DungeonActionCharacterRepositoryRecord[];
     monsters?: DungeonActionMonsterRepositoryRecord[];

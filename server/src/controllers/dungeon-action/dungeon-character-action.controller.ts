@@ -38,8 +38,9 @@ export class DungeonCharacterActionController {
         );
 
         // Fetch all dungeon action events that have occurred since their last action
-        const previousDungeonActionEntitySets =
-            await this.dungeonActionService.getPreviousCharacterDungeonActionEntitySets(dungeonActionEntity);
+        const previousDungeonActionEntitySets = await this.dungeonActionService.getCharacterDungeonActionEntitySet(
+            dungeonActionEntity,
+        );
 
         const responseData = buildResponse(requestData.data.sentence, []);
 
