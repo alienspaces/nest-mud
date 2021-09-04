@@ -10,6 +10,7 @@ import {
     DungeonMonsterEntity,
     DungeonLocationEntity,
     DungeonObjectEntity,
+    DungeonActionEntitySet,
 } from '@/services';
 import * as createDungeonCharacterActionSchema from './schema/create-dungeon-action.schema.json';
 import { CreateDungeonActionDto, DungeonActionDto } from './dto';
@@ -38,32 +39,22 @@ export class DungeonCharacterActionController {
         );
 
         // Fetch all dungeon action events that have occurred since their last action
-        const previousDungeonActionEntitySets = await this.dungeonActionService.getCharacterDungeonActionEntitySet(
+        const dungeonActionEntitySets = await this.dungeonActionService.getCharacterDungeonActionEntitySets(
             dungeonActionEntity,
         );
 
-        const responseData = buildResponse(requestData.data.sentence, []);
+        const responseData = buildResponse(requestData.data.sentence, dungeonActionEntitySets);
 
         return responseData;
     }
 }
 
-interface BuildResponseData {
-    dungeonActionEntity: DungeonActionEntity;
-    dungeonCharacterEntity: DungeonCharacterEntity;
-    dungeonMonsterEntity: DungeonMonsterEntity;
-    dungeonLocationEntity: DungeonLocationEntity;
-    dungeonCharacterEntities: DungeonCharacterEntity[];
-    dungeonMonsterEntities: DungeonMonsterEntity[];
-    dungeonObjectEntities: DungeonObjectEntity[];
-}
-
-function buildResponse(sentence: string, buildResponseData: BuildResponseData[]): DungeonActionDto {
+function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionEntitySet[]): DungeonActionDto {
     let returnData: DungeonActionDto;
 
     let returnDataCharacterActions: DungeonActionDto['data'] = [];
 
-    buildResponseData.forEach((data) => {
+    dungeonActionEntitySets.forEach((data) => {
         returnDataCharacterActions.push({
             // The action that occurred
             action: {

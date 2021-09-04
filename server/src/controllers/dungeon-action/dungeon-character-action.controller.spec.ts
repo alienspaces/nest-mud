@@ -8,6 +8,7 @@ import { RepositoriesModule } from '@/repositories';
 import { Data, DataModule, DataService, defaultDataConfig } from '@/common/data';
 import { ServicesModule } from '@/services';
 import { DungeonCharacterActionController } from './dungeon-character-action.controller';
+import { DungeonActionDto } from './dto/dungeon-action.dto';
 
 describe('DungeonCharacterActionController', () => {
     let module: TestingModule;
@@ -46,8 +47,20 @@ describe('DungeonCharacterActionController', () => {
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
-            // TODO: Add action move tests
+            let dungeonActionDto: DungeonActionDto = await controller.create(
+                data.dungeonCharacterEntities[0].dungeon_id,
+                data.dungeonCharacterEntities[0].id,
+                {
+                    data: {
+                        sentence: 'move north',
+                    },
+                },
+            );
+            expect(dungeonActionDto.data).toBeTruthy();
+            expect(dungeonActionDto.data.length).toBeGreaterThan(0);
+            expect(dungeonActionDto.data[0].action).toBeTruthy();
 
+            data.addCharacterTeardownId(dungeonActionDto.data[0].action.id);
             await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });

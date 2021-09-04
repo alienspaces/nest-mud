@@ -65,7 +65,7 @@ export class DungeonActionService {
         // Current dungeon location record set
         let records = await this.getDungeonLocationRecordSet(dungeonCharacterID);
 
-        logger.debug(`Fetched dungeon record set`);
+        logger.info(`Fetched dungeon record set`);
 
         // Resolve character action
         let dungeonActionRecord = this.resolver.resolveAction(sentence, records);
@@ -73,22 +73,22 @@ export class DungeonActionService {
             throw new Error('Failed to resolve action');
         }
 
-        logger.debug(`Have dungeon action record resolved command >${dungeonActionRecord.resolved_command}<`);
+        logger.info(`Have dungeon action record resolved command >${dungeonActionRecord.resolved_command}<`);
 
         // Perform dungeon character action
         dungeonActionRecord = await this.performDungeonCharacterAction(dungeonActionRecord, records);
 
-        logger.debug(`Have updated dungeon action record ${dungeonActionRecord.id}`);
+        logger.info(`Have updated dungeon action record ${dungeonActionRecord.id}`);
 
         // Refetch current dungeon location record set
         records = await this.getDungeonLocationRecordSet(dungeonCharacterID);
 
-        logger.debug(`Fetched updated dungeon record set`);
+        logger.info(`Fetched updated dungeon record set`);
 
         // Create dungeon action event records
         dungeonActionRecord = await this.createDungeonActionRecord(dungeonActionRecord);
 
-        logger.debug(`Created dungeon action record ID ${dungeonActionRecord.id}`);
+        logger.info(`Created dungeon action record ID ${dungeonActionRecord.id}`);
 
         if (records.characters) {
             for (var idx = 0; idx < records.characters.length; idx++) {
@@ -96,7 +96,7 @@ export class DungeonActionService {
                     dungeonActionRecord,
                     records.characters[idx],
                 );
-                logger.debug(`Created dungeon action character record id ${dungeonActionCharacterRecord.id}`);
+                logger.info(`Created dungeon action character record id ${dungeonActionCharacterRecord.id}`);
             }
         }
 
@@ -106,7 +106,7 @@ export class DungeonActionService {
                     dungeonActionRecord,
                     records.monsters[idx],
                 );
-                logger.debug(`Created dungeon action monster record id ${dungeonActionMonsterRecord.id}`);
+                logger.info(`Created dungeon action monster record id ${dungeonActionMonsterRecord.id}`);
             }
         }
 
@@ -116,7 +116,7 @@ export class DungeonActionService {
                     dungeonActionRecord,
                     records.objects[idx],
                 );
-                logger.debug(`Created dungeon action object record id ${dungeonActionObjectRecord.id}`);
+                logger.info(`Created dungeon action object record id ${dungeonActionObjectRecord.id}`);
             }
         }
 
@@ -146,7 +146,7 @@ export class DungeonActionService {
         const actionFunc = actionFuncs[dungeonActionRecord.resolved_command];
         dungeonActionRecord = await actionFunc(dungeonActionRecord, records);
 
-        logger.debug(`Have updated dungeon action record ${dungeonActionRecord}`);
+        logger.info(`Have updated dungeon action record ${dungeonActionRecord}`);
 
         return dungeonActionRecord;
     }
@@ -200,6 +200,8 @@ export class DungeonActionService {
         return dungeonActionRecord;
     }
 
+    // NOTE: The following should probably be returning entities sourced from other services
+    // and not from repositories directly
     async getDungeonLocationRecordSet(dungeonCharacterID: string): Promise<DungeonLocationRecordSet> {
         const logger = this.loggerService.logger({
             function: 'getDungeonLocationRecordSet',
@@ -213,7 +215,7 @@ export class DungeonActionService {
         if (!characterRecord) {
             throw new Error(`Character ${dungeonCharacterID} not found, cannot get dungeon location record set`);
         }
-        logger.debug(`Fetched dungeon character ID ${characterRecord.id}`);
+        logger.info(`Fetched dungeon character ID ${characterRecord.id}`);
 
         // Location record
         const locationRecord = await this.dungeonLocationRepository.getOne({
@@ -230,7 +232,7 @@ export class DungeonActionService {
             ],
             forUpdate: true,
         });
-        logger.debug(`Fetched ${characterRecords.length} dungeon character records`);
+        logger.info(`Fetched ${characterRecords.length} dungeon character records`);
 
         // Monsters at location
         const monsterRecords = await this.dungeonMonsterRepository.getMany({
@@ -242,7 +244,7 @@ export class DungeonActionService {
             ],
             forUpdate: true,
         });
-        logger.debug(`Fetched ${monsterRecords.length} dungeon monster records`);
+        logger.info(`Fetched ${monsterRecords.length} dungeon monster records`);
 
         // Objects at location
         const objectRecords = await this.dungeonObjectRepository.getMany({
@@ -254,7 +256,7 @@ export class DungeonActionService {
             ],
             forUpdate: true,
         });
-        logger.debug(`Fetched ${objectRecords.length} dungeon object records`);
+        logger.info(`Fetched ${objectRecords.length} dungeon object records`);
 
         let locationIds: string[] = [];
         [
@@ -284,7 +286,7 @@ export class DungeonActionService {
                 },
             ],
         });
-        logger.debug(`Fetched ${locationRecords.length} dungeon location records`);
+        logger.info(`Fetched ${locationRecords.length} dungeon location records`);
 
         // Resolve action sentence
         const records: DungeonLocationRecordSet = {
@@ -299,13 +301,14 @@ export class DungeonActionService {
         return records;
     }
 
-    async getCharacterDungeonActionEntitySet(
+    async getCharacterDungeonActionEntitySets(
         dungeonActionRecord: DungeonActionEntity,
     ): Promise<DungeonActionEntitySet[]> {
         const logger = this.loggerService.logger({
             function: 'getCharacterDungeonActionEntitySet',
         });
 
+        // Find this characters previous dungeon action record
         const previousDungeonActionRecords = await this.dungeonActionRepository.getMany({
             parameters: [
                 {
@@ -321,11 +324,19 @@ export class DungeonActionService {
             limit: 1,
         });
 
+        // When there aren't any previous dungeon action records for this character
+        // return the dungeon action entity set for the provided dungeon action record
         if (!previousDungeonActionRecords || !previousDungeonActionRecords.length) {
-            logger.info('No previous dungeon character actions, returning...');
-            return;
+            logger.info('No previous dungeon character actions');
+
+            const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(dungeonActionRecord);
+            const dungeonActionEntitySet = await this.buildDungeonActionEntitySet(dungeonActionRecordSet);
+
+            return [dungeonActionEntitySet];
         }
 
+        // When there is a previous dungeon action fetch all dungeon action records that
+        // occured since that dungeon action at the same location
         const dungeonActionRecords = await this.dungeonActionRepository.getMany({
             parameters: [
                 {
@@ -340,7 +351,7 @@ export class DungeonActionService {
             ],
         });
 
-        const allDungeonActionRecords = [previousDungeonActionRecords[0], ...dungeonActionRecords];
+        const allDungeonActionRecords = [...dungeonActionRecords, dungeonActionRecord];
 
         const returnDungeonActionEntitySets: DungeonActionEntitySet[] = [];
         for (var idx = 0; idx < allDungeonActionRecords.length; idx++) {
@@ -399,7 +410,7 @@ export class DungeonActionService {
         const logger = this.loggerService.logger({
             function: 'createDungeonActionRecord',
         });
-        logger.debug('Dungeon action record', dungeonActionRecord);
+        logger.info('Dungeon action record', dungeonActionRecord);
         dungeonActionRecord = await this.dungeonActionRepository.insertOne({
             record: dungeonActionRecord,
         });

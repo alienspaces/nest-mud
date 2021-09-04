@@ -72,7 +72,7 @@ describe('DungeonCharactersController', () => {
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
-            let DungeonCharacterDto: DungeonCharacterDto = await controller.create(data.dungeonEntities[0].id, {
+            let dungeonCharacterDto: DungeonCharacterDto = await controller.create(data.dungeonEntities[0].id, {
                 data: {
                     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
                     strength: faker.datatype.number(10),
@@ -80,11 +80,10 @@ describe('DungeonCharactersController', () => {
                     intelligence: faker.datatype.number(10),
                 },
             });
-            expect(DungeonCharacterDto.data).toBeTruthy();
-            expect(DungeonCharacterDto.data.length).toBeGreaterThan(0);
+            expect(dungeonCharacterDto.data).toBeTruthy();
+            expect(dungeonCharacterDto.data.length).toBeGreaterThan(0);
 
-            data.addCharacterTeardownId(DungeonCharacterDto.data[0].id);
-
+            data.addCharacterTeardownId(dungeonCharacterDto.data[0].id);
             await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
