@@ -134,7 +134,7 @@ export abstract class Repository<TRecord extends Record> {
         return sql;
     }
 
-    buildInsertSQL(): string {
+    buildInsertSQL(record: TRecord): string {
         const logger = this.loggerService.logger({
             function: 'buildInsertSQL',
         });
@@ -142,16 +142,18 @@ export abstract class Repository<TRecord extends Record> {
         let values = '';
         let valueCount = 0;
         this.columnNames.forEach((columnName) => {
-            sql += `"${columnName}", `;
-            valueCount++;
-            values += `$${valueCount}, `;
+            logger.debug(`Column ${columnName} value ${record[columnName]}`);
+            if (record[columnName] !== undefined) {
+                sql += `"${columnName}", `;
+                valueCount++;
+                values += `$${valueCount}, `;
+            }
         });
         sql = sql.substring(0, sql.length - 2);
         values = values.substring(0, values.length - 2);
         sql += `) VALUES (${values})`;
         sql += ' RETURNING ';
         this.columnNames.forEach((columnName) => {
-            valueCount++;
             sql += `"${columnName}", `;
         });
         sql = sql.substring(0, sql.length - 2);
@@ -231,7 +233,6 @@ export abstract class Repository<TRecord extends Record> {
         const values = [args.id];
         logger.debug(values);
         const result = await client.query(sql, values);
-        // await this.databaseService.end();
 
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -271,7 +272,6 @@ export abstract class Repository<TRecord extends Record> {
         });
         logger.debug(values);
         const result = await client.query(sql, values);
-        // await this.databaseService.end();
 
         return result.rows as TRecord[];
     }
@@ -298,7 +298,6 @@ export abstract class Repository<TRecord extends Record> {
         const values = this.columnNames.map((columnName: string) => args.record[columnName]);
         logger.debug(values);
         const result = await client.query(sql, values);
-        // await this.databaseService.end();
 
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
@@ -314,19 +313,22 @@ export abstract class Repository<TRecord extends Record> {
         });
         const client = this.databaseService.client;
 
-        // TODO: Only include non null record properties in insert SQL column list and values
-
-        const sql = this.buildInsertSQL();
-
         if (!args.record.id) {
             args.record.id = crypto.randomUUID();
         }
         args.record.created_at = new Date(new Date().toUTCString());
 
-        const values = this.columnNames.map((columnName: string) => args.record[columnName]);
+        const sql = this.buildInsertSQL(args.record);
+
+        const values: any[] = [];
+        this.columnNames.forEach((columnName) => {
+            if (args.record[columnName] !== undefined) {
+                values.push(args.record[columnName]);
+            }
+        });
+
         logger.debug(values);
         const result = await client.query(sql, values);
-        // await this.databaseService.end();
 
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -354,7 +356,6 @@ export abstract class Repository<TRecord extends Record> {
         const values = [args.id];
         logger.debug(values);
         const result = await client.query(sql, values);
-        // await this.databaseService.end();
 
         if (result.rowCount != 1) {
             // TODO: Data layer exception type

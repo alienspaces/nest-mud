@@ -43,6 +43,12 @@ describe('ActionsService', () => {
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
+            const dungeonActionEntity = await service.processDungeonCharacterAction(
+                data.dungeonCharacterEntities[0].id,
+                'move north',
+            );
+            expect(dungeonActionEntity.id).toBeTruthy();
+
             await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });

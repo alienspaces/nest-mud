@@ -30,7 +30,6 @@ export class DungeonService {
         const repositoryParameters: DungeonRepositoryParameter[] = [];
         for (var key in parameters) {
             if (parameters.hasOwnProperty(key)) {
-                console.log(key + ' -> ' + parameters[key]);
                 repositoryParameters.push({
                     column: key,
                     value: parameters[key],

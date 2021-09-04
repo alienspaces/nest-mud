@@ -151,9 +151,13 @@ INSERT INTO test (id, name, age, created_at) VALUES ('${record.id}', '${record.n
 
     describe('buildInsertSQL', () => {
         it('should build insert SQL', () => {
-            const sql = repository.buildInsertSQL();
+            const testRecord: TestRecord = {
+                name: 'Bruce Banner',
+                age: 45,
+            };
+            const sql = repository.buildInsertSQL(testRecord);
             expect(sql).toEqual(
-                'INSERT INTO test ("id", "name", "age", "created_at", "updated_at", "deleted_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
+                'INSERT INTO test ("name", "age") VALUES ($1, $2) RETURNING "id", "name", "age", "created_at", "updated_at", "deleted_at"',
             );
         });
     });
