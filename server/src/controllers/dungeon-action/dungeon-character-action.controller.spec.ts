@@ -46,6 +46,8 @@ describe('DungeonCharacterActionController', () => {
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
+            // TODO: Add action move tests
+
             await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });

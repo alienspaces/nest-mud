@@ -39,7 +39,7 @@ describe('ActionsService', () => {
     });
 
     describe('processDungeonCharacterAction', () => {
-        it('should process dungeon character action', async () => {
+        it('should move character north', async () => {
             const data = new Data();
             await expect(dataService.setup(defaultDataConfig(), data)).resolves.not.toThrow();
 
@@ -48,6 +48,8 @@ describe('ActionsService', () => {
                 'move north',
             );
             expect(dungeonActionEntity.id).toBeTruthy();
+            expect(dungeonActionEntity.resolved_command).toEqual('move');
+            expect(dungeonActionEntity.dungeon_location_id).toEqual(data.dungeonLocationEntities[1].id);
 
             data.addActionTeardownId(dungeonActionEntity.id);
             await expect(dataService.teardown(data)).resolves.not.toThrow();
