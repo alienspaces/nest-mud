@@ -49,6 +49,7 @@ describe('ActionsService', () => {
             );
             expect(dungeonActionEntity.id).toBeTruthy();
 
+            data.addActionTeardownId(dungeonActionEntity.id);
             await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });

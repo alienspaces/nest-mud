@@ -20,6 +20,8 @@ import {
     CreateDungeonObjectEntity,
     DungeonObjectEntity,
     DungeonObjectService,
+    DungeonActionEntity,
+    DungeonActionService,
 } from '@/services';
 import { DataConfig, DungeonConfig } from './data.config';
 
@@ -29,12 +31,14 @@ export class Data {
     dungeonCharacterEntities: DungeonCharacterEntity[] = [];
     dungeonMonsterEntities: DungeonMonsterEntity[] = [];
     dungeonObjectEntities: DungeonObjectEntity[] = [];
+    dungeonActionEntities: DungeonActionEntity[] = [];
 
     private _dungeonTeardownIds: string[] = [];
     private _dungeonLocationTeardownIds: string[] = [];
     private _characterTeardownIds: string[] = [];
     private _monsterTeardownIds: string[] = [];
     private _objectTeardownIds: string[] = [];
+    private _actionTeardownIds: string[] = [];
 
     constructor() {
         this.dungeonEntities = [];
@@ -47,6 +51,8 @@ export class Data {
         this._monsterTeardownIds = [];
         this.dungeonObjectEntities = [];
         this._objectTeardownIds = [];
+        this.dungeonActionEntities = [];
+        this._actionTeardownIds = [];
     }
 
     getDungeonTeardownIds(): string[] {
@@ -67,6 +73,10 @@ export class Data {
 
     getObjectTeardownIds(): string[] {
         return this._objectTeardownIds;
+    }
+
+    getActionTeardownIds(): string[] {
+        return this._actionTeardownIds;
     }
 
     clearDungeonEntities() {
@@ -94,6 +104,11 @@ export class Data {
         this._objectTeardownIds = [];
     }
 
+    clearActionEntities() {
+        this.dungeonActionEntities = [];
+        this._actionTeardownIds = [];
+    }
+
     addDungeonTeardownId(id: string) {
         this._dungeonTeardownIds.push(`'${id}'`);
     }
@@ -112,6 +127,10 @@ export class Data {
 
     addObjectTeardownId(id: string) {
         this._objectTeardownIds.push(`'${id}'`);
+    }
+
+    addActionTeardownId(id: string) {
+        this._actionTeardownIds.push(`'${id}'`);
     }
 }
 
@@ -237,8 +256,7 @@ export class DataService {
             await this.databaseService.connect();
         }
 
-        // TODO: Teardown dungeon action events
-
+        await this.removeActionEntities(data);
         await this.removeObjectEntities(data);
         await this.removeMonsterEntities(data);
         await this.removeCharacterEntities(data);
@@ -421,6 +439,62 @@ export class DataService {
         }
 
         data.clearMonsterEntities();
+    }
+
+    private async removeActionEntities(data: Data) {
+        const logger = this.loggerService.logger({
+            class: 'DataService',
+            function: 'removeActionEntities',
+        });
+
+        const teardownIDs = data.getActionTeardownIds();
+        if (!teardownIDs.length) {
+            logger.debug('No dungeon actions to teardown, skipping...');
+            return;
+        }
+
+        const client = await this.databaseService.connect();
+        let sql = `DELETE FROM dungeon_action_object WHERE dungeon_action_id IN (${teardownIDs.join(',')});`;
+        logger.debug(sql);
+
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
+
+        sql = `DELETE FROM dungeon_action_monster WHERE dungeon_action_id IN (${teardownIDs.join(',')});`;
+        logger.debug(sql);
+
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
+
+        sql = `DELETE FROM dungeon_action_character WHERE dungeon_action_id IN (${teardownIDs.join(',')});`;
+        logger.debug(sql);
+
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
+
+        sql = `DELETE FROM dungeon_action WHERE id IN (${teardownIDs.join(',')});`;
+        logger.debug(sql);
+
+        try {
+            await client.query(sql);
+        } catch (e) {
+            logger.error(e);
+            await this.databaseService.end();
+        }
+
+        data.clearActionEntities();
     }
 
     private async removeObjectEntities(data: Data) {
