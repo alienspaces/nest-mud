@@ -31,7 +31,7 @@ export class DungeonCharacterActionController {
             function: 'create',
         });
 
-        logger.debug('Creating dungeon character action');
+        logger.info('Creating dungeon character action');
 
         const dungeonActionEntity = await this.dungeonActionService.processDungeonCharacterAction(
             character_id,
@@ -64,15 +64,15 @@ function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionE
                 id: dungeonActionEntity.id,
                 command: dungeonActionEntity.resolved_command,
                 command_result: '',
-                equipped_dungeon_object_name: dungeonActionEntity.resolved_equipped_dungeon_object_name,
-                stashed_dungeon_object_name: dungeonActionEntity.resolved_stashed_dungeon_object_name,
-                target_dungeon_object_name: dungeonActionEntity.resolved_target_dungeon_object_name,
-                target_dungeon_character_name: dungeonActionEntity.resolved_target_dungeon_character_name,
-                target_dungeon_monster_name: dungeonActionEntity.resolved_target_dungeon_monster_name,
-                target_dungeon_location_direction: dungeonActionEntity.resolved_target_dungeon_location_direction,
-                target_dungeon_location_name: dungeonActionEntity.resolved_target_dungeon_location_name,
+                equipped_dungeon_object_name: dungeonActionEntity.resolved_equipped_dungeon_object_name || undefined,
+                stashed_dungeon_object_name: dungeonActionEntity.resolved_stashed_dungeon_object_name || undefined,
+                target_dungeon_object_name: dungeonActionEntity.resolved_target_dungeon_object_name || undefined,
+                target_dungeon_character_name: dungeonActionEntity.resolved_target_dungeon_character_name || undefined,
+                target_dungeon_monster_name: dungeonActionEntity.resolved_target_dungeon_monster_name || undefined,
+                target_dungeon_location_direction:
+                    dungeonActionEntity.resolved_target_dungeon_location_direction || undefined,
+                target_dungeon_location_name: dungeonActionEntity.resolved_target_dungeon_location_name || undefined,
                 created_at: dungeonActionEntity.created_at,
-                updated_at: dungeonActionEntity.updated_at || undefined,
             },
             // The location the action occurred
             location: {

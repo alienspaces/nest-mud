@@ -12,7 +12,6 @@ export class DungeonActionDataDto {
         target_dungeon_location_direction?: string;
         target_dungeon_location_name?: string;
         created_at: Date;
-        updated_at?: Date;
     };
     // The location the action occurred
     location: {

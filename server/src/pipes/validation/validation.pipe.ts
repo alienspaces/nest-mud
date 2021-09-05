@@ -9,6 +9,9 @@ export class ValidationPipe implements PipeTransform {
         console.log(`Value`, value);
         console.log(`Schema ${this.schemaId}`);
         console.log(`Meta`, metadata);
+        if (metadata.type === 'param') {
+            return value;
+        }
 
         const errors = Schema.validate(this.schemaId, this.schema, value);
         if (errors) {
