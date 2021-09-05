@@ -29,6 +29,7 @@ import { DungeonObjectEntity } from '@/services/dungeon-object/dungeon-object.en
 import { DungeonActionEntitySet, DungeonActionEntity } from './dungeon-action.entities';
 import { DungeonCharacterActionResolver } from './dungeon-action.resolver';
 import { DungeonLocationRecordSet, DungeonActionEventRecordSet } from './dungeon-action.types';
+import { domainServiceError } from '@/common/error';
 
 type Action = {
     action: string;
@@ -71,7 +72,10 @@ export class DungeonActionService {
         // Resolve character action
         let dungeonActionRecord = this.resolver.resolveAction(sentence, records);
         if (!dungeonActionRecord) {
-            throw new Error('Failed to resolve action');
+            throw domainServiceError(`Failed to resolve command for sentence ${sentence}`);
+        }
+        if (!dungeonActionRecord.resolved_command) {
+            throw domainServiceError(`Failed to resolve command for sentence ${sentence}`);
         }
 
         logger.info(`Have dungeon action record resolved command >${dungeonActionRecord.resolved_command}<`);
@@ -145,6 +149,10 @@ export class DungeonActionService {
         };
 
         const actionFunc = actionFuncs[dungeonActionRecord.resolved_command];
+        if (!actionFunc) {
+            throw domainServiceError(`Action function for ${dungeonActionRecord.resolved_command} not supported`);
+        }
+
         dungeonActionRecord = await actionFunc(dungeonActionRecord, records);
 
         logger.info(`Have updated dungeon action record ${dungeonActionRecord}`);
@@ -174,7 +182,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method not implemented');
+        throw new Error('Method look not implemented');
         return dungeonActionRecord;
     }
 
@@ -182,7 +190,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method not implemented');
+        throw new Error('Method equip not implemented');
         return dungeonActionRecord;
     }
 
@@ -190,7 +198,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method not implemented');
+        throw new Error('Method stash not implemented');
         return dungeonActionRecord;
     }
 
@@ -198,7 +206,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method not implemented');
+        throw new Error('Method drop not implemented');
         return dungeonActionRecord;
     }
 
