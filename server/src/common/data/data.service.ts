@@ -449,13 +449,13 @@ export class DataService {
 
         const teardownIDs = data.getActionTeardownIds();
         if (!teardownIDs.length) {
-            logger.debug('No dungeon actions to teardown, skipping...');
+            logger.warn('No dungeon actions to teardown, skipping...');
             return;
         }
 
         const client = await this.databaseService.connect();
         let sql = `DELETE FROM dungeon_action_object WHERE dungeon_action_id IN (${teardownIDs.join(',')});`;
-        logger.debug(sql);
+        logger.warn(sql);
 
         try {
             await client.query(sql);
@@ -465,7 +465,7 @@ export class DataService {
         }
 
         sql = `DELETE FROM dungeon_action_monster WHERE dungeon_action_id IN (${teardownIDs.join(',')});`;
-        logger.debug(sql);
+        logger.warn(sql);
 
         try {
             await client.query(sql);
@@ -475,7 +475,7 @@ export class DataService {
         }
 
         sql = `DELETE FROM dungeon_action_character WHERE dungeon_action_id IN (${teardownIDs.join(',')});`;
-        logger.debug(sql);
+        logger.warn(sql);
 
         try {
             await client.query(sql);
@@ -485,7 +485,7 @@ export class DataService {
         }
 
         sql = `DELETE FROM dungeon_action WHERE id IN (${teardownIDs.join(',')});`;
-        logger.debug(sql);
+        logger.warn(sql);
 
         try {
             await client.query(sql);
@@ -530,7 +530,7 @@ export class DataService {
         });
         for (var idx = 0; idx < dungeonConfig.dungeonLocationConfig.length; idx++) {
             if (dungeonConfig.dungeonLocationConfig[idx].entity.name === name) {
-                logger.debug(`Returning >${dungeonConfig.dungeonLocationConfig[idx].entity.id}< for >${name}<`);
+                logger.info(`Returning >${dungeonConfig.dungeonLocationConfig[idx].entity.id}< for >${name}<`);
                 return dungeonConfig.dungeonLocationConfig[idx].entity.id;
             }
         }
@@ -640,6 +640,11 @@ export class DataService {
     }
 
     private resolveConfigLocationIdentifiers(dungeonConfig: DungeonConfig) {
+        const logger = this.loggerService.logger({
+            class: 'DataService',
+            function: 'resolveConfigLocationIdentifiers',
+        });
+
         // Location direction identifiers
         if (dungeonConfig.dungeonLocationConfig) {
             for (var idx = 0; idx < dungeonConfig.dungeonLocationConfig.length; idx++) {
@@ -725,6 +730,9 @@ export class DataService {
         // Character location identifiers
         if (dungeonConfig.dungeonCharacterConfig) {
             for (var idx = 0; idx < dungeonConfig.dungeonCharacterConfig.length; idx++) {
+                logger.info(
+                    `Fetching location for dungeon character ${dungeonConfig.dungeonCharacterConfig[idx].entity.name} location ${dungeonConfig.dungeonCharacterConfig[idx].location_name}`,
+                );
                 dungeonConfig.dungeonCharacterConfig[idx].entity.dungeon_location_id = this.getLocationIdentifier(
                     dungeonConfig,
                     dungeonConfig.dungeonCharacterConfig[idx].location_name,
@@ -735,6 +743,9 @@ export class DataService {
         // Monster location identifiers
         if (dungeonConfig.dungeonMonsterConfig) {
             for (var idx = 0; idx < dungeonConfig.dungeonMonsterConfig.length; idx++) {
+                logger.info(
+                    `Fetching location for dungeon monster ${dungeonConfig.dungeonMonsterConfig[idx].entity.name} location ${dungeonConfig.dungeonMonsterConfig[idx].location_name}`,
+                );
                 dungeonConfig.dungeonMonsterConfig[idx].entity.dungeon_location_id = this.getLocationIdentifier(
                     dungeonConfig,
                     dungeonConfig.dungeonMonsterConfig[idx].location_name,
@@ -745,6 +756,9 @@ export class DataService {
         // Object location identifiers
         if (dungeonConfig.dungeonObjectConfig) {
             for (var idx = 0; idx < dungeonConfig.dungeonObjectConfig.length; idx++) {
+                logger.info(
+                    `Fetching location for dungeon object ${dungeonConfig.dungeonObjectConfig[idx].entity.name} location ${dungeonConfig.dungeonObjectConfig[idx].location_name}`,
+                );
                 dungeonConfig.dungeonObjectConfig[idx].entity.dungeon_location_id = this.getLocationIdentifier(
                     dungeonConfig,
                     dungeonConfig.dungeonObjectConfig[idx].location_name,

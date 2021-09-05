@@ -1,6 +1,7 @@
 export interface CreateDungeonMonsterEntity {
     id?: string;
     dungeon_id: string;
+    dungeon_location_id: string;
     name: string;
     strength: number;
     dexterity: number;

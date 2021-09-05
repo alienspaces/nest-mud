@@ -25,6 +25,7 @@ import { DungeonCharacterEntity } from '@/services/dungeon-character/dungeon-cha
 import { DungeonMonsterService } from '@/services/dungeon-monster/dungeon-monster.service';
 import { DungeonMonsterEntity } from '@/services/dungeon-monster/dungeon-monster.entities';
 import { DungeonObjectService } from '@/services/dungeon-object/dungeon-object.service';
+import { DungeonObjectEntity } from '@/services/dungeon-object/dungeon-object.entities';
 import { DungeonActionEntitySet, DungeonActionEntity } from './dungeon-action.entities';
 import { DungeonCharacterActionResolver } from './dungeon-action.resolver';
 import { DungeonLocationRecordSet, DungeonActionEventRecordSet } from './dungeon-action.types';
@@ -65,7 +66,7 @@ export class DungeonActionService {
         // Current dungeon location record set
         let records = await this.getDungeonLocationRecordSet(dungeonCharacterID);
 
-        logger.info(`Fetched dungeon record set`);
+        logger.info(`Fetched dungeon location >${records.location.name}< record set`);
 
         // Resolve character action
         let dungeonActionRecord = this.resolver.resolveAction(sentence, records);
@@ -83,7 +84,7 @@ export class DungeonActionService {
         // Refetch current dungeon location record set
         records = await this.getDungeonLocationRecordSet(dungeonCharacterID);
 
-        logger.info(`Fetched updated dungeon record set`);
+        logger.info(`Fetched updated dungeon location >${records.location.name}< record set`);
 
         // Create dungeon action event records
         dungeonActionRecord = await this.createDungeonActionRecord(dungeonActionRecord);
@@ -160,6 +161,7 @@ export class DungeonActionService {
             let characterRecord = records.character;
             characterRecord.dungeon_location_id = dungeonActionRecord.resolved_target_dungeon_location_id;
             characterRecord = await this.dungeonCharacterRepository.updateOne({ record: characterRecord });
+
             // Update dungeon action entity
             dungeonActionRecord.dungeon_location_id = dungeonActionRecord.resolved_target_dungeon_location_id;
         } else if (dungeonActionRecord.dungeon_monster_id) {
@@ -519,17 +521,38 @@ export class DungeonActionService {
             );
         }
 
-        const dungeonCharacterEntities = await this.dungeonCharacterService.getDungeonCharacters({
-            dungeon_location_id: dungeonActionRecordSet.dungeonActionRecord.dungeon_location_id,
-        });
+        const dungeonCharacterEntities: DungeonCharacterEntity[] = [];
+        if (dungeonActionRecordSet.dungeonActionCharacterRecords) {
+            for (var idx = 0; idx < dungeonActionRecordSet.dungeonActionCharacterRecords.length; idx++) {
+                const dungeonActionCharacterRecord = dungeonActionRecordSet.dungeonActionCharacterRecords[0];
+                const dungeonCharacterEntity = await this.dungeonCharacterService.getDungeonCharacter(
+                    dungeonActionCharacterRecord.dungeon_character_id,
+                );
+                dungeonCharacterEntities.push(dungeonCharacterEntity);
+            }
+        }
 
-        const dungeonMonsterEntities = await this.dungeonMonsterService.getDungeonMonsters({
-            dungeon_location_id: dungeonActionRecordSet.dungeonActionRecord.dungeon_location_id,
-        });
+        const dungeonMonsterEntities: DungeonMonsterEntity[] = [];
+        if (dungeonActionRecordSet.dungeonActionMonsterRecords) {
+            for (var idx = 0; idx < dungeonActionRecordSet.dungeonActionMonsterRecords.length; idx++) {
+                const dungeonActionMonsterRecord = dungeonActionRecordSet.dungeonActionMonsterRecords[0];
+                const dungeonMonsterEntity = await this.dungeonMonsterService.getDungeonMonster(
+                    dungeonActionMonsterRecord.dungeon_monster_id,
+                );
+                dungeonMonsterEntities.push(dungeonMonsterEntity);
+            }
+        }
 
-        const dungeonObjectEntities = await this.dungeonObjectService.getDungeonObjects({
-            dungeon_location_id: dungeonActionRecordSet.dungeonActionRecord.dungeon_location_id,
-        });
+        const dungeonObjectEntities: DungeonObjectEntity[] = [];
+        if (dungeonActionRecordSet.dungeonActionObjectRecords) {
+            for (var idx = 0; idx < dungeonActionRecordSet.dungeonActionObjectRecords.length; idx++) {
+                const dungeonActionObjectRecord = dungeonActionRecordSet.dungeonActionObjectRecords[0];
+                const dungeonObjectEntity = await this.dungeonObjectService.getDungeonObject(
+                    dungeonActionObjectRecord.dungeon_object_id,
+                );
+                dungeonObjectEntities.push(dungeonObjectEntity);
+            }
+        }
 
         const dungeonActionEntitySet = {
             dungeonActionEntity: dungeonActionEntity,

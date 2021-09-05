@@ -63,35 +63,22 @@ export class DungeonMonsterService {
         return dungeonMonsterEntities;
     }
 
-    async createDungeonMonster(CreateDungeonMonsterEntity: CreateDungeonMonsterEntity): Promise<DungeonMonsterEntity> {
-        const dungeonLocationRecords = await this.dungeonLocationRepository.getMany({
-            parameters: [
-                {
-                    column: 'dungeon_id',
-                    value: CreateDungeonMonsterEntity.dungeon_id,
-                },
-                { column: 'default', value: true },
-            ],
-        });
-        if (dungeonLocationRecords.length !== 1) {
-            throw new Error(`Dungeon ${CreateDungeonMonsterEntity.dungeon_id} default location record not found`);
-        }
-
+    async createDungeonMonster(createDungeonMonsterEntity: CreateDungeonMonsterEntity): Promise<DungeonMonsterEntity> {
         const dungeonMonsterRecord: DungeonMonsterRepositoryRecord = {
-            id: CreateDungeonMonsterEntity.id || null,
-            dungeon_id: CreateDungeonMonsterEntity.dungeon_id,
-            dungeon_location_id: dungeonLocationRecords[0].id,
-            name: CreateDungeonMonsterEntity.name,
-            strength: CreateDungeonMonsterEntity.strength,
-            dexterity: CreateDungeonMonsterEntity.dexterity,
-            intelligence: CreateDungeonMonsterEntity.intelligence,
+            id: createDungeonMonsterEntity.id || null,
+            dungeon_id: createDungeonMonsterEntity.dungeon_id,
+            dungeon_location_id: createDungeonMonsterEntity.dungeon_location_id,
+            name: createDungeonMonsterEntity.name,
+            strength: createDungeonMonsterEntity.strength,
+            dexterity: createDungeonMonsterEntity.dexterity,
+            intelligence: createDungeonMonsterEntity.intelligence,
             health: this.calculateHealth({
-                strength: CreateDungeonMonsterEntity.strength,
-                dexterity: CreateDungeonMonsterEntity.dexterity,
+                strength: createDungeonMonsterEntity.strength,
+                dexterity: createDungeonMonsterEntity.dexterity,
             }),
             fatigue: this.calculateFatigue({
-                strength: CreateDungeonMonsterEntity.strength,
-                intelligence: CreateDungeonMonsterEntity.intelligence,
+                strength: createDungeonMonsterEntity.strength,
+                intelligence: createDungeonMonsterEntity.intelligence,
             }),
             coins: defaultCoins,
         };

@@ -59,8 +59,13 @@ describe('DungeonCharacterActionController', () => {
             expect(dungeonActionDto.data).toBeTruthy();
             expect(dungeonActionDto.data.length).toBeGreaterThan(0);
             expect(dungeonActionDto.data[0].action).toBeTruthy();
+            expect(dungeonActionDto.data[0].character).toBeTruthy();
+            expect(dungeonActionDto.data[0].characters).toBeTruthy();
+            expect(dungeonActionDto.data[0].characters.length).toEqual(1);
+            expect(dungeonActionDto.data[0].monsters).toBeTruthy();
+            expect(dungeonActionDto.data[0].monsters.length).toEqual(1);
 
-            data.addCharacterTeardownId(dungeonActionDto.data[0].action.id);
+            data.addActionTeardownId(dungeonActionDto.data[0].action.id);
             await expect(dataService.teardown(data)).resolves.not.toThrow();
         });
     });
