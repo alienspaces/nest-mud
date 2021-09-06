@@ -40,7 +40,7 @@ Possible directions:
 
 ### Look Actions
 
-A character can `look` a direction, at an object, at another character or at a monster that is in the current location.
+A character can simply `look` to get a description of their current location, look in a specific direction, at an object, at another character or at a monster that is in the current location.
 
 When a character looks at an object that is not in their possession a brief description of the object will be provided. To look more closely at an object, a character must have the object equipped or stashed in their backpack.
 
@@ -49,6 +49,7 @@ When a character looks a direction a brief description of the location will be p
 **Syntax Examples:**
 
 ```text
+look
 look north
 look chest
 look goblin
@@ -64,4 +65,15 @@ A character may `equip` or `stash` an object into their backpack that is in thei
 equip sword
 stash gold hammer
 drop dragon tongue
+```
+
+### Use Actions
+
+A character may attempt `use` any object that is equipped, stashed or in their current location. Some items may only be used when equipped or stashed.
+
+**Syntax Examples:**
+
+```text
+use sword
+use door
 ```
