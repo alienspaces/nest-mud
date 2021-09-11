@@ -1,49 +1,28 @@
 import 'package:flutter/material.dart';
 
+// Application packages
+import 'package:client/logger.dart';
+import 'package:client/theme.dart';
+import 'package:client/navigation.dart';
+
 void main() {
+  // Initialise logger
+  initLogger();
+
+  // Run application
   runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final log = getLogger('CardFlipApp');
+
   @override
   Widget build(BuildContext context) {
+    log.info('Building..');
     return MaterialApp(
-      title: 'Nest MUD',
-      theme: ThemeData(
-        primarySwatch: Colors.brown,
-      ),
-      home: HomeScreen(title: 'Nest MUD - POC'),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Welcome',
-            ),
-          ],
-        ),
-      ),
+      title: 'Nest MUD Client',
+      theme: getTheme(context),
+      home: Navigation(),
     );
   }
 }
