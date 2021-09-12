@@ -53,11 +53,25 @@ class _HomeScreenState extends State<HomeScreen> {
         alignment: Alignment.center,
         child: Column(
           children: [
-            Container(child: Text('Enter the dungeon.')),
             Container(
+                child: Text(
+              'Enter the dungeon.',
+              style: Theme.of(context).textTheme.headline5,
+            )),
+            Container(
+              margin: EdgeInsets.all(20),
               child: ElevatedButton(
                 onPressed: widget.callbacks.openGamePage,
-                child: Text('Play'),
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Text(
+                    'Play',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        ?.copyWith(fontSize: 18, color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ),
               ),
             )
           ],
