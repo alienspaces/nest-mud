@@ -24,6 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # A composable, multi-platform, Future-based API for HTTP requests.
+  http: ^0.13.3
+
   # Flutter Widgets that make it easy to implement the BLoC
   # (Business Logic Component) design pattern. Built to be used
   # with the bloc state management package.

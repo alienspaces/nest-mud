@@ -8,6 +8,6 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MainApp());
 
-    expect(find.text('Welcome'), findsOneWidget);
+    expect(find.text('Nest MUD Client'), findsOneWidget);
   });
 }
