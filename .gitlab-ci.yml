@@ -1,5 +1,3 @@
-image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
-
 include:
   - template: Security/SAST.gitlab-ci.yml
 
@@ -12,7 +10,17 @@ sast:
       security-code-scan, sobelow, spotbugs
   stage: test
 
+test-client:
+  image: registry.gitlab.com/alienspaces/nest-mud/cirrusci/flutter:stable
+  stage: test
+  script:
+    - flutter test
+  only:
+    - develop
+    - master
+
 test-server:
+  image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
   stage: test
   variables:
     POSTGRES_DB: nest-mud

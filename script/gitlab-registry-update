@@ -12,3 +12,8 @@ IMAGE="postgres:12.7-alpine3.14"
 docker pull $IMAGE || exit $?
 docker tag $IMAGE registry.gitlab.com/alienspaces/nest-mud/$IMAGE
 docker push registry.gitlab.com/alienspaces/nest-mud/$IMAGE
+
+IMAGE="cirrusci/flutter:stable"
+docker pull $IMAGE
+docker tag $IMAGE registry.gitlab.com/alienspaces/nest-mud/$IMAGE
+docker push registry.gitlab.com/alienspaces/nest-mud/$IMAGE
