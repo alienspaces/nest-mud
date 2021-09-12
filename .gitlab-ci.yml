@@ -1,14 +1,17 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
+
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+
 stages:
-- test
+  - test
+
+sast:
+  variables:
+    SAST_EXCLUDED_ANALYZERS: bandit, brakeman, flawfinder, phpcs-security-audit, pmd-apex,
+      security-code-scan, sobelow, spotbugs
+  stage: test
+
 test-server:
   stage: test
   variables:
@@ -16,21 +19,16 @@ test-server:
     POSTGRES_USER: nest-mud-user
     POSTGRES_PASSWORD: nest-mud-pass
   services:
-  - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
-    alias: postgres
+    - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
+      alias: postgres
   before_script:
-  - apk add bash
-  - npm i -g @nestjs/cli
+    - apk add bash
+    - npm i -g @nestjs/cli
   script:
-  - cd server
-  - cp .env.ci .env
-  - source .env
-  - yarn install
-  - "./script/db-migrate-up"
-  - yarn test
-  - yarn test:e2e
-sast:
-  variables:
-    SAST_EXCLUDED_ANALYZERS: bandit, brakeman, flawfinder, phpcs-security-audit, pmd-apex,
-      security-code-scan, sobelow, spotbugs
-  stage: test
+    - cd server
+    - cp .env.ci .env
+    - source .env
+    - yarn install
+    - "./script/db-migrate-up"
+    - yarn test
+    - yarn test:e2e
