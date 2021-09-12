@@ -14,7 +14,7 @@ void main() {
 }
 
 class MainApp extends StatelessWidget {
-  final log = getLogger('CardFlipApp');
+  final log = getLogger('MainApp');
 
   @override
   Widget build(BuildContext context) {

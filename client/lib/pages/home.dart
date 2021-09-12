@@ -43,7 +43,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('HomePage - build');
+    final log = getLogger('HomeScreen');
     log.info('Building..');
 
     return Scaffold(

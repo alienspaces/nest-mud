@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:client/navigation.dart';
 import 'package:client/logger.dart';
 import 'package:client/widgets/common/header.dart';
+import 'package:client/widgets/game/game_board.dart';
 
 class GamePage extends Page {
   static const String pageName = 'GamePage';
@@ -43,7 +44,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('GamePage - build');
+    final log = getLogger('GameScreen');
     log.info('Building..');
 
     return Scaffold(
@@ -51,7 +52,7 @@ class _GameScreenState extends State<GameScreen> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-        child: Text('Welcome'),
+        child: GameBoardWidget(),
       ),
     );
   }
