@@ -5,13 +5,13 @@ import 'package:client/navigation.dart';
 import 'package:client/logger.dart';
 import 'package:client/widgets/common/header.dart';
 
-class HomePage extends Page {
-  static const String pageName = 'HomePage';
+class GamePage extends Page {
+  static const String pageName = 'GamePage';
   final NavigationCallbacks callbacks;
 
-  HomePage({
-    LocalKey key = const ValueKey(HomePage.pageName),
-    name = HomePage.pageName,
+  GamePage({
+    LocalKey key = const ValueKey(GamePage.pageName),
+    name = GamePage.pageName,
     required this.callbacks,
   }) : super(key: key, name: name);
 
@@ -19,7 +19,7 @@ class HomePage extends Page {
     return MaterialPageRoute(
       settings: this,
       builder: (BuildContext context) {
-        return HomeScreen(
+        return GameScreen(
           callbacks: callbacks,
         );
       },
@@ -27,23 +27,23 @@ class HomePage extends Page {
   }
 }
 
-class HomeScreen extends StatefulWidget {
+class GameScreen extends StatefulWidget {
   final NavigationCallbacks callbacks;
-  static String pageName = 'Home';
+  static String pageName = 'Game';
 
-  HomeScreen({
+  GameScreen({
     Key? key,
     required this.callbacks,
   }) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _GameScreenState createState() => _GameScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('HomePage - build');
+    final log = getLogger('GamePage - build');
     log.info('Building..');
 
     return Scaffold(
@@ -51,17 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-        child: Column(
-          children: [
-            Container(child: Text('Enter the dungeon.')),
-            Container(
-              child: ElevatedButton(
-                onPressed: widget.callbacks.openGamePage,
-                child: Text('Play'),
-              ),
-            )
-          ],
-        ),
+        child: Text('Welcome'),
       ),
     );
   }

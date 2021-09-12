@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 // Application packages
 import 'package:client/logger.dart';
+
+// Application page packages
 import 'package:client/pages/home.dart';
+import 'package:client/pages/game.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,9 +23,11 @@ typedef NavigationCallback = void Function();
 class NavigationCallbacks {
   // Add a callback for every page we need to navigate to
   final NavigationCallback openHomePage;
+  final NavigationCallback openGamePage;
 
   NavigationCallbacks({
     required this.openHomePage,
+    required this.openGamePage,
   });
 }
 
@@ -37,6 +42,12 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
+  void openGamePage() {
+    setState(() {
+      _pageList = [GamePage.pageName];
+    });
+  }
+
   List<Page<dynamic>> _pages(BuildContext context) {
     final log = getLogger('Navigation - _pages');
     log.info('Building pages..');
@@ -45,6 +56,7 @@ class _NavigationState extends State<Navigation> {
 
     NavigationCallbacks callbacks = NavigationCallbacks(
       openHomePage: openHomePage,
+      openGamePage: openGamePage,
     );
 
     _pageList.forEach((pageName) {
@@ -52,6 +64,10 @@ class _NavigationState extends State<Navigation> {
         case HomePage.pageName:
           log.info('Adding ${HomePage.pageName}');
           pages.add(HomePage(callbacks: callbacks));
+          break;
+        case GamePage.pageName:
+          log.info('Adding ${GamePage.pageName}');
+          pages.add(GamePage(callbacks: callbacks));
           break;
         default:
         //
