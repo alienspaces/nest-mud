@@ -19,8 +19,8 @@ build-server:
   script:
     - cd server
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$COMMIT_REF .
-    - docker push $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$COMMIT_REF
+    - docker build -t $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
 
 test-client:
   image: registry.gitlab.com/alienspaces/nest-mud/cirrusci/flutter:stable
