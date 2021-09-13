@@ -2,6 +2,7 @@ include:
   - template: Security/SAST.gitlab-ci.yml
 
 stages:
+  - build
   - test
 
 sast:
@@ -9,6 +10,17 @@ sast:
     SAST_EXCLUDED_ANALYZERS: bandit, brakeman, flawfinder, phpcs-security-audit, pmd-apex,
       security-code-scan, sobelow, spotbugs
   stage: test
+
+build-server:
+  image: docker:19.03.12
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  script:
+    - cd server
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$COMMIT_REF .
+    - docker push $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$COMMIT_REF
 
 test-client:
   image: registry.gitlab.com/alienspaces/nest-mud/cirrusci/flutter:stable

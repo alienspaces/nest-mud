@@ -10,7 +10,7 @@ class API {
     final client = RetryClient(http.Client());
     String response;
     try {
-      response = await client.read(Uri(scheme: 'https', host: this.hostname));
+      response = await client.read(Uri.parse(this.hostname));
     } finally {
       client.close();
     }
@@ -22,7 +22,7 @@ class API {
     final client = RetryClient(http.Client());
     String response;
     try {
-      response = await client.read(Uri(scheme: 'https', host: '${this.hostname}/api/dungeons'));
+      response = await client.read(Uri.parse(this.hostname));
     } finally {
       client.close();
     }
@@ -34,9 +34,7 @@ class API {
     final client = RetryClient(http.Client());
     http.Response response;
     try {
-      response = await client.post(
-          Uri(scheme: 'https', host: '${this.hostname}/api/dungeons/${dungeonID}/characters'),
-          body: {});
+      response = await client.post(Uri.parse(this.hostname), body: {});
     } finally {
       client.close();
     }
@@ -44,13 +42,11 @@ class API {
   }
 
   // TODO: Actual implementation
-  Future<String> createAction(String dungeonID) async {
+  Future<String> createAction(String dungeonID, String characterID) async {
     final client = RetryClient(http.Client());
     http.Response response;
     try {
-      response = await client.post(
-          Uri(scheme: 'https', host: '${this.hostname}/api/dungeons/${dungeonID}/actions'),
-          body: {});
+      response = await client.post(Uri.parse(this.hostname), body: {});
     } finally {
       client.close();
     }
