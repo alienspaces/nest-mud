@@ -12,6 +12,7 @@ sast:
   stage: test
 
 variables:
+  FF_NETWORK_PER_BUILD: 1
   APP_SERVER_ENV: development
   APP_SERVER_NAME: "nest-mud"
   APP_SERVER_HOST: http://nest-mud-server:3000
@@ -33,16 +34,16 @@ build-server:
   script:
     - cd server
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA .
-    - docker push registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
+    - docker build -t $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
 
 test-client:
-  image: registry.gitlab.com/alienspaces/nest-mud/cirrusci/flutter:stable
+  image: $CI_REGISTRY/alienspaces/nest-mud/cirrusci/flutter:stable
   stage: test
   services:
-    - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
+    - name: $CI_REGISTRY/alienspaces/nest-mud/postgres:12.7-alpine3.14
       alias: nest-mud-database
-    - name: registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
+    - name: $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
       alias: nest-mud-server
   script:
     - cd client
@@ -52,10 +53,10 @@ test-client:
     - master
 
 test-server:
-  image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
+  image: $CI_REGISTRY/alienspaces/nest-mud/node:14.17.3-alpine3.14
   stage: test
   services:
-    - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
+    - name: $CI_REGISTRY/alienspaces/nest-mud/postgres:12.7-alpine3.14
       alias: nest-mud-database
   before_script:
     - apk add bash
