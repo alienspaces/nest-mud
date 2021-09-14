@@ -1,4 +1,6 @@
-FROM registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
+FROM registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
+
+RUN apk add --update nodejs npm yarn
 
 COPY . /app
 WORKDIR /app
