@@ -11,6 +11,20 @@ sast:
       security-code-scan, sobelow, spotbugs
   stage: test
 
+variables:
+  APP_SERVER_ENV: development
+  APP_SERVER_NAME: "nest-mud"
+  APP_SERVER_HOST: http://nest-mud-server:3000
+  APP_SERVER_LOG_LEVEL: debug
+  APP_SERVER_DB_HOST: nest-mud-database
+  APP_SERVER_DB_NAME: "nest-mud"
+  APP_SERVER_DB_PORT: 5432
+  APP_SERVER_DB_USER: "nest-mud-user"
+  APP_SERVER_DB_PASSWORD: "nest-mud-pass"
+  POSTGRES_DB: nest-mud
+  POSTGRES_USER: nest-mud-user
+  POSTGRES_PASSWORD: nest-mud-pass
+
 build-server:
   image: docker:19.03.12
   stage: build
@@ -25,13 +39,9 @@ build-server:
 test-client:
   image: registry.gitlab.com/alienspaces/nest-mud/cirrusci/flutter:stable
   stage: test
-  variables:
-    POSTGRES_DB: nest-mud
-    POSTGRES_USER: nest-mud-user
-    POSTGRES_PASSWORD: nest-mud-pass
   services:
     - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
-      alias: postgres
+      alias: nest-mud-database
     - name: registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
       alias: nest-mud-server
   script:
@@ -44,20 +54,14 @@ test-client:
 test-server:
   image: registry.gitlab.com/alienspaces/nest-mud/node:14.17.3-alpine3.14
   stage: test
-  variables:
-    POSTGRES_DB: nest-mud
-    POSTGRES_USER: nest-mud-user
-    POSTGRES_PASSWORD: nest-mud-pass
   services:
     - name: registry.gitlab.com/alienspaces/nest-mud/postgres:12.7-alpine3.14
-      alias: postgres
+      alias: nest-mud-database
   before_script:
     - apk add bash
     - npm i -g @nestjs/cli
   script:
     - cd server
-    - cp .env.ci .env
-    - source .env
     - yarn install
     - "./script/db-migrate-up"
     - yarn test
