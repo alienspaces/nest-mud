@@ -20,7 +20,7 @@ cd server
 ./script/setup
 ```
 
-### Start
+### Start Server
 
 Starts a [`postgres`](https://www.postgresql.org/) database in a [`docker`](https://www.docker.com/) container, runs database migrations with [`db-migrate`](https://db-migrate.readthedocs.io/en/latest/), loads game data and starts the [`nestsjs`](https://docs.nestjs.com/) API server.
 
@@ -29,9 +29,15 @@ cd server
 ./script/start
 ```
 
+### Start Client
+
+```bash
+cd client
+./script/start
+```
+
 ## TODO
 
-- Implement move [location] action
 - Implement look [object] action
 - Implement equip [object], stash [object] and drop [object] actions
 

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# establish and validate required environment
+# USAGE: environment [optional path to .env]
+
+function verify_env {
+    echo "=> (env) Verifying environment"
+
+    # required for all environments
+    ENV_VARS=( \
+        # general
+        "APP_SERVER_HOST" \
+    );
+
+    # verify
+    MISSING=0
+    for ENV_VAR_NAME in "${ENV_VARS[@]}"; do
+        # shellcheck disable=SC2237
+        if ! [[ -n "${!ENV_VAR_NAME}" ]]; then
+            echo "=> (env) Variable ${ENV_VAR_NAME} undefined"
+            MISSING=1
+            continue
+        fi
+
+        # masked
+        if [[ "${ENV_VAR_NAME}" = *"PASSWORD" ]] || [[ "${ENV_VAR_NAME}" = *"KEY" ]]; then
+            echo "=> (env) ${ENV_VAR_NAME} => ********"
+        else
+            echo "=> (env) ${ENV_VAR_NAME} => ${!ENV_VAR_NAME}"
+        fi
+    done
+
+    if [[ "$MISSING" == "1" ]]; then
+        echo "=> (env) Variables missing, cannot continue"
+        exit 1
+    fi
+}
+
+# environment
+DOTFILE_PATH="."
+if [ -f "$1" ]; then
+    DOTFILE_PATH="$1"
+fi
+
+echo "=> (env) Checking $DOTFILE_PATH/.env"
+
+if [ -f "$DOTFILE_PATH/.env" ]; then
+    echo "=> (env) Sourcing $DOTFILE_PATH/.env"
+    # shellcheck disable=SC1091
+    source "$DOTFILE_PATH/.env"
+fi
+
+# verify environment
+verify_env

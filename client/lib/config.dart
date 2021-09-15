@@ -1,1 +1,1 @@
-final config = {"serverHost": null};
+final config = {"serverHost":"http://localhost:8082"};

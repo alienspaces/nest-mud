@@ -33,6 +33,10 @@ dependencies:
   # https://pub.dev/packages/flutter_bloc
   flutter_bloc: ^7.2.0
 
+  # A Dart package that helps to implement value based equality without
+  # needing to explicitly override == and hashCode.
+  equatable: ^2.0.3
+
   # Provides APIs for debugging and error logging. This library introduces
   # abstractions similar to those used in other languages, such as the Closure JS Logger
   # and java.util.logging.Logger.
