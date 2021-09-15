@@ -1,10 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
-class API {
-  final String hostname;
+// Application
+import 'package:client/config.dart';
 
-  API({required this.hostname});
+class API {
+  final String hostname = config['serverHost'].toString();
 
   Future<String> test() async {
     final client = RetryClient(http.Client());

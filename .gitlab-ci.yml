@@ -11,6 +11,7 @@ sast:
       security-code-scan, sobelow, spotbugs
   stage: test
 
+# All variables are valid for all jobs
 variables:
   FF_NETWORK_PER_BUILD: 1
   APP_SERVER_ENV: development
@@ -26,6 +27,8 @@ variables:
   POSTGRES_USER: nest-mud-user
   POSTGRES_PASSWORD: nest-mud-pass
 
+# Build the server so we can use it as a service when integration
+# testing the Flutter client.
 build-server:
   image: docker:19.03.12
   stage: build
@@ -37,6 +40,8 @@ build-server:
     - docker build -t $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA .
     - docker push $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
 
+# Testing the client requires the server and postgres to be running
+# as services.
 test-client:
   image: $CI_REGISTRY/alienspaces/nest-mud/cirrusci/flutter:stable
   stage: test
@@ -47,11 +52,13 @@ test-client:
       alias: nest-mud-server
   script:
     - cd client
+    - dart ./tool/generate.dart
     - flutter test
   only:
     - develop
     - master
 
+# Testing the server requires postgres to be running as a service.
 test-server:
   image: $CI_REGISTRY/alienspaces/nest-mud/node:14.17.3-alpine3.14
   stage: test
