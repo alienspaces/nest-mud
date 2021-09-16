@@ -6,9 +6,27 @@ abstract class DungeonState extends Equatable {
 }
 
 @immutable
-class DungeonInitial extends DungeonState {
-  const DungeonInitial();
+class DungeonInitialState extends DungeonState {
+  const DungeonInitialState();
 
   @override
   List<Object> get props => [];
+}
+
+@immutable
+class DungeonLoadingState extends DungeonState {
+  const DungeonLoadingState();
+
+  @override
+  List<Object> get props => [];
+}
+
+@immutable
+class DungeonReadyState extends DungeonState {
+  final List<DungeonRecord> dungeonRecords;
+
+  const DungeonReadyState({required this.dungeonRecords});
+
+  @override
+  List<Object> get props => [dungeonRecords];
 }

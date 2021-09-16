@@ -1,4 +1,6 @@
-import 'character_record.dart';
+import 'package:equatable/equatable.dart';
+
+part 'character_record.dart';
 
 abstract class CharacterRepository {
   CharacterRecord create(CharacterRecord record);

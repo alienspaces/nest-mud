@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'character_repository.dart';
 
 class CharacterRecord extends Equatable {
   final int id;
