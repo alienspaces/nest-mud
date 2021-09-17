@@ -182,7 +182,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method look not implemented');
+        throw domainServiceError('Method look not implemented');
         return dungeonActionRecord;
     }
 
@@ -190,7 +190,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method equip not implemented');
+        throw domainServiceError('Method equip not implemented');
         return dungeonActionRecord;
     }
 
@@ -198,7 +198,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method stash not implemented');
+        throw domainServiceError('Method stash not implemented');
         return dungeonActionRecord;
     }
 
@@ -206,7 +206,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw new Error('Method drop not implemented');
+        throw domainServiceError('Method drop not implemented');
         return dungeonActionRecord;
     }
 
@@ -223,7 +223,9 @@ export class DungeonActionService {
             forUpdate: true,
         });
         if (!characterRecord) {
-            throw new Error(`Character ${dungeonCharacterID} not found, cannot get dungeon location record set`);
+            throw domainServiceError(
+                `Character ${dungeonCharacterID} not found, cannot get dungeon location record set`,
+            );
         }
         logger.info(`Fetched dungeon character ID ${characterRecord.id}`);
 
