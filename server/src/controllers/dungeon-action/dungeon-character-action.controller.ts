@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, Param, UsePipes, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UsePipes, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
@@ -22,8 +22,8 @@ export class DungeonCharacterActionController {
     @UsePipes(new ValidationPipe(createDungeonCharacterActionSchema.$id, createDungeonCharacterActionSchema))
     @Post()
     async create(
-        @Param('dungeon_id') dungeon_id: string,
-        @Param('character_id') character_id: string,
+        @Param('dungeon_id', new ParseUUIDPipe({ version: '4' })) dungeon_id: string,
+        @Param('character_id', new ParseUUIDPipe({ version: '4' })) character_id: string,
         @Body() requestData: CreateDungeonActionDto,
     ): Promise<DungeonActionDto> {
         const logger = this.loggerService.logger({

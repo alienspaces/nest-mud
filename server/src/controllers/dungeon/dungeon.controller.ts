@@ -1,4 +1,4 @@
-import { Controller, Post, Put, Body, Param, UsePipes, NotFoundException, Get } from '@nestjs/common';
+import { Controller, Post, Put, Body, Param, UsePipes, NotFoundException, Get, ParseUUIDPipe } from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
@@ -10,7 +10,7 @@ export class DungeonController {
     constructor(private loggerService: LoggerService, private dungeonService: DungeonService) {}
 
     @Get(':dungeon_id')
-    async getOne(@Param('dungeon_id') dungeon_id: string): Promise<DungeonDto> {
+    async getOne(@Param('dungeon_id', new ParseUUIDPipe({ version: '4' })) dungeon_id: string): Promise<DungeonDto> {
         const logger = this.loggerService.logger({
             class: 'DungeonController',
             function: 'getOne',

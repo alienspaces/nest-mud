@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, Param, UsePipes, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UsePipes, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
 
 // Application
 import { LoggerService } from '@/core';
@@ -18,7 +18,9 @@ export class DungeonCharactersController {
     constructor(private loggerService: LoggerService, private dungeonCharacterService: DungeonCharacterService) {}
 
     @Get()
-    async getMany(@Param('dungeon_id') dungeon_id: string): Promise<DungeonCharacterDto> {
+    async getMany(
+        @Param('dungeon_id', new ParseUUIDPipe({ version: '4' })) dungeon_id: string,
+    ): Promise<DungeonCharacterDto> {
         const logger = this.loggerService.logger({
             class: 'DungeonCharactersController',
             function: 'get',
@@ -38,8 +40,8 @@ export class DungeonCharactersController {
 
     @Get('/:character_id')
     async get(
-        @Param('dungeon_id') dungeon_id: string,
-        @Param('character_id') character_id: string,
+        @Param('dungeon_id', new ParseUUIDPipe({ version: '4' })) dungeon_id: string,
+        @Param('character_id', new ParseUUIDPipe({ version: '4' })) character_id: string,
     ): Promise<DungeonCharacterDto> {
         const logger = this.loggerService.logger({
             class: 'DungeonCharactersController',
@@ -64,7 +66,7 @@ export class DungeonCharactersController {
     @UsePipes(new ValidationPipe(createCharacterSchema.$id, createCharacterSchema))
     @Post()
     async create(
-        @Param('dungeon_id') dungeon_id: string,
+        @Param('dungeon_id', new ParseUUIDPipe({ version: '4' })) dungeon_id: string,
         @Body() requestData: CreateDungeonCharacterDto,
     ): Promise<DungeonCharacterDto> {
         const logger = this.loggerService.logger({
@@ -113,8 +115,8 @@ export class DungeonCharactersController {
     @UsePipes(new ValidationPipe(updateCharacterSchema.$id, updateCharacterSchema))
     @Put(':id')
     async update(
-        @Param('dungeon_id') dungeon_id: string,
-        @Param('id') id: string,
+        @Param('dungeon_id', new ParseUUIDPipe({ version: '4' })) dungeon_id: string,
+        @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
         @Body() requestData: UpdateDungeonCharacterDto,
     ): Promise<DungeonCharacterDto> {
         const logger = this.loggerService.logger({

@@ -34,10 +34,6 @@ describe('DungeonController', () => {
         controller = await module.resolve<DungeonController>(DungeonController, contextId);
     });
 
-    it('should be defined', () => {
-        expect(controller).toBeDefined();
-    });
-
     describe('getOne', () => {
         it('should get one dungeon', async () => {
             const data = new Data();
