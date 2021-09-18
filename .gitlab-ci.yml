@@ -15,7 +15,6 @@ sast:
 variables:
   FF_NETWORK_PER_BUILD: 1
   APP_SERVER_ENV: development
-  APP_SERVER_NAME: "nest-mud"
   APP_SERVER_LOG_LEVEL: debug
   APP_SERVER_DB_HOST: nest-mud-database
   APP_SERVER_DB_NAME: "nest-mud"
@@ -53,6 +52,7 @@ test-client:
       alias: nest-mud-server
   script:
     - cd client
+    - flutter pub get
     - dart ./tool/generate.dart
     - flutter test
   only:
