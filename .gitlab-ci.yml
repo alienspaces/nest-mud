@@ -16,7 +16,7 @@ variables:
   FF_NETWORK_PER_BUILD: 1
   APP_SERVER_ENV: development
   APP_SERVER_LOG_LEVEL: warn
-  APP_SERVER_DB_HOST: nest-mud-database
+  APP_SERVER_DB_HOST: localhost
   APP_SERVER_DB_NAME: "nest-mud"
   APP_SERVER_DB_PORT: 5432
   APP_SERVER_DB_USER: "nest-mud-user"
