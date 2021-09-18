@@ -9,6 +9,8 @@ import 'package:client/repository/repository.dart';
 part 'dungeon_state.dart';
 
 class DungeonCubit extends Cubit<DungeonState> {
+  final dungeonRepository = DungeonRepository();
+
   DungeonCubit() : super(DungeonInitialState()) {}
 
   Future<void> loadDungeons() async {
@@ -16,8 +18,8 @@ class DungeonCubit extends Cubit<DungeonState> {
     log.info('Loading dungeons...');
     emit(DungeonLoadingState());
 
-    // TODO: Dungeon repository integration
+    final dungeonRecords = await dungeonRepository.getMany();
 
-    emit(DungeonReadyState(dungeonRecords: []));
+    emit(DungeonReadyState(dungeonRecords: dungeonRecords));
   }
 }

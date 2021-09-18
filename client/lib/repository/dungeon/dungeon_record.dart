@@ -1,15 +1,16 @@
-part of 'character_repository.dart';
+// Package
+part of 'dungeon_repository.dart';
 
-class CharacterRecord extends Equatable {
-  final int id;
+class DungeonRecord extends Equatable {
+  final String id;
   final String name;
 
-  CharacterRecord({
+  DungeonRecord({
     required this.id,
     required this.name,
   });
 
-  CharacterRecord.fromJson(Map<String, dynamic> json)
+  DungeonRecord.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'];
 

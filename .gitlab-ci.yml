@@ -16,7 +16,6 @@ variables:
   FF_NETWORK_PER_BUILD: 1
   APP_SERVER_ENV: development
   APP_SERVER_NAME: "nest-mud"
-  APP_SERVER_HOST: http://nest-mud-server:3000
   APP_SERVER_LOG_LEVEL: debug
   APP_SERVER_DB_HOST: nest-mud-database
   APP_SERVER_DB_NAME: "nest-mud"
@@ -26,6 +25,8 @@ variables:
   POSTGRES_DB: nest-mud
   POSTGRES_USER: nest-mud-user
   POSTGRES_PASSWORD: nest-mud-pass
+  APP_CLIENT_API_HOST: nest-mud-server
+  APP_CLIENT_API_PORT: 3000
 
 # Build the server so we can use it as a service when integration
 # testing the Flutter client.

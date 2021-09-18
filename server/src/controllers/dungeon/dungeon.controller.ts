@@ -16,7 +16,7 @@ export class DungeonController {
             function: 'getOne',
         });
 
-        logger.debug(`Getting dungeon ID ${dungeon_id}`);
+        logger.info(`Getting dungeon ID ${dungeon_id}`);
 
         const dungeonEntity = await this.dungeonService.getDungeon(dungeon_id);
 
@@ -31,7 +31,7 @@ export class DungeonController {
             function: 'getMany',
         });
 
-        logger.debug(`Getting dungeons`);
+        logger.info(`Getting dungeons`);
 
         const dungeonEntities = await this.dungeonService.getDungeons();
 

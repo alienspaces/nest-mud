@@ -1,1 +1,1 @@
-final config = {"serverHost":"http://localhost:8082"};
+final config = {"serverHost":"localhost","serverPort":"3000"};

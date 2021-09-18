@@ -23,7 +23,7 @@ class DungeonLoadingState extends DungeonState {
 
 @immutable
 class DungeonReadyState extends DungeonState {
-  final List<DungeonRecord> dungeonRecords;
+  final List<DungeonRecord?> dungeonRecords;
 
   const DungeonReadyState({required this.dungeonRecords});
 
