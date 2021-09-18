@@ -18,7 +18,12 @@ export POSTGRES_PASSWORD=$APP_SERVER_DB_PASSWORD
 
 /usr/local/bin/docker-entrypoint.sh postgres &
 
+# Override provided environment database host
+export APP_SERVER_DB_HOST="localhost"
+export APP_SERVER_DB_PORT=5432
+
 # Wait for connection to be available
+# shellcheck disable=SC2153
 export PGPASSWORD="$APP_SERVER_DB_PASSWORD"
 retry_cmd psql --host="$APP_SERVER_DB_HOST" \
      --port="$APP_SERVER_DB_PORT" \
