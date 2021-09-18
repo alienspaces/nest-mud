@@ -10,14 +10,28 @@ class API {
   final String port = config['serverPort'].toString();
 
   Future<String> test() async {
+    final log = getLogger('API');
     final client = RetryClient(http.Client());
-    String response;
+    http.Response? response;
     try {
-      response = await client.read(Uri.parse(this.hostname));
+      Uri uri = Uri(
+        scheme: 'http',
+        host: this.hostname,
+        port: int.parse(this.port),
+      );
+      response =
+          await client.get(uri, headers: {'Content-Type': 'application/json; charset=utf-8'});
+    } on http.ClientException catch (err) {
+      log.warning('Failed: ${err.message}');
     } finally {
       client.close();
     }
-    return response;
+    String responseBody = '';
+    if (response != null) {
+      responseBody = response.body;
+    }
+    log.warning('Response: ${responseBody}');
+    return responseBody;
   }
 
   Future<String> getDungeon(String dungeonID) async {
