@@ -1,10 +1,10 @@
-import 'package:client/widgets/home/home_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application packages
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
+import 'package:client/widgets/home/home_game.dart';
 
 class HomeGameListWidget extends StatefulWidget {
   const HomeGameListWidget({Key? key}) : super(key: key);
@@ -14,11 +14,6 @@ class HomeGameListWidget extends StatefulWidget {
 }
 
 class _HomeGameListWidgetState extends State<HomeGameListWidget> {
-  void _loadDungeons(BuildContext context) {
-    final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
-    dungeonCubit.loadDungeons();
-  }
-
   @override
   void initState() {
     final log = getLogger('HomeGameListWidget');
@@ -28,6 +23,14 @@ class _HomeGameListWidgetState extends State<HomeGameListWidget> {
 
     // Load available dungeons
     _loadDungeons(context);
+  }
+
+  void _loadDungeons(BuildContext context) {
+    final log = getLogger('HomeGameListWidget');
+    log.info('Loading dungeons');
+
+    final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
+    dungeonCubit.loadDungeons();
   }
 
   @override
