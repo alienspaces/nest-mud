@@ -44,7 +44,17 @@ class _GameListWidgetState extends State<GameListWidget> {
       },
       builder: (BuildContext context, DungeonState state) {
         log.info('builder...');
-        return Container();
+        List<Widget> widgets = [];
+        if (state is DungeonReadyState) {
+          state.dungeonRecords.forEach((dungeonRecord) {
+            widgets.add(Text('${dungeonRecord?.name}'));
+          });
+        }
+        return Container(
+          child: Column(
+            children: widgets,
+          ),
+        );
       },
     );
   }

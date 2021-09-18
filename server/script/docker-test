@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 
-docker build -t registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:develop .
-docker images
+echo "=> Building.."
+docker build -t registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:develop . || exit $?
 
-docker run -it -rm --name nest-mud-server registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:develop
+echo "=> Running.."
+docker run \
+    -it \
+    --rm \
+    --name nest-mud-server \
+    --env APP_SERVER_ENV=development \
+    --env APP_SERVER_LOG_LEVEL=debug \
+    --env APP_SERVER_DB_HOST=localhost \
+    --env APP_SERVER_DB_NAME="nest-mud" \
+    --env APP_SERVER_DB_PORT=5432 \
+    --env APP_SERVER_DB_USER="nest-mud-user" \
+    --env APP_SERVER_DB_PASSWORD="nest-mud-pass" \
+    registry.gitlab.com/alienspaces/nest-mud/nest-mud-server:develop || exit $?

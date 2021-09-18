@@ -46,8 +46,6 @@ test-client:
   image: $CI_REGISTRY/alienspaces/nest-mud/cirrusci/flutter:stable
   stage: test
   services:
-    - name: $CI_REGISTRY/alienspaces/nest-mud/postgres:12.7-alpine3.14
-      alias: nest-mud-database
     - name: $CI_REGISTRY/alienspaces/nest-mud/nest-mud-server:$CI_COMMIT_SHORT_SHA
       alias: nest-mud-server
   script:
