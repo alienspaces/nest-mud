@@ -19,6 +19,10 @@ class DungeonRepository implements DungeonRepositoryInterface {
     final log = getLogger('DungeonRepository');
     final api = API();
     String response = await api.getDungeon(dungeonID);
+    if (response == '') {
+      log.warning('No record returned');
+      return null;
+    }
     Map<String, dynamic> decoded = jsonDecode(response);
     log.warning('Decoded response ${decoded}');
     final record = DungeonRecord.fromJson(decoded);
@@ -29,8 +33,12 @@ class DungeonRepository implements DungeonRepositoryInterface {
     final log = getLogger('DungeonRepository');
     final api = API();
     String response = await api.getDungeons();
-    Map<String, dynamic> decoded = jsonDecode(response);
     List<DungeonRecord> records = [];
+    if (response == '') {
+      log.warning('No records returned');
+      return records;
+    }
+    Map<String, dynamic> decoded = jsonDecode(response);
     if (decoded['data'] != null) {
       List<dynamic> data = decoded['data'];
       log.warning('Decoded response ${data}');
