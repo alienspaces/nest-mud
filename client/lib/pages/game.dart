@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:client/navigation.dart';
 import 'package:client/logger.dart';
 import 'package:client/widgets/common/header.dart';
-import 'package:client/widgets/game/game_board.dart';
+import 'package:client/widgets/game/game_container.dart';
 
 class GamePage extends Page {
   static const String pageName = 'GamePage';
@@ -52,7 +52,7 @@ class _GameScreenState extends State<GameScreen> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-        child: GameBoardWidget(),
+        child: GameContainerWidget(),
       ),
     );
   }

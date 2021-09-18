@@ -42,8 +42,8 @@ class _HomeGameListWidgetState extends State<HomeGameListWidget> {
       builder: (BuildContext context, DungeonState state) {
         log.info('builder...');
         List<Widget> widgets = [];
-        if (state is DungeonReadyState) {
-          state.dungeonRecords.forEach((dungeonRecord) {
+        if (state is DungeonStateUpdated) {
+          state.dungeonRecords?.forEach((dungeonRecord) {
             widgets.add(HomeGameWidget(dungeonRecord: dungeonRecord));
           });
         }

@@ -14,19 +14,20 @@ class DungeonInitialState extends DungeonState {
 }
 
 @immutable
-class DungeonLoadingState extends DungeonState {
-  const DungeonLoadingState();
+class DungeonStateLoading extends DungeonState {
+  const DungeonStateLoading();
 
   @override
   List<Object> get props => [];
 }
 
 @immutable
-class DungeonReadyState extends DungeonState {
-  final List<DungeonRecord> dungeonRecords;
+class DungeonStateUpdated extends DungeonState {
+  final List<DungeonRecord>? dungeonRecords;
+  final DungeonRecord? currentDungeonRecord;
 
-  const DungeonReadyState({required this.dungeonRecords});
+  const DungeonStateUpdated({required this.dungeonRecords, this.currentDungeonRecord});
 
   @override
-  List<Object> get props => [dungeonRecords];
+  List<Object?> get props => [dungeonRecords, currentDungeonRecord];
 }

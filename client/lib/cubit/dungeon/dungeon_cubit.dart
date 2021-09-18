@@ -10,16 +10,29 @@ part 'dungeon_state.dart';
 
 class DungeonCubit extends Cubit<DungeonState> {
   final dungeonRepository = DungeonRepository();
+  List<DungeonRecord>? dungeonRecords;
+  DungeonRecord? currentDungeonRecord;
 
   DungeonCubit() : super(DungeonInitialState()) {}
 
   Future<void> loadDungeons() async {
     final log = getLogger('DungeonCubit');
     log.info('Loading dungeons...');
-    emit(DungeonLoadingState());
+    emit(DungeonStateLoading());
 
-    final dungeonRecords = await dungeonRepository.getMany();
+    dungeonRecords = await dungeonRepository.getMany();
 
-    emit(DungeonReadyState(dungeonRecords: dungeonRecords));
+    emit(DungeonStateUpdated(dungeonRecords: dungeonRecords));
+  }
+
+  Future<void> selectDungeon(DungeonRecord dungeonRecord) async {
+    currentDungeonRecord = dungeonRecord;
+
+    emit(
+      DungeonStateUpdated(
+        dungeonRecords: dungeonRecords,
+        currentDungeonRecord: currentDungeonRecord,
+      ),
+    );
   }
 }

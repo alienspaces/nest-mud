@@ -1,4 +1,3 @@
-import 'package:client/widgets/game/game_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,22 +5,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
-class GameBoardWidget extends StatefulWidget {
-  const GameBoardWidget({Key? key}) : super(key: key);
+class GameContainerWidget extends StatefulWidget {
+  const GameContainerWidget({Key? key}) : super(key: key);
 
   @override
-  _GameBoardWidgetState createState() => _GameBoardWidgetState();
+  _GameContainerWidgetState createState() => _GameContainerWidgetState();
 }
 
-class _GameBoardWidgetState extends State<GameBoardWidget> {
+class _GameContainerWidgetState extends State<GameContainerWidget> {
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('GameBoard');
+    final log = getLogger('GameContainer');
     log.info('Building..');
 
     return BlocProvider(
       create: (context) => DungeonCubit(),
-      child: GameListWidget(),
+      child: Container(),
     );
   }
 }
