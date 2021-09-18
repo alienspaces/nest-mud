@@ -16,6 +16,7 @@ export POSTGRES_DB=$APP_SERVER_DB_NAME
 export POSTGRES_USER=$APP_SERVER_DB_USER
 export POSTGRES_PASSWORD=$APP_SERVER_DB_PASSWORD
 
+# Run postgres entrypoint
 /usr/local/bin/docker-entrypoint.sh postgres &
 
 # Override provided environment database host
@@ -37,4 +38,5 @@ source "script/db-migrate-up" || exit $?
 # shellcheck disable=SC1091
 source "script/db-seed" || exit $?
 
+# Start API server
 yarn start
