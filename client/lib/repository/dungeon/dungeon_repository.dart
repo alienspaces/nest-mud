@@ -25,12 +25,12 @@ class DungeonRepository implements DungeonRepositoryInterface {
     return record;
   }
 
-  Future<List<DungeonRecord?>> getMany() async {
+  Future<List<DungeonRecord>> getMany() async {
     final log = getLogger('DungeonRepository');
     final api = API();
     String response = await api.getDungeons();
     Map<String, dynamic> decoded = jsonDecode(response);
-    List<DungeonRecord?> records = [];
+    List<DungeonRecord> records = [];
     if (decoded['data'] != null) {
       List<dynamic> data = decoded['data'];
       log.warning('Decoded response ${data}');

@@ -1,3 +1,4 @@
+import 'package:client/widgets/home/home_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,14 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
-class GameListWidget extends StatefulWidget {
-  const GameListWidget({Key? key}) : super(key: key);
+class HomeGameListWidget extends StatefulWidget {
+  const HomeGameListWidget({Key? key}) : super(key: key);
 
   @override
-  _GameListWidgetState createState() => _GameListWidgetState();
+  _HomeGameListWidgetState createState() => _HomeGameListWidgetState();
 }
 
-class _GameListWidgetState extends State<GameListWidget> {
+class _HomeGameListWidgetState extends State<HomeGameListWidget> {
   void _loadDungeons(BuildContext context) {
     final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
     dungeonCubit.loadDungeons();
@@ -20,34 +21,30 @@ class _GameListWidgetState extends State<GameListWidget> {
 
   @override
   void initState() {
-    final log = getLogger('GameListWidget');
+    final log = getLogger('HomeGameListWidget');
     log.info('Initialising state..');
 
     super.initState();
 
     // Load available dungeons
-    final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
-    dungeonCubit.loadDungeons();
+    _loadDungeons(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('GameListWidget');
+    final log = getLogger('HomeGameListWidget');
     log.info('Building..');
 
     return BlocConsumer<DungeonCubit, DungeonState>(
       listener: (context, state) {
         log.info('listener...');
-        if (state is DungeonInitialState) {
-          _loadDungeons(context);
-        }
       },
       builder: (BuildContext context, DungeonState state) {
         log.info('builder...');
         List<Widget> widgets = [];
         if (state is DungeonReadyState) {
           state.dungeonRecords.forEach((dungeonRecord) {
-            widgets.add(Text('${dungeonRecord.name}'));
+            widgets.add(HomeGameWidget(dungeonRecord: dungeonRecord));
           });
         }
         return Container(

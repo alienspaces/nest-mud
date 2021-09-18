@@ -1,3 +1,4 @@
+import 'package:client/widgets/home/home_container.dart';
 import 'package:flutter/material.dart';
 
 // Application packages
@@ -51,31 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-        child: Column(
-          children: [
-            Container(
-                child: Text(
-              'Enter the dungeon.',
-              style: Theme.of(context).textTheme.headline5,
-            )),
-            Container(
-              margin: EdgeInsets.all(20),
-              child: ElevatedButton(
-                onPressed: widget.callbacks.openGamePage,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: Text(
-                    'Play',
-                    style: Theme.of(context)
-                        .textTheme
-                        .button
-                        ?.copyWith(fontSize: 18, color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+        child: HomeContainerWidget(),
       ),
     );
   }

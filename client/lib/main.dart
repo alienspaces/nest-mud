@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application packages
 import 'package:client/logger.dart';
 import 'package:client/theme.dart';
 import 'package:client/navigation.dart';
+import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
 void main() {
   // Initialise logger
@@ -22,7 +24,10 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Nest MUD Client',
       theme: getTheme(context),
-      home: Navigation(),
+      home: BlocProvider(
+        create: (context) => DungeonCubit(),
+        child: Navigation(),
+      ),
     );
   }
 }
