@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application
 import 'package:client/logger.dart';
+import 'package:client/cubit/character/character_cubit.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
-import 'package:client/repository/dungeon/dungeon_repository.dart';
+import 'package:client/repository/repository.dart';
 
 class HomeDungeonSelectedWidget extends StatefulWidget {
   final DungeonRecord dungeonRecord;
@@ -19,11 +20,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
   int dexterity = 8;
   int intelligence = 8;
 
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
+  // Global key that uniquely identifies the Form widget
   final _formKey = GlobalKey<FormState>();
 
   // Form field controllers
@@ -42,6 +39,16 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
     log.info('Creating character strength >${strength}<');
     log.info('Creating character dexterity >${dexterity}<');
     log.info('Creating character intelligence >${intelligence}<');
+
+    final characterCubit = BlocProvider.of<CharacterCubit>(context);
+    CharacterRecord characterRecord = new CharacterRecord(
+      name: characterNameController.text,
+      strength: strength,
+      dexterity: dexterity,
+      intelligence: intelligence,
+    );
+
+    characterCubit.createCharacter(characterRecord);
   }
 
   void _incrementStrength() {

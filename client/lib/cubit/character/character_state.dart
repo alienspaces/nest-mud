@@ -12,3 +12,20 @@ class CharacterInitial extends CharacterState {
   @override
   List<Object> get props => [];
 }
+
+@immutable
+class CharacterStateCreating extends CharacterState {
+  const CharacterStateCreating();
+
+  @override
+  List<Object> get props => [];
+}
+
+@immutable
+class CharacterStateUpdated extends CharacterState {
+  final CharacterRecord characterRecord;
+  const CharacterStateUpdated({required this.characterRecord});
+
+  @override
+  List<Object> get props => [characterRecord];
+}
