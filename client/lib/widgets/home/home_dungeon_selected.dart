@@ -45,7 +45,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
   }
 
   void _incrementStrength() {
-    if (strength + dexterity + intelligence <= 32) {
+    if (strength + dexterity + intelligence <= 35) {
       setState(() {
         strength++;
       });
@@ -56,6 +56,38 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
     if (strength > 8) {
       setState(() {
         strength--;
+      });
+    }
+  }
+
+  void _incrementDexterity() {
+    if (strength + dexterity + intelligence <= 35) {
+      setState(() {
+        dexterity++;
+      });
+    }
+  }
+
+  void _decrementDexterity() {
+    if (dexterity > 8) {
+      setState(() {
+        dexterity--;
+      });
+    }
+  }
+
+  void _incrementIntelligence() {
+    if (strength + dexterity + intelligence <= 35) {
+      setState(() {
+        intelligence++;
+      });
+    }
+  }
+
+  void _decrementIntelligence() {
+    if (intelligence > 8) {
+      setState(() {
+        intelligence--;
       });
     }
   }
@@ -73,6 +105,9 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
     }
 
     const double fieldHeight = 50;
+    const double attributeFieldLabelWidth = 100;
+    const double attributeFieldValueWidth = 50;
+    const double attributeFieldSpacerWidth = 80;
 
     return BlocConsumer<DungeonCubit, DungeonState>(
       listener: (BuildContext context, DungeonState state) {
@@ -87,7 +122,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     height: fieldHeight,
@@ -99,6 +134,8 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                   ),
                   Container(
                     height: fieldHeight,
+                    width: 340,
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: TextFormField(
                       controller: characterNameController,
                       autofocus: true,
@@ -112,10 +149,14 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                     ),
                   ),
                   Container(
+                    margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
                           height: fieldHeight,
+                          width: attributeFieldLabelWidth,
+                          alignment: Alignment.centerLeft,
                           child: Text('Strength'),
                         ),
                         Container(
@@ -129,6 +170,8 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                         ),
                         Container(
                           height: fieldHeight,
+                          width: attributeFieldValueWidth,
+                          alignment: Alignment.center,
                           child: Text('${strength}'),
                         ),
                         Container(
@@ -140,51 +183,101 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                             child: const Text('>'),
                           ),
                         ),
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldSpacerWidth,
+                        ),
                       ],
                     ),
                   ),
-                  // Container(
-                  //   height: fieldHeight,
-                  //   child: Row(
-                  //     mainAxisSize: MainAxisSize.max,
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: <Widget>[
-                  //       Container(
-                  //         height: fieldHeight,
-                  //         child: Text('Strength'),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   Container(
-                    height: fieldHeight,
-                    child: TextFormField(
-                      controller: characterNameController,
-                      autofocus: true,
-                      decoration: _fieldDecoration(''),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter character name';
-                        }
-                        return null;
-                      },
+                    margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldLabelWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Text('Dexterity'),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _decrementDexterity();
+                            },
+                            child: const Text('<'),
+                          ),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldValueWidth,
+                          alignment: Alignment.center,
+                          child: Text('${dexterity}'),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _incrementDexterity();
+                            },
+                            child: const Text('>'),
+                          ),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldSpacerWidth,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldLabelWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Text('Intelligence'),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _decrementIntelligence();
+                            },
+                            child: const Text('<'),
+                          ),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldValueWidth,
+                          alignment: Alignment.center,
+                          child: Text('${intelligence}'),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _incrementIntelligence();
+                            },
+                            child: const Text('>'),
+                          ),
+                        ),
+                        Container(
+                          height: fieldHeight,
+                          width: attributeFieldSpacerWidth,
+                        ),
+                      ],
                     ),
                   ),
                   Container(
                     height: fieldHeight,
-                    child: TextFormField(
-                      controller: characterNameController,
-                      autofocus: true,
-                      decoration: _fieldDecoration(''),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter character name';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Container(
+                    width: 200,
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: ElevatedButton(
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
@@ -192,7 +285,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                           _createCharacter();
                         }
                       },
-                      child: const Text('Submit'),
+                      child: const Text('Enter The Dungeon'),
                     ),
                   ),
                 ],
