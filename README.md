@@ -38,8 +38,9 @@ cd client
 
 ## TODO
 
-- Implement look [object] action
-- Implement equip [object], stash [object] and drop [object] actions
+- Client - create character
+- Client - move character
+- Decide final scope of this proof of concept
 
 ## Special Note
 
