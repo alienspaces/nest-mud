@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Application packages
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
-import 'package:client/repository/dungeon/dungeon_repository.dart';
 
 class HomeDungeonListWidget extends StatefulWidget {
   const HomeDungeonListWidget({Key? key}) : super(key: key);
@@ -23,10 +22,10 @@ class _HomeDungeonListWidgetState extends State<HomeDungeonListWidget> {
 
     super.initState();
 
-    // Load available dungeons
     _loadDungeons(context);
   }
 
+  /// Loads available dungeons
   void _loadDungeons(BuildContext context) {
     final log = getLogger('HomeDungeonListWidget');
     log.info('Loading dungeons');

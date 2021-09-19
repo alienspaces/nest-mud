@@ -21,7 +21,8 @@ class HomeDungeonSelectedWidget extends StatelessWidget {
       },
       builder: (BuildContext context, DungeonState state) {
         if (state is DungeonStateUpdated && state.currentDungeonRecord != null) {
-          //
+          // TODO: Build a character form here and a create button
+          // to create a character in the current selected dungeon
           return Container(
             child: Column(
               children: [

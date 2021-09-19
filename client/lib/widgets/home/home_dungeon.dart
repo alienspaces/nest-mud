@@ -10,7 +10,8 @@ class HomeDungeonWidget extends StatelessWidget {
   final DungeonRecord dungeonRecord;
   const HomeDungeonWidget({Key? key, required this.dungeonRecord}) : super(key: key);
 
-  void selectDungeon(BuildContext context, DungeonRecord dungeonRecord) {
+  /// Sets the current dungeon state to the provided dungeon
+  void _selectDungeon(BuildContext context, DungeonRecord dungeonRecord) {
     final log = getLogger('HomeGameWidget');
     log.info('Select current dungeon ${dungeonRecord.id} ${dungeonRecord.name}');
 
@@ -34,7 +35,7 @@ class HomeDungeonWidget extends StatelessWidget {
               Text('Enter Dungeon'),
               Text('${dungeonRecord.id} ${dungeonRecord.name}'),
               ElevatedButton(
-                onPressed: () => selectDungeon(context, dungeonRecord),
+                onPressed: () => _selectDungeon(context, dungeonRecord),
                 child: Text('Create Character'),
               ),
             ],
