@@ -89,27 +89,75 @@ class API {
     return responseBody;
   }
 
-  // TODO: Actual implementation
-  Future<String> createCharacter(String dungeonID) async {
+  Future<String> createCharacter(
+    String dungeonID, {
+    required String name,
+    required int strength,
+    required int dexterity,
+    required int intelligence,
+  }) async {
+    final log = getLogger('API');
     final client = RetryClient(http.Client());
-    http.Response response;
+
+    Map data = {
+      name: name,
+      strength: strength,
+      dexterity: dexterity,
+      intelligence: intelligence,
+    };
+
+    http.Response? response;
     try {
-      response = await client.post(Uri.parse(this.hostname), body: {});
+      response = await client.post(Uri.parse(this.hostname), headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      }, body: {
+        data: data,
+      });
+    } on http.ClientException catch (err) {
+      log.warning('Failed: ${err.message}');
+      log.warning('Failed: ${err.uri}');
     } finally {
       client.close();
     }
-    return response.body;
+    String responseBody = '';
+    if (response != null) {
+      responseBody = response.body;
+    }
+    log.warning('Response: ${responseBody}');
+    return responseBody;
   }
 
   // TODO: Actual implementation
-  Future<String> createAction(String dungeonID, String characterID) async {
+  Future<String> createAction(
+    String dungeonID,
+    String characterID, {
+    required String sentence,
+  }) async {
+    final log = getLogger('API');
     final client = RetryClient(http.Client());
-    http.Response response;
+
+    Map data = {
+      sentence: sentence,
+    };
+
+    http.Response? response;
     try {
-      response = await client.post(Uri.parse(this.hostname), body: {});
+      response = await client.post(Uri.parse(this.hostname), headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      }, body: {
+        data: data,
+      });
+    } on http.ClientException catch (err) {
+      log.warning('Failed: ${err.message}');
+      log.warning('Failed: ${err.uri}');
     } finally {
       client.close();
     }
-    return response.body;
+    String responseBody = '';
+    if (response != null) {
+      responseBody = response.body;
+    }
+    log.warning('Response: ${responseBody}');
+    return responseBody;
   }
 }
