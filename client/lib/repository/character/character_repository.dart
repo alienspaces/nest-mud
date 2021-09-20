@@ -10,6 +10,8 @@ abstract class CharacterRepositoryInterface {
 class CharacterRepository implements CharacterRepositoryInterface {
   @override
   CharacterRecord create(CharacterRecord record) {
+    // TODO: Hook in API and actually create character
+
     return record;
   }
 }

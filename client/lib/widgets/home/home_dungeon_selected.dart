@@ -48,6 +48,9 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
       intelligence: intelligence,
     );
 
+    // TODO: Complete character creation, once character
+    // created and there is a current character in the
+    // dungeon then dungeon character actions can be created.
     characterCubit.createCharacter(characterRecord);
   }
 
