@@ -13,6 +13,7 @@
     "definitions": {
         "data": {
             "type": "object",
+            "required": ["name", "strength", "dexterity", "intelligence"],
             "properties": {
                 "name": {
                     "type": "string"
@@ -26,8 +27,7 @@
                 "intelligence": {
                     "type": "number"
                 }
-            },
-            "required": ["name", "strength", "dexterity", "intelligence"]
+            }
         }
     }
 }

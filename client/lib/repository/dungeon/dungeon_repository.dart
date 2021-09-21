@@ -14,7 +14,6 @@ abstract class DungeonRepositoryInterface {
 }
 
 class DungeonRepository implements DungeonRepositoryInterface {
-  @override
   Future<DungeonRecord?> getOne(String dungeonID) async {
     final log = getLogger('DungeonRepository');
     final api = API();

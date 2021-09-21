@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
@@ -99,26 +101,42 @@ class API {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
 
-    Map data = {
-      name: name,
-      strength: strength,
-      dexterity: dexterity,
-      intelligence: intelligence,
-    };
-
     http.Response? response;
     try {
-      response = await client.post(Uri.parse(this.hostname), headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      }, body: {
-        data: data,
+      Uri uri = Uri(
+        scheme: 'http',
+        host: this.hostname,
+        port: int.parse(this.port),
+        path: '/api/v1/dungeons/${dungeonID}/characters',
+      );
+      log.warning('URI ${uri}');
+
+      String bodyData = jsonEncode({
+        "data": {
+          "name": '${name}',
+          "strength": '${strength}',
+          "dexterity": '${dexterity}',
+          "intelligence": '${intelligence}',
+        },
       });
+      log.warning('bodyData ${bodyData}');
+
+      response = await client.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: bodyData,
+      );
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
       log.warning('Failed: ${err.uri}');
+    } catch (err) {
+      log.warning('Failed: ${err}');
     } finally {
       client.close();
     }
+    log.warning('Response: ${response}');
     String responseBody = '';
     if (response != null) {
       responseBody = response.body;

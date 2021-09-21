@@ -13,14 +13,19 @@ class CharacterCubit extends Cubit<CharacterState> {
 
   CharacterCubit() : super(CharacterInitial()) {}
 
-  Future<void> createCharacter(CharacterRecord characterRecord) async {
+  Future<void> createCharacter(String dungeonID, CharacterRecord characterRecord) async {
     final log = getLogger('CharacterCubit');
     log.info('Creating character ${characterRecord}');
 
     emit(CharacterStateCreating());
 
-    characterRecord = await characterRepository.create(characterRecord);
+    CharacterRecord? updatedCharacterRecord =
+        await characterRepository.create(dungeonID, characterRecord);
 
-    emit(CharacterStateUpdated(characterRecord: characterRecord));
+    log.info('Created character ${updatedCharacterRecord}');
+
+    if (updatedCharacterRecord != null) {
+      emit(CharacterStateUpdated(characterRecord: updatedCharacterRecord));
+    }
   }
 }

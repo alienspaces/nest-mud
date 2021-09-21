@@ -33,7 +33,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
     super.dispose();
   }
 
-  void _createCharacter() {
+  void _createCharacter(String dungeonID) {
     final log = getLogger('HomeDungeonSelectedWidget');
     log.info('Creating character name >${characterNameController.text}<');
     log.info('Creating character strength >${strength}<');
@@ -51,7 +51,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
     // TODO: Complete character creation, once character
     // created and there is a current character in the
     // dungeon then dungeon character actions can be created.
-    characterCubit.createCharacter(characterRecord);
+    characterCubit.createCharacter(dungeonID, characterRecord);
   }
 
   void _incrementStrength() {
@@ -292,7 +292,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
-                          _createCharacter();
+                          _createCharacter(state.currentDungeonRecord!.id);
                         }
                       },
                       child: const Text('Enter The Dungeon'),
