@@ -7,6 +7,8 @@ import 'package:client/cubit/character/character_cubit.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 import 'package:client/repository/repository.dart';
 
+const int MAX_ATTRIBUTES = 36;
+
 class HomeDungeonSelectedWidget extends StatefulWidget {
   final DungeonRecord dungeonRecord;
   const HomeDungeonSelectedWidget({Key? key, required this.dungeonRecord}) : super(key: key);
@@ -55,7 +57,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
   }
 
   void _incrementStrength() {
-    if (strength + dexterity + intelligence <= 35) {
+    if (strength + dexterity + intelligence < MAX_ATTRIBUTES) {
       setState(() {
         strength++;
       });
@@ -71,7 +73,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
   }
 
   void _incrementDexterity() {
-    if (strength + dexterity + intelligence <= 35) {
+    if (strength + dexterity + intelligence < MAX_ATTRIBUTES) {
       setState(() {
         dexterity++;
       });
@@ -87,7 +89,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
   }
 
   void _incrementIntelligence() {
-    if (strength + dexterity + intelligence <= 35) {
+    if (strength + dexterity + intelligence < MAX_ATTRIBUTES) {
       setState(() {
         intelligence++;
       });

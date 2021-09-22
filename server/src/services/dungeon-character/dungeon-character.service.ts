@@ -23,7 +23,7 @@ export interface DungeonCharacterParameters {
 
 const defaultCoins = 100;
 const defaultExperiencePoints = 0;
-const defaultAttributePoints = 30;
+const defaultAttributePoints = 36;
 
 @Injectable()
 export class DungeonCharacterService {

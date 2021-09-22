@@ -114,9 +114,9 @@ class API {
       String bodyData = jsonEncode({
         "data": {
           "name": '${name}',
-          "strength": '${strength}',
-          "dexterity": '${dexterity}',
-          "intelligence": '${intelligence}',
+          "strength": strength,
+          "dexterity": dexterity,
+          "intelligence": intelligence,
         },
       });
       log.warning('bodyData ${bodyData}');

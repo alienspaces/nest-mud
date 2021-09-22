@@ -29,3 +29,13 @@ class CharacterStateUpdated extends CharacterState {
   @override
   List<Object> get props => [characterRecord];
 }
+
+@immutable
+class CharacterStateError extends CharacterState {
+  final CharacterRecord characterRecord;
+  final String message;
+  const CharacterStateError({required this.characterRecord, required this.message});
+
+  @override
+  List<Object> get props => [characterRecord, message];
+}
