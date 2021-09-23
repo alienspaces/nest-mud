@@ -1,3 +1,5 @@
+import 'package:client/widgets/game/game_character.dart';
+import 'package:client/widgets/game/game_dungeon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +22,14 @@ class _GameContainerWidgetState extends State<GameContainerWidget> {
 
     return BlocProvider(
       create: (context) => DungeonCubit(),
-      child: Container(),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            GameCharacterWidget(),
+            GameDungeonWidget(),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -28,7 +28,6 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     _loadDungeons(context);
   }
 
-  /// Loads available dungeons
   void _loadDungeons(BuildContext context) {
     final log = getLogger('HomeContainerWidget');
     log.info('Loading dungeons');
@@ -36,6 +35,11 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
     dungeonCubit.loadDungeons();
   }
+
+  // TODO: Consider separating out dungeon container and character container, when
+  // a dungeon is selected the dungeon container will display an empy container, when
+  // no dungeon is selected the character container will display an empty container,
+  // maybe much cleaner layout and logic..
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,12 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
               ),
             );
           });
+        } else {
+          widgets.add(
+            Container(
+              child: Text('Loading dungeons...'),
+            ),
+          );
         }
 
         return Container(
