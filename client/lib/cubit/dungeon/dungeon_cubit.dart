@@ -11,9 +11,14 @@ part 'dungeon_state.dart';
 class DungeonCubit extends Cubit<DungeonState> {
   final dungeonRepository = DungeonRepository();
   List<DungeonRecord>? dungeonRecords;
-  DungeonRecord? currentDungeonRecord;
+  DungeonRecord? dungeonRecord;
 
-  DungeonCubit() : super(DungeonInitialState()) {}
+  DungeonCubit() : super(DungeonStateInitial()) {}
+
+  void clearDungeon() {
+    this.dungeonRecord = null;
+    emit(DungeonStateLoaded(dungeonRecords: dungeonRecords));
+  }
 
   Future<void> loadDungeons() async {
     final log = getLogger('DungeonCubit');
@@ -22,16 +27,16 @@ class DungeonCubit extends Cubit<DungeonState> {
 
     dungeonRecords = await dungeonRepository.getMany();
 
-    emit(DungeonStateSelected(dungeonRecords: dungeonRecords));
+    emit(DungeonStateLoaded(dungeonRecords: dungeonRecords));
   }
 
   Future<void> selectDungeon(DungeonRecord dungeonRecord) async {
-    currentDungeonRecord = dungeonRecord;
+    this.dungeonRecord = dungeonRecord;
 
     emit(
-      DungeonStateSelected(
+      DungeonStateLoaded(
         dungeonRecords: dungeonRecords,
-        currentDungeonRecord: currentDungeonRecord,
+        currentDungeonRecord: dungeonRecord,
       ),
     );
   }

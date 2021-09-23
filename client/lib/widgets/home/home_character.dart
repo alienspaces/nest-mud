@@ -25,7 +25,7 @@ class _HomeCharacterWidgetState extends State<HomeCharacterWidget> {
 
     return BlocConsumer<CharacterCubit, CharacterState>(
       listener: (BuildContext context, CharacterState state) {
-        //
+        log.info('listener...');
       },
       builder: (BuildContext context, CharacterState characterState) {
         if (characterState is CharacterStateInitial) {

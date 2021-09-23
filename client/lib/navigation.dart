@@ -37,6 +37,8 @@ class _NavigationState extends State<Navigation> {
 
   // Callback functions set the desired page stack
   void openHomePage() {
+    final log = getLogger('Navigation');
+    log.info('Opening home page..');
     setState(() {
       _pageList = [HomePage.pageName];
     });

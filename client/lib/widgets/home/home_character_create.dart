@@ -49,9 +49,6 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
       intelligence: intelligence,
     );
 
-    // TODO: Complete character creation, once character
-    // created and there is a current character in the
-    // dungeon then dungeon character actions can be created.
     characterCubit.createCharacter(dungeonID, characterRecord);
   }
 
@@ -122,7 +119,7 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
 
     return BlocConsumer<CharacterCubit, CharacterState>(
       listener: (BuildContext context, CharacterState state) {
-        //
+        log.info('listener...');
       },
       builder: (BuildContext context, CharacterState state) {
         if (state is CharacterStateInitial) {

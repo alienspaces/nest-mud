@@ -47,11 +47,12 @@ class _HomeDungeonListWidgetState extends State<HomeDungeonListWidget> {
         log.info('builder...');
         List<Widget> widgets = [];
 
-        if (state is DungeonStateSelected) {
+        if (state is DungeonStateLoaded) {
           state.dungeonRecords?.forEach((dungeonRecord) {
+            log.info('Checking dungeon ID ${dungeonRecord.id}');
             // Dungeon selected
-            if (state is DungeonStateSelected &&
-                state.currentDungeonRecord?.id == dungeonRecord.id) {
+            if (state is DungeonStateLoaded && state.currentDungeonRecord?.id == dungeonRecord.id) {
+              log.info('Displaying character widget');
               widgets.add(
                 Container(
                   child: HomeCharacterWidget(dungeonRecord: dungeonRecord),
@@ -61,6 +62,7 @@ class _HomeDungeonListWidgetState extends State<HomeDungeonListWidget> {
             }
 
             // Dungeon not selected
+            log.info('Displaying dungeon widget');
             widgets.add(
               Container(
                 child: HomeDungeonWidget(dungeonRecord: dungeonRecord),

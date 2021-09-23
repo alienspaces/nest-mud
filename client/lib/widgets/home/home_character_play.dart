@@ -24,7 +24,7 @@ class _HomeCharacterPlayWidgetState extends State<HomeCharacterPlayWidget> {
 
     return BlocConsumer<CharacterCubit, CharacterState>(
       listener: (BuildContext context, CharacterState state) {
-        //
+        log.info('listener...');
       },
       builder: (BuildContext context, CharacterState state) {
         if (state is CharacterStateSelected) {
