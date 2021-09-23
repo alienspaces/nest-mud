@@ -1,5 +1,5 @@
 import 'package:client/widgets/home/home_dungeon.dart';
-import 'package:client/widgets/home/home_dungeon_selected.dart';
+import 'package:client/widgets/home/home_character_create.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -54,7 +54,7 @@ class _HomeDungeonListWidgetState extends State<HomeDungeonListWidget> {
                 state.currentDungeonRecord?.id == dungeonRecord.id) {
               widgets.add(
                 Container(
-                  child: HomeDungeonSelectedWidget(dungeonRecord: dungeonRecord),
+                  child: HomeCharacterCreateWidget(dungeonRecord: dungeonRecord),
                 ),
               );
               return;

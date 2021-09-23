@@ -36,7 +36,7 @@ class HomeDungeonWidget extends StatelessWidget {
               Text('${dungeonRecord.id} ${dungeonRecord.name}'),
               ElevatedButton(
                 onPressed: () => _selectDungeon(context, dungeonRecord),
-                child: Text('Create Character'),
+                child: Text('Select Dungeon'),
               ),
             ],
           ),

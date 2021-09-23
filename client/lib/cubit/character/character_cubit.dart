@@ -13,7 +13,7 @@ const int MAX_ATTRIBUTES = 36;
 class CharacterCubit extends Cubit<CharacterState> {
   final characterRepository = CharacterRepository();
 
-  CharacterCubit() : super(CharacterInitial()) {}
+  CharacterCubit() : super(CharacterStateInitial()) {}
 
   Future<void> createCharacter(String dungeonID, CharacterRecord characterRecord) async {
     final log = getLogger('CharacterCubit');

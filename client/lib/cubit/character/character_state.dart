@@ -6,8 +6,8 @@ abstract class CharacterState extends Equatable {
 }
 
 @immutable
-class CharacterInitial extends CharacterState {
-  const CharacterInitial();
+class CharacterStateInitial extends CharacterState {
+  const CharacterStateInitial();
 
   @override
   List<Object> get props => [];

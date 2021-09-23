@@ -4,20 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Application
 import 'package:client/logger.dart';
 import 'package:client/cubit/character/character_cubit.dart';
-import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 import 'package:client/repository/repository.dart';
 
 const int MAX_ATTRIBUTES = 36;
 
-class HomeDungeonSelectedWidget extends StatefulWidget {
+class HomeCharacterCreateWidget extends StatefulWidget {
   final DungeonRecord dungeonRecord;
-  const HomeDungeonSelectedWidget({Key? key, required this.dungeonRecord}) : super(key: key);
+  const HomeCharacterCreateWidget({Key? key, required this.dungeonRecord}) : super(key: key);
 
   @override
-  _HomeDungeonSelectedWidgetState createState() => _HomeDungeonSelectedWidgetState();
+  _HomeCharacterCreateWidgetState createState() => _HomeCharacterCreateWidgetState();
 }
 
-class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
+class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
   int strength = 8;
   int dexterity = 8;
   int intelligence = 8;
@@ -36,7 +35,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
   }
 
   void _createCharacter(String dungeonID) {
-    final log = getLogger('HomeDungeonSelectedWidget');
+    final log = getLogger('HomeCharacterCreateWidget');
     log.info('Creating character name >${characterNameController.text}<');
     log.info('Creating character strength >${strength}<');
     log.info('Creating character dexterity >${dexterity}<');
@@ -106,7 +105,7 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('HomeDungeonSelectedWidget');
+    final log = getLogger('HomeCharacterCreateWidget');
     log.info('Building..');
 
     InputDecoration _fieldDecoration(String hintText) {
@@ -121,12 +120,12 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
     const double attributeFieldValueWidth = 50;
     const double attributeFieldSpacerWidth = 80;
 
-    return BlocConsumer<DungeonCubit, DungeonState>(
-      listener: (BuildContext context, DungeonState state) {
+    return BlocConsumer<CharacterCubit, CharacterState>(
+      listener: (BuildContext context, CharacterState state) {
         //
       },
-      builder: (BuildContext context, DungeonState state) {
-        if (state is DungeonStateUpdated && state.currentDungeonRecord != null) {
+      builder: (BuildContext context, CharacterState state) {
+        if (state is CharacterStateInitial) {
           // TODO: Build a character form here and a create button
           // to create a character in the current selected dungeon
           return Container(
@@ -294,10 +293,10 @@ class _HomeDungeonSelectedWidgetState extends State<HomeDungeonSelectedWidget> {
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
-                          _createCharacter(state.currentDungeonRecord!.id);
+                          _createCharacter(widget.dungeonRecord.id);
                         }
                       },
-                      child: const Text('Enter The Dungeon'),
+                      child: const Text('Create Character'),
                     ),
                   ),
                 ],
