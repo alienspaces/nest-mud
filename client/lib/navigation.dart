@@ -45,6 +45,8 @@ class _NavigationState extends State<Navigation> {
   }
 
   void openGamePage() {
+    final log = getLogger('Navigation');
+    log.info('Opening game page..');
     setState(() {
       _pageList = [GamePage.pageName];
     });

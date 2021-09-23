@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application
 import 'package:client/logger.dart';
+import 'package:client/navigation.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 import 'package:client/repository/dungeon/dungeon_repository.dart';
 
 class HomeDungeonWidget extends StatelessWidget {
+  final NavigationCallbacks callbacks;
   final DungeonRecord dungeonRecord;
-  const HomeDungeonWidget({Key? key, required this.dungeonRecord}) : super(key: key);
+  const HomeDungeonWidget({Key? key, required this.callbacks, required this.dungeonRecord})
+      : super(key: key);
 
   /// Sets the current dungeon state to the provided dungeon
   void _selectDungeon(BuildContext context, DungeonRecord dungeonRecord) {

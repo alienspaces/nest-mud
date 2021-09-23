@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application packages
+import 'package:client/navigation.dart';
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
 class HomeContainerWidget extends StatefulWidget {
-  const HomeContainerWidget({Key? key}) : super(key: key);
+  final NavigationCallbacks callbacks;
+
+  const HomeContainerWidget({Key? key, required this.callbacks}) : super(key: key);
 
   @override
   _HomeContainerWidgetState createState() => _HomeContainerWidgetState();
@@ -55,7 +58,8 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
               log.info('Displaying character widget');
               widgets.add(
                 Container(
-                  child: HomeCharacterWidget(dungeonRecord: dungeonRecord),
+                  child: HomeCharacterWidget(
+                      callbacks: widget.callbacks, dungeonRecord: dungeonRecord),
                 ),
               );
               return;
@@ -65,7 +69,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
             log.info('Displaying dungeon widget');
             widgets.add(
               Container(
-                child: HomeDungeonWidget(dungeonRecord: dungeonRecord),
+                child: HomeDungeonWidget(callbacks: widget.callbacks, dungeonRecord: dungeonRecord),
               ),
             );
           });

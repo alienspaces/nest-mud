@@ -3,15 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application packages
 import 'package:client/logger.dart';
+import 'package:client/navigation.dart';
 import 'package:client/repository/repository.dart';
 import 'package:client/cubit/character/character_cubit.dart';
 import 'package:client/widgets/home/home_character_create.dart';
 import 'package:client/widgets/home/home_character_play.dart';
 
 class HomeCharacterWidget extends StatefulWidget {
+  final NavigationCallbacks callbacks;
+
   final DungeonRecord dungeonRecord;
 
-  const HomeCharacterWidget({Key? key, required this.dungeonRecord}) : super(key: key);
+  const HomeCharacterWidget({Key? key, required this.callbacks, required this.dungeonRecord})
+      : super(key: key);
 
   @override
   _HomeCharacterWidgetState createState() => _HomeCharacterWidgetState();
@@ -37,6 +41,7 @@ class _HomeCharacterWidgetState extends State<HomeCharacterWidget> {
         } else if (characterState is CharacterStateSelected) {
           return Container(
             child: HomeCharacterPlayWidget(
+              callbacks: widget.callbacks,
               dungeonRecord: widget.dungeonRecord,
             ),
           );

@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
-        child: HomeContainerWidget(),
+        child: HomeContainerWidget(callbacks: widget.callbacks),
       ),
     );
   }
