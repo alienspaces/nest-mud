@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application
 import 'package:client/logger.dart';
-import 'package:client/cubit/character/character_cubit.dart';
 import 'package:client/repository/repository.dart';
+import 'package:client/cubit/character/character_cubit.dart';
 
 const int MAX_ATTRIBUTES = 36;
 
@@ -126,8 +126,6 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
       },
       builder: (BuildContext context, CharacterState state) {
         if (state is CharacterStateInitial) {
-          // TODO: Build a character form here and a create button
-          // to create a character in the current selected dungeon
           return Container(
             margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Form(
