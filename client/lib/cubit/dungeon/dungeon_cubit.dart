@@ -22,14 +22,14 @@ class DungeonCubit extends Cubit<DungeonState> {
 
     dungeonRecords = await dungeonRepository.getMany();
 
-    emit(DungeonStateUpdated(dungeonRecords: dungeonRecords));
+    emit(DungeonStateSelected(dungeonRecords: dungeonRecords));
   }
 
   Future<void> selectDungeon(DungeonRecord dungeonRecord) async {
     currentDungeonRecord = dungeonRecord;
 
     emit(
-      DungeonStateUpdated(
+      DungeonStateSelected(
         dungeonRecords: dungeonRecords,
         currentDungeonRecord: currentDungeonRecord,
       ),

@@ -22,9 +22,17 @@ class CharacterStateCreating extends CharacterState {
 }
 
 @immutable
-class CharacterStateUpdated extends CharacterState {
+class CharacterStateLoading extends CharacterState {
+  const CharacterStateLoading();
+
+  @override
+  List<Object> get props => [];
+}
+
+@immutable
+class CharacterStateSelected extends CharacterState {
   final CharacterRecord characterRecord;
-  const CharacterStateUpdated({required this.characterRecord});
+  const CharacterStateSelected({required this.characterRecord});
 
   @override
   List<Object> get props => [characterRecord];

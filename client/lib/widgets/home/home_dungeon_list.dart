@@ -47,10 +47,10 @@ class _HomeDungeonListWidgetState extends State<HomeDungeonListWidget> {
         log.info('builder...');
         List<Widget> widgets = [];
 
-        if (state is DungeonStateUpdated) {
+        if (state is DungeonStateSelected) {
           state.dungeonRecords?.forEach((dungeonRecord) {
             // Dungeon selected
-            if (state is DungeonStateUpdated &&
+            if (state is DungeonStateSelected &&
                 state.currentDungeonRecord?.id == dungeonRecord.id) {
               widgets.add(
                 Container(

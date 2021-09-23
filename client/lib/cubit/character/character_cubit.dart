@@ -29,13 +29,28 @@ class CharacterCubit extends Cubit<CharacterState> {
       return;
     }
 
-    CharacterRecord? updatedCharacterRecord =
+    CharacterRecord? createdCharacterRecord =
         await characterRepository.create(dungeonID, characterRecord);
 
-    log.info('Created character ${updatedCharacterRecord}');
+    log.info('Created character ${createdCharacterRecord}');
 
-    if (updatedCharacterRecord != null) {
-      emit(CharacterStateUpdated(characterRecord: updatedCharacterRecord));
+    if (createdCharacterRecord != null) {
+      emit(CharacterStateSelected(characterRecord: createdCharacterRecord));
+    }
+  }
+
+  Future<void> loadCharacter(String dungeonID, String characterID) async {
+    final log = getLogger('CharacterCubit');
+    log.info('Creating character ID ${characterID}');
+
+    emit(CharacterStateLoading());
+
+    CharacterRecord? loadedCharacterRecord = await characterRepository.load(dungeonID, characterID);
+
+    log.info('Created character ${loadedCharacterRecord}');
+
+    if (loadedCharacterRecord != null) {
+      emit(CharacterStateSelected(characterRecord: loadedCharacterRecord));
     }
   }
 }

@@ -22,11 +22,11 @@ class DungeonStateLoading extends DungeonState {
 }
 
 @immutable
-class DungeonStateUpdated extends DungeonState {
+class DungeonStateSelected extends DungeonState {
   final List<DungeonRecord>? dungeonRecords;
   final DungeonRecord? currentDungeonRecord;
 
-  const DungeonStateUpdated({required this.dungeonRecords, this.currentDungeonRecord});
+  const DungeonStateSelected({required this.dungeonRecords, this.currentDungeonRecord});
 
   @override
   List<Object?> get props => [dungeonRecords, currentDungeonRecord];

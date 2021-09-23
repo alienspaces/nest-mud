@@ -141,11 +141,49 @@ class API {
     if (response != null) {
       responseBody = response.body;
     }
+
     log.warning('Response: ${responseBody}');
     return responseBody;
   }
 
-  // TODO: Actual implementation
+  Future<String> loadCharacter(String dungeonID, String characterID) async {
+    final log = getLogger('API');
+    final client = RetryClient(http.Client());
+
+    http.Response? response;
+    try {
+      Uri uri = Uri(
+        scheme: 'http',
+        host: this.hostname,
+        port: int.parse(this.port),
+        path: '/api/v1/dungeons/${dungeonID}/characters/${characterID}',
+      );
+      log.warning('URI ${uri}');
+
+      response = await client.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+      );
+    } on http.ClientException catch (err) {
+      log.warning('Failed: ${err.message}');
+      log.warning('Failed: ${err.uri}');
+    } catch (err) {
+      log.warning('Failed: ${err}');
+    } finally {
+      client.close();
+    }
+    log.warning('Response: ${response}');
+    String responseBody = '';
+    if (response != null) {
+      responseBody = response.body;
+    }
+
+    log.warning('Response: ${responseBody}');
+    return responseBody;
+  }
+
   Future<String> createAction(
     String dungeonID,
     String characterID, {
@@ -175,6 +213,7 @@ class API {
     if (response != null) {
       responseBody = response.body;
     }
+
     log.warning('Response: ${responseBody}');
     return responseBody;
   }
