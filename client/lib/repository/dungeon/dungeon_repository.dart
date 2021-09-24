@@ -40,7 +40,7 @@ class DungeonRepository implements DungeonRepositoryInterface {
     Map<String, dynamic> decoded = jsonDecode(response);
     if (decoded['data'] != null) {
       List<dynamic> data = decoded['data'];
-      log.warning('Decoded response ${data}');
+      log.info('Decoded response ${data}');
       data.forEach((element) {
         records.add(DungeonRecord.fromJson(element));
       });

@@ -7,6 +7,20 @@ interface ResolverSentence {
     sentence?: string;
 }
 
+// Property names mapped to direction words
+const DIRECTION_MAP = {
+    north_dungeon_location_id: 'north',
+    northeast_dungeon_location_id: 'northeast',
+    east_dungeon_location_id: 'east',
+    southeast_dungeon_location_id: 'southeast',
+    south_dungeon_location_id: 'south',
+    southwest_dungeon_location_id: 'southwest',
+    west_dungeon_location_id: 'west',
+    northwest_dungeon_location_id: 'northwest',
+    up_dungeon_location_id: 'up',
+    down_dungeon_location_id: 'down',
+};
+
 export class DungeonCharacterActionResolver {
     resolveAction(sentence: string, records: DungeonLocationRecordSet): DungeonActionRepositoryRecord {
         const resolved = this.resolveCommand(sentence);
@@ -39,32 +53,23 @@ export class DungeonCharacterActionResolver {
             };
             return true;
         });
+
         return resolved;
     }
 
     resolveMoveAction(sentence: string, records: DungeonLocationRecordSet): DungeonActionRepositoryRecord {
-        const directionMap = {
-            north_dungeon_location_id: 'north',
-            northeast_dungeon_location_id: 'northeast',
-            east_dungeon_location_id: 'east',
-            southeast_dungeon_location_id: 'southeast',
-            south_dungeon_location_id: 'south',
-            southwest_dungeon_location_id: 'southwest',
-            west_dungeon_location_id: 'west',
-            northwest_dungeon_location_id: 'northwest',
-            up_dungeon_location_id: 'up',
-            down_dungeon_location_id: 'down',
-        };
-
         let command: DungeonActionRepositoryRecord['resolved_command'];
         let targetDungeonLocationId: string;
         let targetDungeonLocationDirection: string;
-        for (var prop in directionMap) {
-            if (records.location[prop] && sentence.match(new RegExp(`\s?${directionMap[prop]}(?![A-Za-z]+)`))) {
-                command = 'move';
-                targetDungeonLocationId = records.location[prop];
-                targetDungeonLocationDirection = directionMap[prop];
-                break;
+
+        if (sentence) {
+            for (var prop in DIRECTION_MAP) {
+                if (records.location[prop] && sentence.match(new RegExp(`\s?${DIRECTION_MAP[prop]}(?![A-Za-z]+)`))) {
+                    command = 'move';
+                    targetDungeonLocationId = records.location[prop];
+                    targetDungeonLocationDirection = DIRECTION_MAP[prop];
+                    break;
+                }
             }
         }
 
@@ -78,7 +83,7 @@ export class DungeonCharacterActionResolver {
             });
         }
 
-        let dungeonActionRecord: DungeonActionRepositoryRecord = {
+        const dungeonActionRecord: DungeonActionRepositoryRecord = {
             dungeon_id: records.character.dungeon_id,
             dungeon_location_id: records.character.dungeon_location_id,
             dungeon_character_id: records.character.id,
@@ -92,13 +97,51 @@ export class DungeonCharacterActionResolver {
     }
 
     resolveLookAction(sentence: string, records: DungeonLocationRecordSet): DungeonActionRepositoryRecord {
-        let dungeonActionRecord: Partial<DungeonActionRepositoryRecord> = {
+        const command = 'look';
+        let targetDungeonLocationId: string;
+        let targetDungeonLocationDirection: string;
+
+        // Looking in a direction where there is another location?
+        if (sentence) {
+            for (var prop in DIRECTION_MAP) {
+                if (records.location[prop] && sentence.match(new RegExp(`\s?${DIRECTION_MAP[prop]}(?![A-Za-z]+)`))) {
+                    targetDungeonLocationId = records.location[prop];
+                    targetDungeonLocationDirection = DIRECTION_MAP[prop];
+                    break;
+                }
+            }
+        }
+
+        // When not a direction where there is a room exit the character
+        // is looking at the current location.
+        let targetDungeonLocationName: string;
+        if (targetDungeonLocationId == null) {
+            targetDungeonLocationId = records.location.id;
+            targetDungeonLocationName = records.location.name;
+        } else if (records.locations) {
+            records.locations.some((location) => {
+                if (location.id === targetDungeonLocationId) {
+                    targetDungeonLocationName = location.name;
+                    return true;
+                }
+            });
+        }
+
+        const dungeonActionRecord: DungeonActionRepositoryRecord = {
             dungeon_id: records.character.dungeon_id,
             dungeon_location_id: records.character.dungeon_location_id,
             dungeon_character_id: records.character.id,
+            resolved_command: command,
+            resolved_target_dungeon_location_direction: targetDungeonLocationDirection,
+            resolved_target_dungeon_location_name: targetDungeonLocationName,
+            resolved_target_dungeon_location_id: targetDungeonLocationId,
         };
-        return null;
+
+        console.warn('Dungeon action record', dungeonActionRecord);
+
+        return dungeonActionRecord;
     }
+
     resolveEquipAction(sentence: string, records: DungeonLocationRecordSet): DungeonActionRepositoryRecord {
         let dungeonActionRecord: Partial<DungeonActionRepositoryRecord> = {
             dungeon_id: records.character.dungeon_id,

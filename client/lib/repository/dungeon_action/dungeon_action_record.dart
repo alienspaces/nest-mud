@@ -19,23 +19,88 @@ class CreateDungeonActionRecord extends Equatable {
 }
 
 class DungeonActionRecord extends Equatable {
-  final String id;
-  final String name;
+  final DungeonAction action;
+  final DungeonLocation location;
 
   DungeonActionRecord({
-    required this.id,
-    required this.name,
+    required this.action,
+    required this.location,
   });
 
-  DungeonActionRecord.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'];
+// List<Image> imagesList = list.map((i) => Image.fromJson(i)).toList();
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-      };
+  factory DungeonActionRecord.fromJson(Map<String, dynamic> json) {
+    DungeonAction? dungeonAction;
+    Map<String, dynamic>? action = json['action'];
+    if (action == null) {
+      throw FormatException('Missing "action" from JSON');
+    }
+    dungeonAction = DungeonAction(
+      id: action['id'],
+      command: action['command'],
+      command_result: action['command_result'],
+      equipped_dungeon_object_name: action['equipped_dungeon_object_name'],
+      stashed_dungeon_object_name: action['stashed_dungeon_object_name'],
+      target_dungeon_object_name: action['target_dungeon_object_name'],
+      target_dungeon_character_name: action['target_dungeon_character_name'],
+      target_dungeon_monster_name: action['target_dungeon_monster_name'],
+      target_dungeon_location_direction: action['target_dungeon_location_direction'],
+      target_dungeon_location_name: action['target_dungeon_location_name'],
+    );
+
+    DungeonLocation? dungeonLocation;
+    Map<String, dynamic>? location = json['location'];
+    if (location == null) {
+      throw FormatException('Missing "location" from JSON');
+    }
+
+    dungeonLocation = DungeonLocation(
+      name: location['name'],
+      description: location['description'],
+    );
+
+    return DungeonActionRecord(
+      action: dungeonAction,
+      location: dungeonLocation,
+    );
+  }
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [
+        action,
+        location,
+      ];
+}
+
+class DungeonAction {
+  final String id;
+  final String command;
+  final String? command_result;
+  final String? equipped_dungeon_object_name;
+  final String? stashed_dungeon_object_name;
+  final String? target_dungeon_object_name;
+  final String? target_dungeon_character_name;
+  final String? target_dungeon_monster_name;
+  final String? target_dungeon_location_direction;
+  final String? target_dungeon_location_name;
+
+  DungeonAction({
+    required this.id,
+    required this.command,
+    this.command_result,
+    this.equipped_dungeon_object_name,
+    this.stashed_dungeon_object_name,
+    this.target_dungeon_object_name,
+    this.target_dungeon_character_name,
+    this.target_dungeon_monster_name,
+    this.target_dungeon_location_direction,
+    this.target_dungeon_location_name,
+  });
+}
+
+class DungeonLocation {
+  final String name;
+  final String description;
+
+  DungeonLocation({required this.name, required this.description});
 }

@@ -130,7 +130,7 @@ export abstract class Repository<TRecord extends Record> {
             sql += ' FOR UPDATE';
         }
 
-        logger.debug(sql);
+        logger.info(sql);
         return sql;
     }
 
@@ -270,7 +270,7 @@ export abstract class Repository<TRecord extends Record> {
                 values.push(parameter.value);
             }
         });
-        logger.debug(values);
+        logger.info(values);
         const result = await client.query(sql, values);
 
         return result.rows as TRecord[];

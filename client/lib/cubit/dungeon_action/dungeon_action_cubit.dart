@@ -24,7 +24,7 @@ class DungeonActionCubit extends Cubit<DungeonActionState> {
     DungeonActionRecord? createdDungeonActionRecord =
         await dungeonActionRepository.create(dungeonID, characterID, sentence);
 
-    log.info('Created character ${createdDungeonActionRecord}');
+    log.info('Created dungeon action ${createdDungeonActionRecord}');
 
     if (createdDungeonActionRecord != null) {
       emit(DungeonActionStateCreated(dungeonActionRecord: createdDungeonActionRecord));

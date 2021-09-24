@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application packages
 import 'package:client/logger.dart';
-import 'package:client/cubit/dungeon/dungeon_cubit.dart';
+import 'package:client/cubit/dungeon_action/dungeon_action_cubit.dart';
 
 class GameDungeonWidget extends StatefulWidget {
   const GameDungeonWidget({Key? key}) : super(key: key);
@@ -18,16 +18,19 @@ class _GameDungeonWidgetState extends State<GameDungeonWidget> {
     final log = getLogger('GameCharacterWidget');
     log.info('Building..');
 
-    return BlocConsumer<DungeonCubit, DungeonState>(
-      listener: (BuildContext context, DungeonState state) {
+    return BlocConsumer<DungeonActionCubit, DungeonActionState>(
+      listener: (BuildContext context, DungeonActionState state) {
         log.info('listener...');
       },
-      builder: (BuildContext context, DungeonState state) {
-        if (state is DungeonStateLoaded) {
+      builder: (BuildContext context, DungeonActionState state) {
+        if (state is DungeonActionStateCreated) {
           return Container(
             child: Column(
               children: <Widget>[
                 Text('Dungeon'),
+                Text('Command: ${state.dungeonActionRecord?.action.command}'),
+                Text('Name: ${state.dungeonActionRecord?.location.name}'),
+                Text('Description: ${state.dungeonActionRecord?.location.description}'),
               ],
             ),
           );

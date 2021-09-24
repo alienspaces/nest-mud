@@ -72,10 +72,12 @@ export class DungeonActionService {
         // Resolve character action
         let dungeonActionRecord = this.resolver.resolveAction(sentence, records);
         if (!dungeonActionRecord) {
-            throw domainServiceError(`Failed to resolve command for sentence ${sentence}`);
+            logger.warn('Failed to return dungeon action record');
+            throw domainServiceError(`Failed to resolve command for sentence >${sentence}<`);
         }
         if (!dungeonActionRecord.resolved_command) {
-            throw domainServiceError(`Failed to resolve command for sentence ${sentence}`);
+            logger.warn('Failed to populate dungeon action record resolved command');
+            throw domainServiceError(`Failed to resolve command for sentence >${sentence}<`);
         }
 
         logger.info(`Have dungeon action record resolved command >${dungeonActionRecord.resolved_command}<`);
@@ -182,7 +184,7 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        throw domainServiceError('Method look not implemented');
+        // TODO: Provide the ability to look multiple times to get more detailed information
         return dungeonActionRecord;
     }
 
