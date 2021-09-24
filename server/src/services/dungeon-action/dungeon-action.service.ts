@@ -381,6 +381,10 @@ export class DungeonActionService {
     async getDungeonActionEventRecordSet(
         dungeonActionRecord: DungeonActionRepositoryRecord,
     ): Promise<DungeonActionEventRecordSet> {
+        const logger = this.loggerService.logger({
+            function: 'getDungeonActionEventRecordSet',
+        });
+
         const dungeonActionEventRecordSet: DungeonActionEventRecordSet = {
             dungeonActionRecord: dungeonActionRecord,
         };
@@ -535,8 +539,7 @@ export class DungeonActionService {
 
         const dungeonCharacterEntities: DungeonCharacterEntity[] = [];
         if (dungeonActionRecordSet.dungeonActionCharacterRecords) {
-            for (var idx = 0; idx < dungeonActionRecordSet.dungeonActionCharacterRecords.length; idx++) {
-                const dungeonActionCharacterRecord = dungeonActionRecordSet.dungeonActionCharacterRecords[0];
+            for (var dungeonActionCharacterRecord of dungeonActionRecordSet.dungeonActionCharacterRecords) {
                 const dungeonCharacterEntity = await this.dungeonCharacterService.getDungeonCharacter(
                     dungeonActionCharacterRecord.dungeon_character_id,
                 );
@@ -546,8 +549,7 @@ export class DungeonActionService {
 
         const dungeonMonsterEntities: DungeonMonsterEntity[] = [];
         if (dungeonActionRecordSet.dungeonActionMonsterRecords) {
-            for (var idx = 0; idx < dungeonActionRecordSet.dungeonActionMonsterRecords.length; idx++) {
-                const dungeonActionMonsterRecord = dungeonActionRecordSet.dungeonActionMonsterRecords[0];
+            for (var dungeonActionMonsterRecord of dungeonActionRecordSet.dungeonActionMonsterRecords) {
                 const dungeonMonsterEntity = await this.dungeonMonsterService.getDungeonMonster(
                     dungeonActionMonsterRecord.dungeon_monster_id,
                 );
@@ -557,8 +559,7 @@ export class DungeonActionService {
 
         const dungeonObjectEntities: DungeonObjectEntity[] = [];
         if (dungeonActionRecordSet.dungeonActionObjectRecords) {
-            for (var idx = 0; idx < dungeonActionRecordSet.dungeonActionObjectRecords.length; idx++) {
-                const dungeonActionObjectRecord = dungeonActionRecordSet.dungeonActionObjectRecords[0];
+            for (var dungeonActionObjectRecord of dungeonActionRecordSet.dungeonActionObjectRecords) {
                 const dungeonObjectEntity = await this.dungeonObjectService.getDungeonObject(
                     dungeonActionObjectRecord.dungeon_object_id,
                 );

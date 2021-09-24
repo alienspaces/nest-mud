@@ -54,7 +54,7 @@ function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionE
 
     let dungeonActionData: DungeonActionDto['data'] = [];
 
-    dungeonActionEntitySets.forEach((dungeonActionEntitySet) => {
+    for (var dungeonActionEntitySet of dungeonActionEntitySets) {
         const dungeonActionEntity = dungeonActionEntitySet.dungeonActionEntity;
         const dungeonLocationEntity = dungeonActionEntitySet.dungeonLocationEntity;
 
@@ -107,37 +107,37 @@ function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionE
         const dungeonCharacterEntities = dungeonActionEntitySet.dungeonCharacterEntities;
         if (dungeonCharacterEntities) {
             dungeonActionDataItem.characters = [];
-            dungeonCharacterEntities.forEach((dungeonCharacterEntity) => {
+            for (var locationDungeonCharacterEntity of dungeonCharacterEntities) {
                 dungeonActionDataItem.characters.push({
-                    name: dungeonCharacterEntity.name,
+                    name: locationDungeonCharacterEntity.name,
                 });
-            });
+            }
         }
 
         // The monsters at the location when the action was performed
         const dungeonMonsterEntities = dungeonActionEntitySet.dungeonMonsterEntities;
         if (dungeonMonsterEntities) {
             dungeonActionDataItem.monsters = [];
-            dungeonMonsterEntities.forEach((dungeonMonsterEntity) => {
+            for (var locationDungeonMonsterEntity of dungeonMonsterEntities) {
                 dungeonActionDataItem.monsters.push({
-                    name: dungeonMonsterEntity.name,
+                    name: locationDungeonMonsterEntity.name,
                 });
-            });
+            }
         }
 
         // The objects at the location when the action was performed
         const dungeonObjectEntities = dungeonActionEntitySet.dungeonObjectEntities;
         if (dungeonObjectEntities) {
             dungeonActionDataItem.objects = [];
-            dungeonObjectEntities.forEach((dungeonObjectEntity) => {
+            for (var locationDungeonObjectEntity of dungeonObjectEntities) {
                 dungeonActionDataItem.objects.push({
-                    name: dungeonObjectEntity.name,
+                    name: locationDungeonObjectEntity.name,
                 });
-            });
+            }
         }
 
         dungeonActionData.push(dungeonActionDataItem);
-    });
+    }
 
     returnData = { data: dungeonActionData };
 
