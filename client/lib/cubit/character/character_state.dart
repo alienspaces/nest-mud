@@ -40,7 +40,7 @@ class CharacterStateSelected extends CharacterState {
 
 @immutable
 class CharacterStateError extends CharacterState {
-  final CharacterRecord characterRecord;
+  final CreateCharacterRecord characterRecord;
   final String message;
   const CharacterStateError({required this.characterRecord, required this.message});
 

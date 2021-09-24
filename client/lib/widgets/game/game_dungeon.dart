@@ -12,8 +12,6 @@ class GameDungeonWidget extends StatefulWidget {
   _GameDungeonWidgetState createState() => _GameDungeonWidgetState();
 }
 
-// TODO: Work out how to get current dungeon location and display it..
-
 class _GameDungeonWidgetState extends State<GameDungeonWidget> {
   @override
   Widget build(BuildContext context) {

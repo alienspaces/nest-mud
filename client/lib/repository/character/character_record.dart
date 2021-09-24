@@ -1,8 +1,38 @@
 // Package
 part of 'character_repository.dart';
 
+class CreateCharacterRecord extends Equatable {
+  final String name;
+  final int strength;
+  final int dexterity;
+  final int intelligence;
+
+  CreateCharacterRecord({
+    required this.name,
+    required this.strength,
+    required this.dexterity,
+    required this.intelligence,
+  });
+
+  CreateCharacterRecord.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        strength = json['strength'],
+        dexterity = json['dexterity'],
+        intelligence = json['intelligence'];
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'strength': strength,
+        'dexterity': dexterity,
+        'intelligence': intelligence,
+      };
+
+  @override
+  List<Object?> get props => [name, strength, dexterity, intelligence];
+}
+
 class CharacterRecord extends Equatable {
-  final String? id;
+  final String id;
   final String name;
   final int strength;
   final int dexterity;
@@ -14,7 +44,7 @@ class CharacterRecord extends Equatable {
   final int? attribute_points;
 
   CharacterRecord({
-    this.id,
+    required this.id,
     required this.name,
     required this.strength,
     required this.dexterity,

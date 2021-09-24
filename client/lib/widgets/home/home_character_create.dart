@@ -42,14 +42,14 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
     log.info('Creating character intelligence >${intelligence}<');
 
     final characterCubit = BlocProvider.of<CharacterCubit>(context);
-    CharacterRecord characterRecord = new CharacterRecord(
+    CreateCharacterRecord createCharacterRecord = new CreateCharacterRecord(
       name: characterNameController.text,
       strength: strength,
       dexterity: dexterity,
       intelligence: intelligence,
     );
 
-    characterCubit.createCharacter(dungeonID, characterRecord);
+    characterCubit.createCharacter(dungeonID, createCharacterRecord);
   }
 
   void _incrementStrength() {

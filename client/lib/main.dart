@@ -6,6 +6,7 @@ import 'package:client/logger.dart';
 import 'package:client/theme.dart';
 import 'package:client/navigation.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
+import 'package:client/cubit/dungeon_action/dungeon_action_cubit.dart';
 import 'package:client/cubit/character/character_cubit.dart';
 
 void main() {
@@ -29,6 +30,9 @@ class MainApp extends StatelessWidget {
         providers: [
           BlocProvider<DungeonCubit>(
             create: (BuildContext context) => DungeonCubit(),
+          ),
+          BlocProvider<DungeonActionCubit>(
+            create: (BuildContext context) => DungeonActionCubit(),
           ),
           BlocProvider<CharacterCubit>(
             create: (BuildContext context) => CharacterCubit(),

@@ -9,26 +9,27 @@ import 'package:client/api/api.dart';
 part 'character_record.dart';
 
 abstract class CharacterRepositoryInterface {
-  Future<CharacterRecord?> create(String dungeonID, CharacterRecord record);
+  Future<CharacterRecord?> create(String dungeonID, CreateCharacterRecord record);
 }
 
 class CharacterRepository implements CharacterRepositoryInterface {
-  Future<CharacterRecord?> create(String dungeonID, CharacterRecord record) async {
+  Future<CharacterRecord?> create(String dungeonID, CreateCharacterRecord createRecord) async {
     final log = getLogger('CharacterRepository');
 
     final api = API();
     String response = await api.createCharacter(
       dungeonID,
-      name: record.name,
-      strength: record.strength,
-      dexterity: record.dexterity,
-      intelligence: record.intelligence,
+      name: createRecord.name,
+      strength: createRecord.strength,
+      dexterity: createRecord.dexterity,
+      intelligence: createRecord.intelligence,
     );
     if (response == '') {
       log.warning('No records returned');
       return null;
     }
 
+    CharacterRecord? record;
     Map<String, dynamic> decoded = jsonDecode(response);
     if (decoded['data'] != null) {
       List<dynamic> data = decoded['data'];
