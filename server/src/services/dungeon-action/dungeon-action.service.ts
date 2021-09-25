@@ -394,8 +394,6 @@ export class DungeonActionService {
         const allDungeonActionRecords = [...dungeonActionRecords];
 
         const returnDungeonActionEntitySets: DungeonActionEntitySet[] = [];
-        // for (var idx = 0; idx < allDungeonActionRecords.length; idx++) {
-        //     const dungeonActionRecord = allDungeonActionRecords[idx];
         for (var returnDungeonActionRecord of allDungeonActionRecords) {
             const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(returnDungeonActionRecord);
             const dungeonActionEntitySet = await this.buildDungeonActionEntitySet(dungeonActionRecordSet);
