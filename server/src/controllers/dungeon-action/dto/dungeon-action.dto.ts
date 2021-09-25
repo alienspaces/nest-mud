@@ -1,3 +1,7 @@
+export type DungeonActionDataLocationDirections = [
+    'north' | 'northeast' | 'east' | 'southeast' | 'south' | 'southwest' | 'west' | 'northwest' | 'up' | 'down',
+];
+
 export class DungeonActionDataDto {
     // The action that occurred
     action: {
@@ -17,6 +21,7 @@ export class DungeonActionDataDto {
     location: {
         name: string;
         description: string;
+        directions: DungeonActionDataLocationDirections;
     };
     // The character that performed the action
     character?: {

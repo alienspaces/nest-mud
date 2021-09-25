@@ -13,7 +13,26 @@ import {
     DungeonActionEntitySet,
 } from '@/services';
 import * as createDungeonCharacterActionSchema from './schema/create-dungeon-action.schema.json';
-import { CreateDungeonActionDto, DungeonActionDataDto, DungeonActionDto } from './dto';
+import {
+    CreateDungeonActionDto,
+    DungeonActionDataDto,
+    DungeonActionDto,
+    DungeonActionDataLocationDirections,
+} from './dto';
+
+// Property names mapped to direction words
+const DIRECTION_MAP = {
+    north_dungeon_location_id: 'north',
+    northeast_dungeon_location_id: 'northeast',
+    east_dungeon_location_id: 'east',
+    southeast_dungeon_location_id: 'southeast',
+    south_dungeon_location_id: 'south',
+    southwest_dungeon_location_id: 'southwest',
+    west_dungeon_location_id: 'west',
+    northwest_dungeon_location_id: 'northwest',
+    up_dungeon_location_id: 'up',
+    down_dungeon_location_id: 'down',
+};
 
 @Controller('/api/v1/dungeons/:dungeon_id/characters/:character_id/actions')
 export class DungeonCharacterActionController {
@@ -57,6 +76,16 @@ function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionE
     for (var dungeonActionEntitySet of dungeonActionEntitySets) {
         const dungeonActionEntity = dungeonActionEntitySet.dungeonActionEntity;
         const dungeonLocationEntity = dungeonActionEntitySet.dungeonLocationEntity;
+        let dungeonLocationDirections: DungeonActionDataLocationDirections;
+        for (var prop in DIRECTION_MAP) {
+            if (dungeonLocationEntity[prop] != null) {
+                if (dungeonLocationDirections == null) {
+                    dungeonLocationDirections = [dungeonLocationEntity[prop]];
+                    continue;
+                }
+                dungeonLocationDirections.push(dungeonLocationEntity[prop]);
+            }
+        }
 
         const dungeonActionDataItem: DungeonActionDataDto = {
             // The action that occurred
@@ -78,6 +107,7 @@ function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionE
             location: {
                 name: dungeonLocationEntity.name,
                 description: dungeonLocationEntity.description,
+                directions: dungeonLocationDirections,
             },
             // Characters at the location
             characters: [],

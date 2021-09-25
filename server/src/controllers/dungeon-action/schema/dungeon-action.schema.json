@@ -59,6 +59,9 @@
                         },
                         "description": {
                             "type": "string"
+                        },
+                        "directions": {
+                            "type": "array"
                         }
                     }
                 },

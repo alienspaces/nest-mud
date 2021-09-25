@@ -58,8 +58,17 @@ describe('DungeonCharacterActionController', () => {
             );
             expect(dungeonActionDto.data).toBeTruthy();
             expect(dungeonActionDto.data.length).toBeGreaterThan(0);
+            // Action
             expect(dungeonActionDto.data[0].action).toBeTruthy();
+            expect(dungeonActionDto.data[0].action.command).toBeTruthy();
+            // Character
             expect(dungeonActionDto.data[0].character).toBeTruthy();
+            expect(dungeonActionDto.data[0].character.name).toBeTruthy();
+            // Location
+            expect(dungeonActionDto.data[0].location).toBeTruthy();
+            expect(dungeonActionDto.data[0].location.name).toBeTruthy();
+            expect(dungeonActionDto.data[0].location.description).toBeTruthy();
+            expect(dungeonActionDto.data[0].location.directions.length).toBeGreaterThan(0);
             expect(dungeonActionDto.data[0].characters).toBeTruthy();
             expect(dungeonActionDto.data[0].characters.length).toEqual(1);
             expect(dungeonActionDto.data[0].monsters).toBeTruthy();
