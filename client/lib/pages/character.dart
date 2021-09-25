@@ -17,11 +17,22 @@ class CharacterPage extends Page {
   }) : super(key: key, name: name);
 
   Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
+    return PageRouteBuilder(
       settings: this,
-      builder: (BuildContext context) {
+      pageBuilder: (context, animation, secondaryAnimation) {
         return CharacterScreen(
           callbacks: callbacks,
+        );
+      },
+      transitionDuration: Duration(milliseconds: 300),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = 0.0;
+        const end = 1.0;
+        final tween = Tween(begin: begin, end: end);
+        final opacityAnimation = animation.drive(tween);
+        return FadeTransition(
+          opacity: opacityAnimation,
+          child: child,
         );
       },
     );
