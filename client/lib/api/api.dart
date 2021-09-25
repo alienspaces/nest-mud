@@ -6,10 +6,19 @@ import 'package:http/retry.dart';
 // Application
 import 'package:client/config.dart';
 import 'package:client/logger.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class API {
-  final String hostname = config['serverHost'].toString();
+  String hostname = config['serverHost'].toString();
   final String port = config['serverPort'].toString();
+
+  API() {
+    // When hostname is localhost and we are running
+    // in an emulator set backend to specific IP
+    if (!kIsWeb && hostname == 'localhost') {
+      this.hostname = '10.0.3.2';
+    }
+  }
 
   Future<String> test() async {
     final log = getLogger('API');

@@ -21,6 +21,20 @@ class CharacterPlayWidget extends StatefulWidget {
 }
 
 class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
+  Widget _buildAttribute(String name, int? value) {
+    return Row(
+      children: <Widget>[
+        Container(
+          child: Text(name),
+        ),
+        Container(
+          width: 100,
+          child: Text('${value}'),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final log = getLogger('CharacterPlayWidget');
@@ -36,11 +50,30 @@ class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
             margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Column(
               children: <Widget>[
-                Text('Playing character ${state.characterRecord.name}'),
-                ElevatedButton(
-                  onPressed: widget.callbacks.openGamePage,
-                  child: Text(
-                    'Play',
+                Container(
+                  child: Text('Playing character ${state.characterRecord.name}'),
+                ),
+                Container(
+                  child: _buildAttribute('Strength', state.characterRecord.strength),
+                ),
+                Container(
+                  child: _buildAttribute('Dexterity', state.characterRecord.dexterity),
+                ),
+                Container(
+                  child: _buildAttribute('Intelligence', state.characterRecord.intelligence),
+                ),
+                Container(
+                  child: _buildAttribute('Fatigue', state.characterRecord.fatigue),
+                ),
+                Container(
+                  child: _buildAttribute('Health', state.characterRecord.health),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: widget.callbacks.openGamePage,
+                    child: Text(
+                      'Play',
+                    ),
                   ),
                 ),
               ],

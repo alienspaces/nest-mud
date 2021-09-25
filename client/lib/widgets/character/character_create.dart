@@ -133,7 +133,7 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
     const double fieldHeight = 50;
     const double attributeFieldLabelWidth = 100;
     const double attributeFieldValueWidth = 50;
-    const double attributeFieldSpacerWidth = 80;
+    const double attributeFieldSpacerWidth = 60;
 
     return BlocConsumer<CharacterCubit, CharacterState>(
       listener: (BuildContext context, CharacterState state) {
@@ -153,7 +153,7 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
                   ),
                   Container(
                     height: fieldHeight,
-                    width: 340,
+                    width: 300,
                     margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: TextFormField(
                       controller: characterNameController,

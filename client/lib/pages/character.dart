@@ -60,6 +60,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
 
     return Scaffold(
       appBar: header(context, widget.callbacks),
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         alignment: Alignment.center,
