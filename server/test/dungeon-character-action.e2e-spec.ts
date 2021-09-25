@@ -66,7 +66,7 @@ describe('Dungeon Character Action (e2e)', () => {
                     sentence: 'look',
                 },
             },
-            responseCode: 400,
+            responseCode: 201,
         },
     ];
 

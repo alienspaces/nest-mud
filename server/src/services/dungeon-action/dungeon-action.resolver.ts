@@ -137,8 +137,6 @@ export class DungeonCharacterActionResolver {
             resolved_target_dungeon_location_id: targetDungeonLocationId,
         };
 
-        console.warn('Dungeon action record', dungeonActionRecord);
-
         return dungeonActionRecord;
     }
 

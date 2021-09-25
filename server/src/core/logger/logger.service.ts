@@ -9,7 +9,7 @@ export class LoggerService {
     private _logger: pino.Logger;
     constructor() {
         this._logger = pino({
-            level: process.env.APP_LOG_LEVEL || 'info',
+            level: process.env.APP_SERVER_LOG_LEVEL || 'info',
         });
     }
 
