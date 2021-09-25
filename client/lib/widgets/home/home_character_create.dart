@@ -112,6 +112,12 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
       );
     }
 
+    // TODO: Centralise styles..
+    ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+      textStyle: Theme.of(context).textTheme.button!.copyWith(fontSize: 18),
+    );
+
     const double fieldHeight = 50;
     const double attributeFieldLabelWidth = 100;
     const double attributeFieldValueWidth = 50;
@@ -131,8 +137,7 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: fieldHeight,
-                    child: Text('Create Character'),
+                    child: Text('Create Character', style: Theme.of(context).textTheme.headline3),
                   ),
                   Container(
                     height: fieldHeight,
@@ -287,6 +292,7 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
                           _createCharacter(widget.dungeonRecord.id);
                         }
                       },
+                      style: buttonStyle,
                       child: const Text('Create Character'),
                     ),
                   ),

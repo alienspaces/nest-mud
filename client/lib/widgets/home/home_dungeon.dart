@@ -27,6 +27,12 @@ class HomeDungeonWidget extends StatelessWidget {
     final log = getLogger('HomeDungeonWidget');
     log.info('Select current dungeon ${dungeonRecord.id} ${dungeonRecord.name}');
 
+    // TODO: Centralise styles..
+    ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      padding: EdgeInsets.fromLTRB(30, 15, 30, 15),
+      textStyle: Theme.of(context).textTheme.button!.copyWith(fontSize: 18),
+    );
+
     return BlocConsumer<DungeonCubit, DungeonState>(
       listener: (BuildContext context, DungeonState state) {
         //
@@ -35,11 +41,21 @@ class HomeDungeonWidget extends StatelessWidget {
         return Container(
           child: Column(
             children: [
-              Text('${dungeonRecord.name}'),
-              Text('${dungeonRecord.description}'),
-              ElevatedButton(
-                onPressed: () => _selectDungeon(context, dungeonRecord),
-                child: Text('Select Dungeon'),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Text('${dungeonRecord.name}', style: Theme.of(context).textTheme.headline3),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Text('${dungeonRecord.description}'),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: ElevatedButton(
+                  onPressed: () => _selectDungeon(context, dungeonRecord),
+                  style: buttonStyle,
+                  child: Text('Play'),
+                ),
               ),
             ],
           ),

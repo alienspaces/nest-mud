@@ -40,7 +40,8 @@ AppBar header(BuildContext context, NavigationCallbacks callbacks) {
           ),
           child: Text(
             'Home',
-            style: Theme.of(context).textTheme.headline6!.copyWith(
+            style: Theme.of(context).textTheme.button!.copyWith(
+                  fontSize: 18,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
           ),
