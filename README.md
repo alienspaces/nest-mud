@@ -38,10 +38,20 @@ cd client
 
 ## TODO
 
+- UI improvements round 1
+  - Character Play Screen
+  - Game screen
 - Enlarge dungeon
-- UI layout improvements
-- Add dungeon location objects
-- Decide final scope of this proof of concept
+- Add more dungeon objects
+- Add more dungeon monsters
+- UI improvements round 2
+  - Show dungeon objects and monsters
+- Complete 'look' action
+- UI improvements round 3
+  - Add look buttons
+- Run with `docker-compose up`
+
+End of scope for this specific proof of concept
 
 ## Special Note
 
