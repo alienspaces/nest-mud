@@ -38,8 +38,9 @@ cd client
 
 ## TODO
 
-- Client - create character
-- Client - move character
+- Enlarge dungeon
+- UI layout improvements
+- Add dungeon location objects
 - Decide final scope of this proof of concept
 
 ## Special Note

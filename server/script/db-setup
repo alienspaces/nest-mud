@@ -11,6 +11,3 @@ source "${BASH_SOURCE%/*}/db-start" || exit $?
 
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/db-migrate-up" || exit $?
-
-# shellcheck disable=SC1091
-source "${BASH_SOURCE%/*}/db-seed" || exit $?

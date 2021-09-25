@@ -549,9 +549,20 @@ export class DataService {
                     dungeonConfig.dungeonLocationConfig[idx].entity.id = uuidv4();
                 }
             }
-            for (var idx = 0; idx < dungeonConfig.dungeonCharacterConfig.length; idx++) {
-                if (!dungeonConfig.dungeonCharacterConfig[idx].entity.id) {
-                    dungeonConfig.dungeonCharacterConfig[idx].entity.id = uuidv4();
+
+            if (dungeonConfig.dungeonCharacterConfig) {
+                for (var idx = 0; idx < dungeonConfig.dungeonCharacterConfig.length; idx++) {
+                    if (!dungeonConfig.dungeonCharacterConfig[idx].entity.id) {
+                        dungeonConfig.dungeonCharacterConfig[idx].entity.id = uuidv4();
+                    }
+                }
+            }
+
+            if (dungeonConfig.dungeonMonsterConfig) {
+                for (var idx = 0; idx < dungeonConfig.dungeonMonsterConfig.length; idx++) {
+                    if (!dungeonConfig.dungeonMonsterConfig[idx].entity.id) {
+                        dungeonConfig.dungeonMonsterConfig[idx].entity.id = uuidv4();
+                    }
                 }
             }
         }

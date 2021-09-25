@@ -19,7 +19,16 @@
                         "description": "A cave tunnel descends into the mountain."
                     },
                     "north_location_name": "Cave Room",
+                    "west_location_name": "Dark Cave Tunnel",
                     "south_location_name": "Cave Entrance"
+                },
+                {
+                    "entity": {
+                        "name": "Dark Cave Tunnel",
+                        "description": "A dark cave tunnel descends deeper into the mountain."
+                    },
+                    "east_location_name": "Cave Tunnel",
+                    "west_location_name": "Dark Cave Room"
                 },
                 {
                     "entity": {
@@ -27,14 +36,13 @@
                         "description": "A large cave room."
                     },
                     "south_location_name": "Cave Tunnel"
-                }
-            ],
-            "dungeonCharacterConfig": [
+                },
                 {
                     "entity": {
-                        "name": "Hero"
+                        "name": "Dark Cave Room",
+                        "description": "A large dark cave room."
                     },
-                    "location_name": "Cave Entrance"
+                    "east_location_name": "Dark Cave Tunnel"
                 }
             ],
             "dungeonMonsterConfig": [

@@ -35,11 +35,6 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
     dungeonCubit.loadDungeons();
   }
 
-  // TODO: Consider separating out dungeon container and character container, when
-  // a dungeon is selected the dungeon container will display an empy container, when
-  // no dungeon is selected the character container will display an empty container,
-  // maybe much cleaner layout and logic..
-
   @override
   Widget build(BuildContext context) {
     final log = getLogger('HomeContainerWidget');
@@ -54,7 +49,7 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
         List<Widget> widgets = [];
 
         if (state is DungeonStateLoaded) {
-          // Dungeon not selected
+          // Dungeon list
           state.dungeonRecords?.forEach((dungeonRecord) {
             log.info('Displaying dungeon widget');
             widgets.add(

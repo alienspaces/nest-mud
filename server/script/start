@@ -10,4 +10,7 @@ source "${BASH_SOURCE%/*}/environment" || exit $?
 # shellcheck disable=SC1091
 source "${BASH_SOURCE%/*}/db-setup" || exit $?
 
+# shellcheck disable=SC1091
+source "${BASH_SOURCE%/*}/db-seed" || exit $?
+
 yarn start
