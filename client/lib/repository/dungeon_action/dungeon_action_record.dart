@@ -54,9 +54,12 @@ class DungeonActionRecord extends Equatable {
       throw FormatException('Missing "location" from JSON');
     }
 
+    List<dynamic> directions = location['directions'];
+
     dungeonLocation = DungeonLocation(
       name: location['name'],
       description: location['description'],
+      directions: directions.map((e) => e.toString()).toList(),
     );
 
     return DungeonActionRecord(
@@ -101,6 +104,7 @@ class DungeonAction {
 class DungeonLocation {
   final String name;
   final String description;
+  final List<String> directions;
 
-  DungeonLocation({required this.name, required this.description});
+  DungeonLocation({required this.name, required this.description, required this.directions});
 }

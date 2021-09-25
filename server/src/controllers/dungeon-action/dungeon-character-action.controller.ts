@@ -80,10 +80,11 @@ function buildResponse(sentence: string, dungeonActionEntitySets: DungeonActionE
         for (var prop in DIRECTION_MAP) {
             if (dungeonLocationEntity[prop] != null) {
                 if (dungeonLocationDirections == null) {
-                    dungeonLocationDirections = [dungeonLocationEntity[prop]];
+                    // Response directions are 'north', 'south' etc..
+                    dungeonLocationDirections = [DIRECTION_MAP[prop]];
                     continue;
                 }
-                dungeonLocationDirections.push(dungeonLocationEntity[prop]);
+                dungeonLocationDirections.push(DIRECTION_MAP[prop]);
             }
         }
 

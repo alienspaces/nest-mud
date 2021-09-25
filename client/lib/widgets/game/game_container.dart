@@ -30,11 +30,13 @@ class _GameContainerWidgetState extends State<GameContainerWidget> {
   void _initAction(BuildContext context) {
     final log = getLogger('GameContainerWidget');
     log.info('Initialising action..');
+
     final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
     if (dungeonCubit.dungeonRecord == null) {
       log.warning('Dungeon cubit missing dungeon record, cannot initialise action');
       return;
     }
+
     final characterCubit = BlocProvider.of<CharacterCubit>(context);
     if (characterCubit.characterRecord == null) {
       log.warning('Character cubit missing character record, cannot initialise action');
@@ -54,15 +56,12 @@ class _GameContainerWidgetState extends State<GameContainerWidget> {
     final log = getLogger('GameContainer');
     log.info('Building..');
 
-    return BlocProvider(
-      create: (context) => DungeonCubit(),
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            GameCharacterWidget(),
-            GameDungeonWidget(),
-          ],
-        ),
+    return Container(
+      child: Column(
+        children: <Widget>[
+          GameCharacterWidget(),
+          GameDungeonWidget(),
+        ],
       ),
     );
   }

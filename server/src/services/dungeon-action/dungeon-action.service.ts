@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 // Application
-import { LoggerService, RepositoryOperator } from '@/core';
+import { LoggerService, RepositoryOperator, RepositoryOrder } from '@/core';
 import {
     DungeonCharacterRepository,
     DungeonCharacterRepositoryRecord,
@@ -322,6 +322,10 @@ export class DungeonActionService {
             function: 'getCharacterDungeonActionEntitySet',
         });
 
+        logger.info(
+            `**** Fetching previous dungeon action records serial ID ${dungeonActionRecord.serial_id} location ID ${dungeonActionRecord.dungeon_location_id}`,
+        );
+
         // Find this characters previous dungeon action record
         const previousDungeonActionRecords = await this.dungeonActionRepository.getMany({
             parameters: [
@@ -335,19 +339,25 @@ export class DungeonActionService {
                     operator: RepositoryOperator.LessThan,
                 },
             ],
+            orderByColumn: 'serial_id',
+            orderByDirection: RepositoryOrder.Descending,
             limit: 1,
         });
 
         // When there aren't any previous dungeon action records for this character
         // return the dungeon action entity set for the provided dungeon action record
         if (!previousDungeonActionRecords || !previousDungeonActionRecords.length) {
-            logger.info('No previous dungeon character actions');
+            logger.info('**** No previous dungeon character actions');
 
             const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(dungeonActionRecord);
             const dungeonActionEntitySet = await this.buildDungeonActionEntitySet(dungeonActionRecordSet);
 
             return [dungeonActionEntitySet];
         }
+
+        logger.info(
+            `**** Have previous dungeon character action serial ID ${previousDungeonActionRecords[0].serial_id} location ID ${previousDungeonActionRecords[0].dungeon_location_id}`,
+        );
 
         // When there is a previous dungeon action fetch all dungeon action records that
         // occured since that dungeon action at the same location
@@ -359,21 +369,40 @@ export class DungeonActionService {
                 },
                 {
                     column: 'serial_id',
-                    value: [previousDungeonActionRecords[0].serial_id, dungeonActionRecord.serial_id],
-                    operator: RepositoryOperator.Between,
+                    // value: [previousDungeonActionRecords[0].serial_id, dungeonActionRecord.serial_id],
+                    value: previousDungeonActionRecords[0].serial_id,
+                    operator: RepositoryOperator.GreaterThan,
                 },
             ],
         });
 
-        const allDungeonActionRecords = [...dungeonActionRecords, dungeonActionRecord];
+        logger.info(`**** Have ${dungeonActionRecords.length} previous dungeon action records`);
+
+        // When there aren't any previous dungeon action records that occurred between this
+        // characters previous action and the current action at the previous dungeons location
+        // just return the current dungeon action.
+        if (!dungeonActionRecords || !dungeonActionRecords.length) {
+            logger.info('**** No previous dungeon character actions to return');
+
+            const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(dungeonActionRecord);
+            const dungeonActionEntitySet = await this.buildDungeonActionEntitySet(dungeonActionRecordSet);
+
+            return [dungeonActionEntitySet];
+        }
+
+        // const allDungeonActionRecords = [...dungeonActionRecords, dungeonActionRecord];
+        const allDungeonActionRecords = [...dungeonActionRecords];
 
         const returnDungeonActionEntitySets: DungeonActionEntitySet[] = [];
-        for (var idx = 0; idx < allDungeonActionRecords.length; idx++) {
-            const dungeonActionRecord = allDungeonActionRecords[idx];
-            const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(dungeonActionRecord);
+        // for (var idx = 0; idx < allDungeonActionRecords.length; idx++) {
+        //     const dungeonActionRecord = allDungeonActionRecords[idx];
+        for (var returnDungeonActionRecord of allDungeonActionRecords) {
+            const dungeonActionRecordSet = await this.getDungeonActionEventRecordSet(returnDungeonActionRecord);
             const dungeonActionEntitySet = await this.buildDungeonActionEntitySet(dungeonActionRecordSet);
             returnDungeonActionEntitySets.push(dungeonActionEntitySet);
         }
+
+        logger.info(`**** Returning ${returnDungeonActionEntitySets.length} dungeon action entity sets`);
 
         return returnDungeonActionEntitySets;
     }
