@@ -5,6 +5,7 @@ import 'package:client/logger.dart';
 
 // Application page packages
 import 'package:client/pages/home.dart';
+import 'package:client/pages/character.dart';
 import 'package:client/pages/game.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -23,10 +24,12 @@ typedef NavigationCallback = void Function();
 class NavigationCallbacks {
   // Add a callback for every page we need to navigate to
   final NavigationCallback openHomePage;
+  final NavigationCallback openCharacterPage;
   final NavigationCallback openGamePage;
 
   NavigationCallbacks({
     required this.openHomePage,
+    required this.openCharacterPage,
     required this.openGamePage,
   });
 }
@@ -41,6 +44,14 @@ class _NavigationState extends State<Navigation> {
     log.info('Opening home page..');
     setState(() {
       _pageList = [HomePage.pageName];
+    });
+  }
+
+  void openCharacterPage() {
+    final log = getLogger('Navigation');
+    log.info('Opening character page..');
+    setState(() {
+      _pageList = [CharacterPage.pageName];
     });
   }
 
@@ -60,6 +71,7 @@ class _NavigationState extends State<Navigation> {
 
     NavigationCallbacks callbacks = NavigationCallbacks(
       openHomePage: openHomePage,
+      openCharacterPage: openCharacterPage,
       openGamePage: openGamePage,
     );
 
@@ -68,6 +80,10 @@ class _NavigationState extends State<Navigation> {
         case HomePage.pageName:
           log.info('Adding ${HomePage.pageName}');
           pages.add(HomePage(callbacks: callbacks));
+          break;
+        case CharacterPage.pageName:
+          log.info('Adding ${CharacterPage.pageName}');
+          pages.add(CharacterPage(callbacks: callbacks));
           break;
         case GamePage.pageName:
           log.info('Adding ${GamePage.pageName}');

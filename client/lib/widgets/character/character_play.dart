@@ -5,25 +5,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/logger.dart';
 import 'package:client/navigation.dart';
 import 'package:client/cubit/character/character_cubit.dart';
-import 'package:client/repository/repository.dart';
 
 const int MAX_ATTRIBUTES = 36;
 
-class HomeCharacterPlayWidget extends StatefulWidget {
+class CharacterPlayWidget extends StatefulWidget {
   final NavigationCallbacks callbacks;
 
-  final DungeonRecord dungeonRecord;
-  const HomeCharacterPlayWidget({Key? key, required this.callbacks, required this.dungeonRecord})
-      : super(key: key);
+  const CharacterPlayWidget({
+    Key? key,
+    required this.callbacks,
+  }) : super(key: key);
 
   @override
-  _HomeCharacterPlayWidgetState createState() => _HomeCharacterPlayWidgetState();
+  _CharacterPlayWidgetState createState() => _CharacterPlayWidgetState();
 }
 
-class _HomeCharacterPlayWidgetState extends State<HomeCharacterPlayWidget> {
+class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('HomeCharacterPlayWidget');
+    final log = getLogger('CharacterPlayWidget');
     log.info('Building..');
 
     return BlocConsumer<CharacterCubit, CharacterState>(

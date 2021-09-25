@@ -4,27 +4,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Application packages
 import 'package:client/logger.dart';
 import 'package:client/navigation.dart';
-import 'package:client/repository/repository.dart';
 import 'package:client/cubit/character/character_cubit.dart';
-import 'package:client/widgets/home/home_character_create.dart';
-import 'package:client/widgets/home/home_character_play.dart';
+import 'package:client/widgets/character/character_create.dart';
+import 'package:client/widgets/character/character_play.dart';
 
-class HomeCharacterWidget extends StatefulWidget {
+class CharacterContainerWidget extends StatefulWidget {
   final NavigationCallbacks callbacks;
 
-  final DungeonRecord dungeonRecord;
-
-  const HomeCharacterWidget({Key? key, required this.callbacks, required this.dungeonRecord})
-      : super(key: key);
+  const CharacterContainerWidget({
+    Key? key,
+    required this.callbacks,
+  }) : super(key: key);
 
   @override
-  _HomeCharacterWidgetState createState() => _HomeCharacterWidgetState();
+  _CharacterContainerWidgetState createState() => _CharacterContainerWidgetState();
 }
 
-class _HomeCharacterWidgetState extends State<HomeCharacterWidget> {
+class _CharacterContainerWidgetState extends State<CharacterContainerWidget> {
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('HomeCharacter');
+    final log = getLogger('CharacterContainer');
     log.info('Building..');
 
     return BlocConsumer<CharacterCubit, CharacterState>(
@@ -34,15 +33,14 @@ class _HomeCharacterWidgetState extends State<HomeCharacterWidget> {
       builder: (BuildContext context, CharacterState characterState) {
         if (characterState is CharacterStateInitial) {
           return Container(
-            child: HomeCharacterCreateWidget(
-              dungeonRecord: widget.dungeonRecord,
+            child: CharacterCreateWidget(
+              callbacks: widget.callbacks,
             ),
           );
         } else if (characterState is CharacterStateSelected) {
           return Container(
-            child: HomeCharacterPlayWidget(
+            child: CharacterPlayWidget(
               callbacks: widget.callbacks,
-              dungeonRecord: widget.dungeonRecord,
             ),
           );
         }

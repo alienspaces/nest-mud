@@ -3,20 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Application
 import 'package:client/logger.dart';
+import 'package:client/navigation.dart';
 import 'package:client/repository/repository.dart';
 import 'package:client/cubit/character/character_cubit.dart';
+import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
 const int MAX_ATTRIBUTES = 36;
 
-class HomeCharacterCreateWidget extends StatefulWidget {
-  final DungeonRecord dungeonRecord;
-  const HomeCharacterCreateWidget({Key? key, required this.dungeonRecord}) : super(key: key);
+class CharacterCreateWidget extends StatefulWidget {
+  final NavigationCallbacks callbacks;
+
+  const CharacterCreateWidget({
+    Key? key,
+    required this.callbacks,
+  }) : super(key: key);
 
   @override
-  _HomeCharacterCreateWidgetState createState() => _HomeCharacterCreateWidgetState();
+  _CharacterCreateWidgetState createState() => _CharacterCreateWidgetState();
 }
 
-class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
+class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
   int strength = 8;
   int dexterity = 8;
   int intelligence = 8;
@@ -34,12 +40,18 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
     super.dispose();
   }
 
-  void _createCharacter(String dungeonID) {
-    final log = getLogger('HomeCharacterCreateWidget');
+  void _createCharacter() {
+    final log = getLogger('CharacterCreateWidget');
     log.info('Creating character name >${characterNameController.text}<');
     log.info('Creating character strength >${strength}<');
     log.info('Creating character dexterity >${dexterity}<');
     log.info('Creating character intelligence >${intelligence}<');
+
+    final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
+    if (dungeonCubit.dungeonRecord == null) {
+      log.warning('Dungeon cubit dungeon record is null, cannot create character');
+      return;
+    }
 
     final characterCubit = BlocProvider.of<CharacterCubit>(context);
     CreateCharacterRecord createCharacterRecord = new CreateCharacterRecord(
@@ -49,7 +61,7 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
       intelligence: intelligence,
     );
 
-    characterCubit.createCharacter(dungeonID, createCharacterRecord);
+    characterCubit.createCharacter(dungeonCubit.dungeonRecord!.id, createCharacterRecord);
   }
 
   void _incrementStrength() {
@@ -102,7 +114,7 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('HomeCharacterCreateWidget');
+    final log = getLogger('CharacterCreateWidget');
     log.info('Building..');
 
     InputDecoration _fieldDecoration(String hintText) {
@@ -289,7 +301,7 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
-                          _createCharacter(widget.dungeonRecord.id);
+                          _createCharacter();
                         }
                       },
                       style: buttonStyle,

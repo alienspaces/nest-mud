@@ -1,5 +1,3 @@
-import 'package:client/widgets/home/home_dungeon.dart';
-import 'package:client/widgets/home/home_character.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/navigation.dart';
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
+import 'package:client/widgets/home/home_dungeon.dart';
 
 class HomeContainerWidget extends StatefulWidget {
   final NavigationCallbacks callbacks;
@@ -55,31 +54,18 @@ class _HomeContainerWidgetState extends State<HomeContainerWidget> {
         List<Widget> widgets = [];
 
         if (state is DungeonStateLoaded) {
-          if (state.currentDungeonRecord != null) {
-            // Dungeon selected
-            log.info('Displaying character widget');
+          // Dungeon not selected
+          state.dungeonRecords?.forEach((dungeonRecord) {
+            log.info('Displaying dungeon widget');
             widgets.add(
               Container(
-                child: HomeCharacterWidget(
+                child: HomeDungeonWidget(
                   callbacks: widget.callbacks,
-                  dungeonRecord: state.currentDungeonRecord!,
+                  dungeonRecord: dungeonRecord,
                 ),
               ),
             );
-          } else {
-            // Dungeon not selected
-            state.dungeonRecords?.forEach((dungeonRecord) {
-              log.info('Displaying dungeon widget');
-              widgets.add(
-                Container(
-                  child: HomeDungeonWidget(
-                    callbacks: widget.callbacks,
-                    dungeonRecord: dungeonRecord,
-                  ),
-                ),
-              );
-            });
-          }
+          });
         } else {
           widgets.add(
             Container(

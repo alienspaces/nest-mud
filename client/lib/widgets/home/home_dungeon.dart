@@ -20,6 +20,8 @@ class HomeDungeonWidget extends StatelessWidget {
 
     final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
     dungeonCubit.selectDungeon(dungeonRecord);
+
+    this.callbacks.openCharacterPage();
   }
 
   @override
