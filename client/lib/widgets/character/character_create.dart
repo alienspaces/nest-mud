@@ -131,15 +131,60 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
     );
 
     const double fieldHeight = 50;
-    const double attributeFieldLabelWidth = 100;
-    const double attributeFieldValueWidth = 50;
-    const double attributeFieldSpacerWidth = 60;
 
     return BlocConsumer<CharacterCubit, CharacterState>(
       listener: (BuildContext context, CharacterState state) {
         log.info('listener...');
       },
       builder: (BuildContext context, CharacterState state) {
+        // Build attribute row
+        List<Widget> attributeRowWidgets(
+          String attributeName,
+          int attributeValue,
+          void Function() attributeDecrementFunc,
+          void Function() attributeIncrementFunc,
+        ) {
+          return <Widget>[
+            Flexible(
+              flex: 2,
+              child: Container(
+                height: fieldHeight,
+                alignment: Alignment.centerLeft,
+                child: Text(attributeName),
+              ),
+            ),
+            Flexible(
+              child: Container(
+                height: fieldHeight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    attributeDecrementFunc();
+                  },
+                  child: const Text('<'),
+                ),
+              ),
+            ),
+            Flexible(
+              child: Container(
+                height: fieldHeight,
+                alignment: Alignment.center,
+                child: Text('${attributeValue}'),
+              ),
+            ),
+            Flexible(
+              child: Container(
+                height: fieldHeight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    attributeIncrementFunc();
+                  },
+                  child: const Text('>'),
+                ),
+              ),
+            ),
+          ];
+        }
+
         if (state is CharacterStateInitial) {
           return Container(
             margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -171,126 +216,36 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
                     margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldLabelWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Text('Strength'),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _decrementStrength();
-                            },
-                            child: const Text('<'),
-                          ),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldValueWidth,
-                          alignment: Alignment.center,
-                          child: Text('${strength}'),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _incrementStrength();
-                            },
-                            child: const Text('>'),
-                          ),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldSpacerWidth,
-                        ),
-                      ],
+                      children: attributeRowWidgets(
+                        'Strength',
+                        strength,
+                        _decrementStrength,
+                        _incrementStrength,
+                      ),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldLabelWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Text('Dexterity'),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _decrementDexterity();
-                            },
-                            child: const Text('<'),
-                          ),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldValueWidth,
-                          alignment: Alignment.center,
-                          child: Text('${dexterity}'),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _incrementDexterity();
-                            },
-                            child: const Text('>'),
-                          ),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldSpacerWidth,
-                        ),
-                      ],
+                      children: attributeRowWidgets(
+                        'Dexterity',
+                        dexterity,
+                        _decrementDexterity,
+                        _incrementDexterity,
+                      ),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldLabelWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Text('Intelligence'),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _decrementIntelligence();
-                            },
-                            child: const Text('<'),
-                          ),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldValueWidth,
-                          alignment: Alignment.center,
-                          child: Text('${intelligence}'),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _incrementIntelligence();
-                            },
-                            child: const Text('>'),
-                          ),
-                        ),
-                        Container(
-                          height: fieldHeight,
-                          width: attributeFieldSpacerWidth,
-                        ),
-                      ],
+                      children: attributeRowWidgets(
+                        'Intelligence',
+                        intelligence,
+                        _decrementIntelligence,
+                        _incrementIntelligence,
+                      ),
                     ),
                   ),
                   Container(
