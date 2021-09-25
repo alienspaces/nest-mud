@@ -50,6 +50,7 @@ cd client
 - UI improvements round 3
   - Add look buttons
 - Run with `docker-compose up`
+- Update documentation to represent what is supported
 
 End of scope for this specific proof of concept
 
