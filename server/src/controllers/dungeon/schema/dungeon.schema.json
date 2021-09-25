@@ -14,12 +14,16 @@
     "$defs": {
         "data": {
             "type": "object",
+            "required": ["id", "name", "description", "created_at"],
             "properties": {
                 "id": {
                     "type": "string",
                     "format": "uuid"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 },
                 "created_at": {
@@ -30,8 +34,7 @@
                     "type": "string",
                     "format": "date-time"
                 }
-            },
-            "required": ["id", "name", "created_at"]
+            }
         }
     }
 }

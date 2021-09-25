@@ -52,6 +52,7 @@ function buildResponse(dungeonEntities: DungeonEntity[]): DungeonDto {
         returnDataCharacters.push({
             id: data.id,
             name: data.name,
+            description: data.description,
             created_at: data.created_at,
             updated_at: data.updated_at || undefined,
         });

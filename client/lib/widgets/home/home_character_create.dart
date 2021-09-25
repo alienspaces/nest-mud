@@ -136,10 +136,6 @@ class _HomeCharacterCreateWidgetState extends State<HomeCharacterCreateWidget> {
                   ),
                   Container(
                     height: fieldHeight,
-                    child: Text('${widget.dungeonRecord.id} ${widget.dungeonRecord.name}'),
-                  ),
-                  Container(
-                    height: fieldHeight,
                     width: 340,
                     margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: TextFormField(
