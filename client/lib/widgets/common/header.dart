@@ -7,17 +7,54 @@ import 'package:client/logger.dart';
 import 'package:client/cubit/character/character_cubit.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
+void showAlertDialog(BuildContext context, String content, void Function() continueFunc) {
+  // set up the buttons
+  Widget cancelButton = ElevatedButton(
+    child: Text("Cancel"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+  Widget continueButton = ElevatedButton(
+    child: Text("Continue"),
+    onPressed: () {
+      Navigator.of(context).pop();
+      continueFunc();
+    },
+  );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    // title: Text("AlertDialog"),
+    content: Text(content),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    useRootNavigator: false,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
 void _navigateHome(BuildContext context, NavigationCallbacks callbacks) {
   final log = getLogger('Header');
 
-  log.info('Clearing state');
-  final characterCubit = BlocProvider.of<CharacterCubit>(context);
-  characterCubit.clearCharacter();
-  final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
-  dungeonCubit.clearDungeon();
+  showAlertDialog(context, 'Exit the game?', () {
+    log.info('Clearing state');
+    final characterCubit = BlocProvider.of<CharacterCubit>(context);
+    characterCubit.clearCharacter();
+    final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
+    dungeonCubit.clearDungeon();
 
-  log.info('Navigating to home page...');
-  callbacks.openHomePage();
+    log.info('Navigating to home page...');
+    callbacks.openHomePage();
+  });
 }
 
 void _navigateCharacter(BuildContext context, NavigationCallbacks callbacks) {
@@ -34,7 +71,8 @@ void _navigateGame(BuildContext context, NavigationCallbacks callbacks) {
   callbacks.openGamePage();
 }
 
-Widget _buildLink(BuildContext context, String label, void Function() navigateFunc) {
+Widget _buildLink(BuildContext context, String label, void Function() navigateFunc,
+    {bool? confirm}) {
   return Container(
     padding: EdgeInsets.fromLTRB(20, 10, 5, 0),
     child: ElevatedButton(
@@ -59,9 +97,13 @@ AppBar header(BuildContext context, NavigationCallbacks callbacks) {
   final characterCubit = BlocProvider.of<CharacterCubit>(context);
   final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
 
-  List<Widget> links = [
-    _buildLink(context, 'Home', () => _navigateHome(context, callbacks)),
-  ];
+  List<Widget> links = [];
+
+  if (characterCubit.characterRecord != null) {
+    links.add(
+      _buildLink(context, 'Home', () => _navigateHome(context, callbacks), confirm: true),
+    );
+  }
 
   if (characterCubit.characterRecord != null) {
     links.add(
@@ -76,11 +118,23 @@ AppBar header(BuildContext context, NavigationCallbacks callbacks) {
   }
 
   return AppBar(
-    title: Text(
-      "Nest MUD Client",
-      style: Theme.of(context).textTheme.headline4!.copyWith(
-            color: Theme.of(context).colorScheme.onPrimary,
+    title: Container(
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Dungeon",
+            style: Theme.of(context).textTheme.headline6!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
           ),
+          Text(
+            "Doom",
+            style: Theme.of(context).textTheme.headline6!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+        ],
+      ),
     ),
     actions: links,
   );
