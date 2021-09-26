@@ -7,14 +7,14 @@ import 'package:client/logger.dart';
 import 'package:client/cubit/character/character_cubit.dart';
 import 'package:client/cubit/dungeon/dungeon_cubit.dart';
 
-void showAlertDialog(BuildContext context, String content, void Function() continueFunc) {
-  // set up the buttons
+void _showDialogue(BuildContext context, String content, void Function() continueFunc) {
   Widget cancelButton = ElevatedButton(
     child: Text("Cancel"),
     onPressed: () {
       Navigator.of(context).pop();
     },
   );
+
   Widget continueButton = ElevatedButton(
     child: Text("Continue"),
     onPressed: () {
@@ -22,9 +22,8 @@ void showAlertDialog(BuildContext context, String content, void Function() conti
       continueFunc();
     },
   );
-  // set up the AlertDialog
+
   AlertDialog alert = AlertDialog(
-    // title: Text("AlertDialog"),
     content: Text(content),
     actions: [
       cancelButton,
@@ -32,7 +31,6 @@ void showAlertDialog(BuildContext context, String content, void Function() conti
     ],
   );
 
-  // show the dialog
   showDialog(
     context: context,
     useRootNavigator: false,
@@ -45,8 +43,7 @@ void showAlertDialog(BuildContext context, String content, void Function() conti
 void _navigateHome(BuildContext context, NavigationCallbacks callbacks) {
   final log = getLogger('Header');
 
-  showAlertDialog(context, 'Exit the game?', () {
-    log.info('Clearing state');
+  _showDialogue(context, 'Exit the game?', () {
     final characterCubit = BlocProvider.of<CharacterCubit>(context);
     characterCubit.clearCharacter();
     final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
@@ -71,8 +68,7 @@ void _navigateGame(BuildContext context, NavigationCallbacks callbacks) {
   callbacks.openGamePage();
 }
 
-Widget _buildLink(BuildContext context, String label, void Function() navigateFunc,
-    {bool? confirm}) {
+Widget _buildLink(BuildContext context, String label, void Function() navigateFunc) {
   return Container(
     padding: EdgeInsets.fromLTRB(20, 10, 5, 0),
     child: ElevatedButton(
@@ -101,7 +97,7 @@ AppBar header(BuildContext context, NavigationCallbacks callbacks) {
 
   if (characterCubit.characterRecord != null) {
     links.add(
-      _buildLink(context, 'Home', () => _navigateHome(context, callbacks), confirm: true),
+      _buildLink(context, 'Home', () => _navigateHome(context, callbacks)),
     );
   }
 

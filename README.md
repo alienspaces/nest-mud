@@ -41,6 +41,8 @@ cd client
 - UI improvements round 1
   - Character Play Screen
   - Game screen
+- Error handling
+  - Duplicate character name
 - Enlarge dungeon
 - Add more dungeon objects
 - Add more dungeon monsters
