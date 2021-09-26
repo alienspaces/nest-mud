@@ -22,14 +22,28 @@ class CharacterPlayWidget extends StatefulWidget {
 
 class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
   Widget _buildAttribute(String name, int? value) {
+    EdgeInsetsGeometry padding = EdgeInsets.fromLTRB(10, 10, 10, 10);
+
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Container(
-          child: Text(name),
+        Spacer(flex: 1),
+        Flexible(
+          flex: 2,
+          child: Container(
+            padding: padding,
+            alignment: Alignment.centerLeft,
+            child: Text(name),
+          ),
         ),
-        Container(
-          width: 100,
-          child: Text('${value}'),
+        Spacer(flex: 1),
+        Flexible(
+          flex: 2,
+          child: Container(
+            padding: padding,
+            alignment: Alignment.centerLeft,
+            child: Text('${value}'),
+          ),
         ),
       ],
     );
@@ -49,9 +63,13 @@ class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
           return Container(
             margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  child: Text('Playing character ${state.characterRecord.name}'),
+                  child: Text(
+                    '${state.characterRecord.name}',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
                 ),
                 Container(
                   child: _buildAttribute('Strength', state.characterRecord.strength),
@@ -63,10 +81,10 @@ class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
                   child: _buildAttribute('Intelligence', state.characterRecord.intelligence),
                 ),
                 Container(
-                  child: _buildAttribute('Fatigue', state.characterRecord.fatigue),
+                  child: _buildAttribute('Health', state.characterRecord.health),
                 ),
                 Container(
-                  child: _buildAttribute('Health', state.characterRecord.health),
+                  child: _buildAttribute('Fatigue', state.characterRecord.fatigue),
                 ),
                 Container(
                   child: ElevatedButton(

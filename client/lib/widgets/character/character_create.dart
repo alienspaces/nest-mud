@@ -138,6 +138,8 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
       },
       builder: (BuildContext context, CharacterState state) {
         // Build attribute row
+        EdgeInsetsGeometry padding = EdgeInsets.fromLTRB(10, 10, 10, 10);
+
         List<Widget> attributeRowWidgets(
           String attributeName,
           int attributeValue,
@@ -148,14 +150,14 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
             Flexible(
               flex: 2,
               child: Container(
-                height: fieldHeight,
+                padding: padding,
                 alignment: Alignment.centerLeft,
                 child: Text(attributeName),
               ),
             ),
             Flexible(
               child: Container(
-                height: fieldHeight,
+                padding: padding,
                 child: ElevatedButton(
                   onPressed: () {
                     attributeDecrementFunc();
@@ -166,14 +168,14 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
             ),
             Flexible(
               child: Container(
-                height: fieldHeight,
+                padding: padding,
                 alignment: Alignment.center,
                 child: Text('${attributeValue}'),
               ),
             ),
             Flexible(
               child: Container(
-                height: fieldHeight,
+                padding: padding,
                 child: ElevatedButton(
                   onPressed: () {
                     attributeIncrementFunc();
