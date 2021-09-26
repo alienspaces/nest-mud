@@ -138,7 +138,7 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
       },
       builder: (BuildContext context, CharacterState state) {
         // Build attribute row
-        EdgeInsetsGeometry padding = EdgeInsets.fromLTRB(10, 10, 10, 10);
+        EdgeInsetsGeometry padding = EdgeInsets.fromLTRB(10, 2, 10, 2);
 
         List<Widget> attributeRowWidgets(
           String attributeName,

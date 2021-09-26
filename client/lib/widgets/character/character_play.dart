@@ -61,7 +61,7 @@ class _CharacterPlayWidgetState extends State<CharacterPlayWidget> {
       builder: (BuildContext context, CharacterState state) {
         if (state is CharacterStateSelected) {
           return Container(
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            margin: EdgeInsets.fromLTRB(20, 2, 20, 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
