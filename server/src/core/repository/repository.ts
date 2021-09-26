@@ -3,13 +3,7 @@ import { QueryResult } from 'pg';
 
 // Application
 import { DatabaseService, LoggerService } from '@/core';
-
-export class RepositoryException extends Error {
-    constructor(message: any) {
-        super(message);
-        this.name = 'RepositoryException';
-    }
-}
+import { RepositoryError } from '@/core/error/error';
 
 export interface ColumnConfig {
     name: string;
@@ -243,7 +237,7 @@ export abstract class Repository<TRecord extends Record> {
         try {
             result = await client.query(sql, values);
         } catch (error) {
-            throw new RepositoryException(error);
+            throw new RepositoryError(error);
         }
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -287,7 +281,7 @@ export abstract class Repository<TRecord extends Record> {
         try {
             result = await client.query(sql, values);
         } catch (error) {
-            throw new RepositoryException(error);
+            throw new RepositoryError(error);
         }
 
         return result.rows as TRecord[];
@@ -319,7 +313,7 @@ export abstract class Repository<TRecord extends Record> {
         try {
             result = await client.query(sql, values);
         } catch (error) {
-            throw new RepositoryException(error);
+            throw new RepositoryError(error);
         }
 
         if (result.rowCount != 1) {
@@ -356,7 +350,7 @@ export abstract class Repository<TRecord extends Record> {
         try {
             result = await client.query(sql, values);
         } catch (error) {
-            throw new RepositoryException(error);
+            throw new RepositoryError(error);
         }
 
         if (result.rows.length != 1) {
@@ -389,7 +383,7 @@ export abstract class Repository<TRecord extends Record> {
         try {
             result = await client.query(sql, values);
         } catch (error) {
-            throw new RepositoryException(error);
+            throw new RepositoryError(error);
         }
 
         if (result.rowCount != 1) {

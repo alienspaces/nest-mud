@@ -5,3 +5,4 @@ export * from './database/database.service';
 export * from './logger/logger.module';
 export * from './logger/logger.service';
 export * from './repository/repository';
+export * from './error/error';
