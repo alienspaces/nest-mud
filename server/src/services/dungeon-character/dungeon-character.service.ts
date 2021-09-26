@@ -14,7 +14,8 @@ import {
     UpdateDungeonCharacterEntity,
     DungeonCharacterEntity,
 } from './dungeon-character.entities';
-import { domainServiceError } from '@/common/error';
+
+import { DomainError } from '@/core';
 
 export interface DungeonCharacterParameters {
     dungeon_id?: string;
@@ -79,7 +80,7 @@ export class DungeonCharacterService {
             ],
         });
         if (dungeonLocationRecords.length !== 1) {
-            throw domainServiceError(
+            throw new DomainError(
                 `Dungeon ${CreateDungeonCharacterEntity.dungeon_id} default location record not found`,
             );
         }
@@ -92,7 +93,7 @@ export class DungeonCharacterService {
                 CreateDungeonCharacterEntity.intelligence >
             defaultAttributePoints
         ) {
-            throw domainServiceError(`New character attributes exceeds allowed maximum of ${defaultAttributePoints}`);
+            throw new DomainError(`New character attributes exceeds allowed maximum of ${defaultAttributePoints}`);
         }
 
         const dungeonCharacterRecord: DungeonCharacterRepositoryRecord = {
@@ -137,7 +138,7 @@ export class DungeonCharacterService {
                 updateDungeonCharacterEntity.intelligence >
             allowedAttributePoints
         ) {
-            throw domainServiceError(`New character attributes exceeds allowed maximum of ${allowedAttributePoints}`);
+            throw new DomainError(`New character attributes exceeds allowed maximum of ${allowedAttributePoints}`);
         }
 
         const dungeonCharacterRecord = await this.dungeonCharacterRepository.getOne({
