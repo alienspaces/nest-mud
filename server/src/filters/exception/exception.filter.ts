@@ -2,7 +2,7 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from
 import { Request, Response } from 'express';
 
 // Application
-import { LoggerService, Logger } from '@/core';
+import { LoggerService, Logger, RepositoryException } from '@/core';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -16,8 +16,14 @@ export class CustomExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
-        const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-
+        let status: number;
+        if (exception instanceof HttpException) {
+            exception.getStatus();
+        } else if (exception instanceof RepositoryException) {
+            status = HttpStatus.I_AM_A_TEAPOT;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
         this.logger.warn(`Handling ${exception} here...`);
 
         // TODO: Catch database errors at the repository level and throw as DatabaseError type so

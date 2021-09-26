@@ -1,8 +1,15 @@
 import * as crypto from 'crypto';
+import { QueryResult } from 'pg';
 
 // Application
 import { DatabaseService, LoggerService } from '@/core';
-import { identity } from 'rxjs';
+
+export class RepositoryException extends Error {
+    constructor(message: any) {
+        super(message);
+        this.name = 'RepositoryException';
+    }
+}
 
 export interface ColumnConfig {
     name: string;
@@ -232,8 +239,12 @@ export abstract class Repository<TRecord extends Record> {
         });
         const values = [args.id];
         logger.debug(values);
-        const result = await client.query(sql, values);
-
+        let result: QueryResult<any>;
+        try {
+            result = await client.query(sql, values);
+        } catch (error) {
+            throw new RepositoryException(error);
+        }
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
             throw new Error('Record does not exist');
@@ -271,7 +282,13 @@ export abstract class Repository<TRecord extends Record> {
             }
         });
         logger.info(values);
-        const result = await client.query(sql, values);
+
+        let result: QueryResult<any>;
+        try {
+            result = await client.query(sql, values);
+        } catch (error) {
+            throw new RepositoryException(error);
+        }
 
         return result.rows as TRecord[];
     }
@@ -297,7 +314,13 @@ export abstract class Repository<TRecord extends Record> {
 
         const values = this.columnNames.map((columnName: string) => args.record[columnName]);
         logger.debug(values);
-        const result = await client.query(sql, values);
+
+        let result: QueryResult<any>;
+        try {
+            result = await client.query(sql, values);
+        } catch (error) {
+            throw new RepositoryException(error);
+        }
 
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
@@ -328,7 +351,13 @@ export abstract class Repository<TRecord extends Record> {
         });
 
         logger.debug(values);
-        const result = await client.query(sql, values);
+
+        let result: QueryResult<any>;
+        try {
+            result = await client.query(sql, values);
+        } catch (error) {
+            throw new RepositoryException(error);
+        }
 
         if (result.rows.length != 1) {
             // TODO: Data layer exception type
@@ -355,7 +384,13 @@ export abstract class Repository<TRecord extends Record> {
 
         const values = [args.id];
         logger.debug(values);
-        const result = await client.query(sql, values);
+
+        let result: QueryResult<any>;
+        try {
+            result = await client.query(sql, values);
+        } catch (error) {
+            throw new RepositoryException(error);
+        }
 
         if (result.rowCount != 1) {
             // TODO: Data layer exception type
