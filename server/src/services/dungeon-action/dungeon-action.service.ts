@@ -175,7 +175,8 @@ export class DungeonActionService {
             // Update dungeon action entity
             dungeonActionRecord.dungeon_location_id = dungeonActionRecord.resolved_target_dungeon_location_id;
         } else if (dungeonActionRecord.dungeon_monster_id) {
-            // TODO: Move monster
+            // Move monster
+            // ...
         }
         return dungeonActionRecord;
     }
@@ -184,7 +185,8 @@ export class DungeonActionService {
         dungeonActionRecord: DungeonActionRepositoryRecord,
         records: DungeonLocationRecordSet,
     ): Promise<DungeonActionRepositoryRecord> {
-        // TODO: Provide the ability to look multiple times to get more detailed information
+        // Provide the ability to look multiple times to get more detailed information
+        // ...
         return dungeonActionRecord;
     }
 

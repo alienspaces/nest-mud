@@ -145,7 +145,7 @@ class API {
     } finally {
       client.close();
     }
-    log.warning('Response: ${response}');
+    log.warning('Response: ${response?.statusCode}');
     String responseBody = '';
     if (response != null) {
       responseBody = response.body;

@@ -38,6 +38,8 @@ cd client
 
 ## TODO
 
+- API functions need to return something from all functions
+  that can be interpreted as an error. Possibly return `{ status: int, data: JSON string, error: string }`.
 - UI improvements round 1
   - Character Play Screen
   - Game screen

@@ -178,7 +178,6 @@ export abstract class Repository<TRecord extends Record> {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
-                // TODO: Implement parameter operators
                 sql += `"${parameter.column}" = $${parameterCount}`;
             });
             sql += ' AND ';
@@ -202,7 +201,6 @@ export abstract class Repository<TRecord extends Record> {
             let parameterCount = 0;
             args.parameters.forEach((parameter) => {
                 parameterCount++;
-                // TODO: Implement parameter operators
                 sql += `"${parameter.column}" = $${parameterCount}`;
             });
             sql += ' AND ';
@@ -240,8 +238,7 @@ export abstract class Repository<TRecord extends Record> {
             throw new RepositoryError(error);
         }
         if (result.rows.length != 1) {
-            // TODO: Data layer exception type
-            throw new Error('Record does not exist');
+            throw new RepositoryError('Record does not exist');
         }
         return result.rows[0] as TRecord;
     }
@@ -317,8 +314,7 @@ export abstract class Repository<TRecord extends Record> {
         }
 
         if (result.rowCount != 1) {
-            // TODO: Data layer exception type
-            throw new Error('Failed returning record from update');
+            throw new RepositoryError('Failed returning record from update');
         }
         return result.rows[0] as TRecord;
     }
@@ -354,8 +350,7 @@ export abstract class Repository<TRecord extends Record> {
         }
 
         if (result.rows.length != 1) {
-            // TODO: Data layer exception type
-            throw new Error('Failed returning record from insert');
+            throw new RepositoryError('Failed returning record from insert');
         }
         return result.rows[0] as TRecord;
     }
@@ -387,8 +382,7 @@ export abstract class Repository<TRecord extends Record> {
         }
 
         if (result.rowCount != 1) {
-            // TODO: Data layer exception type
-            throw new Error('Failed deleting row');
+            throw new RepositoryError('Failed deleting row');
         }
         return;
     }

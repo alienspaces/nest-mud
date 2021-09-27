@@ -85,8 +85,9 @@ export class DungeonCharacterService {
             );
         }
 
-        // TODO: Move to validation function and calculate max attributes based
+        // Move to validation function and calculate max attributes based
         // on character experience
+        // ...
         if (
             CreateDungeonCharacterEntity.strength +
                 CreateDungeonCharacterEntity.dexterity +
