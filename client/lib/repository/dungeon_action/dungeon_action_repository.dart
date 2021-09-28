@@ -17,29 +17,32 @@ class DungeonActionRepository implements DungeonActionRepositoryInterface {
     final log = getLogger('DungeonActionRepository');
 
     final api = API();
-    String response = await api.createDungeonAction(
+    APIResponse response = await api.createDungeonAction(
       dungeonID,
       characterID,
       sentence,
     );
-    if (response == '') {
+    if (response.error != null) {
       log.warning('No records returned');
       return null;
     }
 
     DungeonActionRecord? record;
-    Map<String, dynamic> decoded = jsonDecode(response);
-    if (decoded['data'] != null) {
-      List<dynamic> data = decoded['data'];
-      log.info('Decoded response ${data}');
-      if (data.length > 1) {
-        // TODO: Support multiple dungeon actions in response as the response may contain
-        // dungeon actions performed by other entities in the same location since our last
-        // action.
-        log.warning('Unexpected number of records returned');
-        return null;
+    String? responseBody = response.body;
+    if (responseBody != null) {
+      Map<String, dynamic> decoded = jsonDecode(responseBody);
+      if (decoded['data'] != null) {
+        List<dynamic> data = decoded['data'];
+        log.info('Decoded response ${data}');
+        if (data.length > 1) {
+          // TODO: Support multiple dungeon actions in response as the response may contain
+          // dungeon actions performed by other entities in the same location since our last
+          // action.
+          log.warning('Unexpected number of records returned');
+          return null;
+        }
+        record = DungeonActionRecord.fromJson(data[0]);
       }
-      record = DungeonActionRecord.fromJson(data[0]);
     }
 
     return record;

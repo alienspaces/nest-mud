@@ -17,34 +17,47 @@ class DungeonRepository implements DungeonRepositoryInterface {
   Future<DungeonRecord?> getOne(String dungeonID) async {
     final log = getLogger('DungeonRepository');
     final api = API();
-    String response = await api.getDungeon(dungeonID);
-    if (response == '') {
-      log.warning('No record returned');
+
+    APIResponse response = await api.getDungeon(dungeonID);
+    if (response.error != null) {
+      log.warning('API responded with error ${response.error}');
       return null;
     }
-    Map<String, dynamic> decoded = jsonDecode(response);
-    log.warning('Decoded response ${decoded}');
-    final record = DungeonRecord.fromJson(decoded);
+
+    DungeonRecord? record;
+    String? responseBody = response.body;
+    if (responseBody != null) {
+      Map<String, dynamic> decoded = jsonDecode(responseBody);
+      log.warning('Decoded response ${decoded}');
+      record = DungeonRecord.fromJson(decoded);
+    }
+
     return record;
   }
 
   Future<List<DungeonRecord>> getMany() async {
     final log = getLogger('DungeonRepository');
     final api = API();
-    String response = await api.getDungeons();
+
+    APIResponse response = await api.getDungeons();
+    if (response.error != null) {
+      log.warning('API responded with error ${response.error}');
+      return [];
+    }
+
     List<DungeonRecord> records = [];
-    if (response == '') {
-      log.warning('No records returned');
-      return records;
+    String? responseBody = response.body;
+    if (responseBody != null) {
+      Map<String, dynamic> decoded = jsonDecode(responseBody);
+      if (decoded['data'] != null) {
+        List<dynamic> data = decoded['data'];
+        log.info('Decoded response ${data}');
+        data.forEach((element) {
+          records.add(DungeonRecord.fromJson(element));
+        });
+      }
     }
-    Map<String, dynamic> decoded = jsonDecode(response);
-    if (decoded['data'] != null) {
-      List<dynamic> data = decoded['data'];
-      log.info('Decoded response ${data}');
-      data.forEach((element) {
-        records.add(DungeonRecord.fromJson(element));
-      });
-    }
+
     return records;
   }
 }

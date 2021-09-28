@@ -8,6 +8,12 @@ import 'package:client/config.dart';
 import 'package:client/logger.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+class APIResponse {
+  String? body;
+  String? error;
+  APIResponse({this.body, this.error});
+}
+
 class API {
   String hostname = config['serverHost'].toString();
   final String port = config['serverPort'].toString();
@@ -20,9 +26,10 @@ class API {
     }
   }
 
-  Future<String> test() async {
+  Future<APIResponse> test() async {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
+
     http.Response? response;
     try {
       Uri uri = Uri(
@@ -34,20 +41,21 @@ class API {
           await client.get(uri, headers: {'Content-Type': 'application/json; charset=utf-8'});
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
+      return APIResponse(error: err.message);
     } finally {
       client.close();
     }
-    String responseBody = '';
-    if (response != null) {
-      responseBody = response.body;
-    }
+
+    String responseBody = response.body;
     log.warning('Response: ${responseBody}');
-    return responseBody;
+
+    return APIResponse(body: responseBody);
   }
 
-  Future<String> getDungeon(String dungeonID) async {
+  Future<APIResponse> getDungeon(String dungeonID) async {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
+
     http.Response? response;
     try {
       Uri uri = Uri(
@@ -61,18 +69,18 @@ class API {
           await client.get(uri, headers: {'Content-Type': 'application/json; charset=utf-8'});
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
+      return APIResponse(error: err.message);
     } finally {
       client.close();
     }
-    String responseBody = '';
-    if (response != null) {
-      responseBody = response.body;
-    }
+
+    String responseBody = response.body;
     log.warning('Response: ${responseBody}');
-    return responseBody;
+
+    return APIResponse(body: responseBody);
   }
 
-  Future<String> getDungeons() async {
+  Future<APIResponse> getDungeons() async {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
     http.Response? response;
@@ -88,19 +96,18 @@ class API {
           await client.get(uri, headers: {'Content-Type': 'application/json; charset=utf-8'});
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
-      log.warning('Failed: ${err.uri}');
+      return APIResponse(error: err.message);
     } finally {
       client.close();
     }
-    String responseBody = '';
-    if (response != null) {
-      responseBody = response.body;
-    }
+
+    String responseBody = response.body;
     log.warning('Response: ${responseBody}');
-    return responseBody;
+
+    return APIResponse(body: responseBody);
   }
 
-  Future<String> createCharacter(
+  Future<APIResponse> createCharacter(
     String dungeonID, {
     required String name,
     required int strength,
@@ -139,23 +146,18 @@ class API {
       );
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
-      log.warning('Failed: ${err.uri}');
-    } catch (err) {
-      log.warning('Failed: ${err}');
+      return APIResponse(error: err.message);
     } finally {
       client.close();
     }
-    log.warning('Response: ${response?.statusCode}');
-    String responseBody = '';
-    if (response != null) {
-      responseBody = response.body;
-    }
 
+    String responseBody = response.body;
     log.warning('Response: ${responseBody}');
-    return responseBody;
+
+    return APIResponse(body: responseBody);
   }
 
-  Future<String> loadCharacter(String dungeonID, String characterID) async {
+  Future<APIResponse> loadCharacter(String dungeonID, String characterID) async {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
 
@@ -177,23 +179,18 @@ class API {
       );
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
-      log.warning('Failed: ${err.uri}');
-    } catch (err) {
-      log.warning('Failed: ${err}');
+      return APIResponse(error: err.message);
     } finally {
       client.close();
     }
-    log.warning('Response: ${response}');
-    String responseBody = '';
-    if (response != null) {
-      responseBody = response.body;
-    }
 
+    String responseBody = response.body;
     log.warning('Response: ${responseBody}');
-    return responseBody;
+
+    return APIResponse(body: responseBody);
   }
 
-  Future<String> createDungeonAction(
+  Future<APIResponse> createDungeonAction(
     String dungeonID,
     String characterID,
     String sentence,
@@ -227,19 +224,14 @@ class API {
       );
     } on http.ClientException catch (err) {
       log.warning('Failed: ${err.message}');
-      log.warning('Failed: ${err.uri}');
-    } catch (err) {
-      log.warning('Failed: ${err}');
+      return APIResponse(error: err.message);
     } finally {
       client.close();
     }
-    log.warning('Response: ${response}');
-    String responseBody = '';
-    if (response != null) {
-      responseBody = response.body;
-    }
 
+    String responseBody = response.body;
     log.warning('Response: ${responseBody}');
-    return responseBody;
+
+    return APIResponse(body: responseBody);
   }
 }

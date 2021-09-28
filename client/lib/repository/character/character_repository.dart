@@ -17,28 +17,31 @@ class CharacterRepository implements CharacterRepositoryInterface {
     final log = getLogger('CharacterRepository');
 
     final api = API();
-    String response = await api.createCharacter(
+    APIResponse response = await api.createCharacter(
       dungeonID,
       name: createRecord.name,
       strength: createRecord.strength,
       dexterity: createRecord.dexterity,
       intelligence: createRecord.intelligence,
     );
-    if (response == '') {
-      log.warning('No records returned');
+    if (response.error != null) {
+      log.warning('API responded with error ${response.error}');
       return null;
     }
 
     CharacterRecord? record;
-    Map<String, dynamic> decoded = jsonDecode(response);
-    if (decoded['data'] != null) {
-      List<dynamic> data = decoded['data'];
-      log.info('Decoded response ${data}');
-      if (data.length > 1) {
-        log.warning('Unexpected number of records returned');
-        return null;
+    String? responseBody = response.body;
+    if (responseBody != null) {
+      Map<String, dynamic> decoded = jsonDecode(responseBody);
+      if (decoded['data'] != null) {
+        List<dynamic> data = decoded['data'];
+        log.info('Decoded response ${data}');
+        if (data.length > 1) {
+          log.warning('Unexpected number of records returned');
+          return null;
+        }
+        record = CharacterRecord.fromJson(data[0]);
       }
-      record = CharacterRecord.fromJson(data[0]);
     }
 
     return record;
@@ -48,25 +51,28 @@ class CharacterRepository implements CharacterRepositoryInterface {
     final log = getLogger('CharacterRepository');
 
     final api = API();
-    String response = await api.loadCharacter(
+    APIResponse response = await api.loadCharacter(
       dungeonID,
       characterID,
     );
-    if (response == '') {
-      log.warning('No records returned');
+    if (response.error != null) {
+      log.warning('API responded with error ${response.error}');
       return null;
     }
 
     CharacterRecord? record;
-    Map<String, dynamic> decoded = jsonDecode(response);
-    if (decoded['data'] != null) {
-      List<dynamic> data = decoded['data'];
-      log.info('Decoded response ${data}');
-      if (data.length > 1) {
-        log.warning('Unexpected number of records returned');
-        return null;
+    String? responseBody = response.body;
+    if (responseBody != null) {
+      Map<String, dynamic> decoded = jsonDecode(responseBody);
+      if (decoded['data'] != null) {
+        List<dynamic> data = decoded['data'];
+        log.info('Decoded response ${data}');
+        if (data.length > 1) {
+          log.warning('Unexpected number of records returned');
+          return null;
+        }
+        record = CharacterRecord.fromJson(data[0]);
       }
-      record = CharacterRecord.fromJson(data[0]);
     }
 
     return record;
