@@ -26,7 +26,8 @@ class CharacterRepository implements CharacterRepositoryInterface {
     );
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      return null;
+      // TODO: Translate API error to a typed exception
+      throw Exception(response.error);
     }
 
     CharacterRecord? record;
@@ -38,7 +39,7 @@ class CharacterRepository implements CharacterRepositoryInterface {
         log.info('Decoded response ${data}');
         if (data.length > 1) {
           log.warning('Unexpected number of records returned');
-          return null;
+          throw Exception('Unexpected number of records returned');
         }
         record = CharacterRecord.fromJson(data[0]);
       }
@@ -57,7 +58,8 @@ class CharacterRepository implements CharacterRepositoryInterface {
     );
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      return null;
+      // TODO: Translate API error to a typed exception
+      throw Exception(response.error);
     }
 
     CharacterRecord? record;
@@ -69,7 +71,7 @@ class CharacterRepository implements CharacterRepositoryInterface {
         log.info('Decoded response ${data}');
         if (data.length > 1) {
           log.warning('Unexpected number of records returned');
-          return null;
+          throw Exception('Unexpected number of records returned');
         }
         record = CharacterRecord.fromJson(data[0]);
       }

@@ -24,7 +24,8 @@ class DungeonActionRepository implements DungeonActionRepositoryInterface {
     );
     if (response.error != null) {
       log.warning('No records returned');
-      return null;
+      // TODO: Translate API error to a typed exception
+      throw Exception(response.error);
     }
 
     DungeonActionRecord? record;
@@ -39,7 +40,7 @@ class DungeonActionRepository implements DungeonActionRepositoryInterface {
           // dungeon actions performed by other entities in the same location since our last
           // action.
           log.warning('Unexpected number of records returned');
-          return null;
+          throw Exception('Unexpected number of records returned');
         }
         record = DungeonActionRecord.fromJson(data[0]);
       }
