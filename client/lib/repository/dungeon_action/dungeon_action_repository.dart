@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 // Application
 import 'package:client/logger.dart';
 import 'package:client/api/api.dart';
+import 'package:client/repository/repository.dart';
 
 // Package
 part 'dungeon_action_record.dart';
@@ -24,8 +25,8 @@ class DungeonActionRepository implements DungeonActionRepositoryInterface {
     );
     if (response.error != null) {
       log.warning('No records returned');
-      // TODO: Translate API error to a typed exception
-      throw Exception(response.error);
+      RepositoryException exception = resolveException(response.error!);
+      throw exception;
     }
 
     DungeonActionRecord? record;

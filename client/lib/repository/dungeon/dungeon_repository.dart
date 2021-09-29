@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 // Application
 import 'package:client/logger.dart';
 import 'package:client/api/api.dart';
+import 'package:client/repository/repository.dart';
 
 // Package
 part 'dungeon_record.dart';
@@ -21,8 +22,8 @@ class DungeonRepository implements DungeonRepositoryInterface {
     APIResponse response = await api.getDungeon(dungeonID);
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      // TODO: Translate API error to a typed exception
-      throw Exception(response.error);
+      RepositoryException exception = resolveException(response.error!);
+      throw exception;
     }
 
     DungeonRecord? record;
@@ -43,8 +44,8 @@ class DungeonRepository implements DungeonRepositoryInterface {
     APIResponse response = await api.getDungeons();
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      // TODO: Translate API error to a typed exception
-      throw Exception(response.error);
+      RepositoryException exception = resolveException(response.error!);
+      throw exception;
     }
 
     List<DungeonRecord> records = [];
