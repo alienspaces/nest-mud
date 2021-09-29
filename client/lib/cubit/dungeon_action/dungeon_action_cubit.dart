@@ -9,11 +9,14 @@ import 'package:client/repository/repository.dart';
 part 'dungeon_action_state.dart';
 
 class DungeonActionCubit extends Cubit<DungeonActionState> {
-  final dungeonActionRepository = DungeonActionRepository();
+  final Map<String, String> config;
+  final RepositoryCollection repositories;
+
   List<DungeonActionRecord>? dungeonRecords;
   DungeonActionRecord? dungeonRecord;
 
-  DungeonActionCubit() : super(DungeonActionStateInitial()) {}
+  DungeonActionCubit({required this.config, required this.repositories})
+      : super(DungeonActionStateInitial()) {}
 
   Future<void> createAction(String dungeonID, String characterID, String sentence) async {
     final log = getLogger('DungeonActionCubit');
@@ -22,7 +25,7 @@ class DungeonActionCubit extends Cubit<DungeonActionState> {
     emit(DungeonActionStateCreating());
 
     DungeonActionRecord? createdDungeonActionRecord =
-        await dungeonActionRepository.create(dungeonID, characterID, sentence);
+        await repositories.dungeonActionRepository.create(dungeonID, characterID, sentence);
 
     log.info('Created dungeon action ${createdDungeonActionRecord}');
 

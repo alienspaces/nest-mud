@@ -1,4 +1,5 @@
 // Barrel file
+export 'collection.dart';
 export 'exception.dart';
 export 'character/character_repository.dart';
 export 'dungeon/dungeon_repository.dart';

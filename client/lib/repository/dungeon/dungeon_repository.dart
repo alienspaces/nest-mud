@@ -15,9 +15,13 @@ abstract class DungeonRepositoryInterface {
 }
 
 class DungeonRepository implements DungeonRepositoryInterface {
+  final Map<String, String> config;
+  final API api;
+
+  DungeonRepository({required this.config, required this.api});
+
   Future<DungeonRecord?> getOne(String dungeonID) async {
     final log = getLogger('DungeonRepository');
-    final api = API();
 
     APIResponse response = await api.getDungeon(dungeonID);
     if (response.error != null) {
@@ -39,7 +43,6 @@ class DungeonRepository implements DungeonRepositoryInterface {
 
   Future<List<DungeonRecord>> getMany() async {
     final log = getLogger('DungeonRepository');
-    final api = API();
 
     APIResponse response = await api.getDungeons();
     if (response.error != null) {

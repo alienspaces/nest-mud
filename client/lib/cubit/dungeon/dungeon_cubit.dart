@@ -9,11 +9,13 @@ import 'package:client/repository/repository.dart';
 part 'dungeon_state.dart';
 
 class DungeonCubit extends Cubit<DungeonState> {
-  final dungeonRepository = DungeonRepository();
+  final Map<String, String> config;
+  final RepositoryCollection repositories;
+
   List<DungeonRecord>? dungeonRecords;
   DungeonRecord? dungeonRecord;
 
-  DungeonCubit() : super(DungeonStateInitial()) {}
+  DungeonCubit({required this.config, required this.repositories}) : super(DungeonStateInitial()) {}
 
   void clearDungeon() {
     this.dungeonRecord = null;
@@ -25,7 +27,7 @@ class DungeonCubit extends Cubit<DungeonState> {
     log.info('Loading dungeons...');
     emit(DungeonStateLoading());
 
-    dungeonRecords = await dungeonRepository.getMany();
+    dungeonRecords = await repositories.dungeonRepository.getMany();
 
     emit(DungeonStateLoaded(dungeonRecords: dungeonRecords));
   }

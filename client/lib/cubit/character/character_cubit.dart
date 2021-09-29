@@ -11,10 +11,13 @@ part 'character_state.dart';
 const int MAX_ATTRIBUTES = 36;
 
 class CharacterCubit extends Cubit<CharacterState> {
-  final characterRepository = CharacterRepository();
+  final Map<String, String> config;
+  final RepositoryCollection repositories;
+
   CharacterRecord? characterRecord;
 
-  CharacterCubit() : super(CharacterStateInitial()) {}
+  CharacterCubit({required this.config, required this.repositories})
+      : super(CharacterStateInitial()) {}
 
   void clearCharacter() {
     this.characterRecord = null;
@@ -36,7 +39,7 @@ class CharacterCubit extends Cubit<CharacterState> {
     }
 
     CharacterRecord? createdCharacterRecord =
-        await characterRepository.create(dungeonID, characterRecord);
+        await repositories.characterRepository.create(dungeonID, characterRecord);
 
     if (createdCharacterRecord != null) {
       log.info('Created character ${createdCharacterRecord}');
@@ -51,7 +54,8 @@ class CharacterCubit extends Cubit<CharacterState> {
 
     emit(CharacterStateLoading());
 
-    CharacterRecord? loadedCharacterRecord = await characterRepository.load(dungeonID, characterID);
+    CharacterRecord? loadedCharacterRecord =
+        await repositories.characterRepository.load(dungeonID, characterID);
 
     log.info('Created character ${loadedCharacterRecord}');
 

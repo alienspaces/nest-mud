@@ -14,10 +14,14 @@ abstract class CharacterRepositoryInterface {
 }
 
 class CharacterRepository implements CharacterRepositoryInterface {
+  final Map<String, String> config;
+  final API api;
+
+  CharacterRepository({required this.config, required this.api});
+
   Future<CharacterRecord?> create(String dungeonID, CreateCharacterRecord createRecord) async {
     final log = getLogger('CharacterRepository');
 
-    final api = API();
     APIResponse response = await api.createCharacter(
       dungeonID,
       name: createRecord.name,
@@ -52,7 +56,6 @@ class CharacterRepository implements CharacterRepositoryInterface {
   Future<CharacterRecord?> load(String dungeonID, String characterID) async {
     final log = getLogger('CharacterRepository');
 
-    final api = API();
     APIResponse response = await api.loadCharacter(
       dungeonID,
       characterID,

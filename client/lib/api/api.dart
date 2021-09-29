@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
 // Application
-import 'package:client/config.dart';
 import 'package:client/logger.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -12,23 +11,26 @@ class APIResponse {
   String? body;
   String? error;
   APIResponse({this.body, this.error});
+
+  bool isNotEmpty() {
+    return this.body != null || this.error != null;
+  }
 }
 
 class API {
-  String hostname = config['serverHost'].toString();
-  final String port = config['serverPort'].toString();
+  final Map<String, String> config;
+  late final String hostname;
+  late final String port;
 
-  API() {
-    // When hostname is localhost and we are running
-    // in an emulator set backend to specific IP
-    if (!kIsWeb && hostname == 'localhost') {
-      this.hostname = '10.0.3.2';
-    }
+  API({required this.config}) {
+    this.hostname = config['serverHost'].toString();
+    this.port = config['serverPort'].toString();
   }
 
   Future<APIResponse> test() async {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
+    log.warning('Testing hostname ${this.hostname} port ${this.port}');
 
     http.Response? response;
     try {

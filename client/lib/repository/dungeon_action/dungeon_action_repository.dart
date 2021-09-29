@@ -14,10 +14,14 @@ abstract class DungeonActionRepositoryInterface {
 }
 
 class DungeonActionRepository implements DungeonActionRepositoryInterface {
+  final Map<String, String> config;
+  final API api;
+
+  DungeonActionRepository({required this.config, required this.api});
+
   Future<DungeonActionRecord?> create(String dungeonID, String characterID, String sentence) async {
     final log = getLogger('DungeonActionRepository');
 
-    final api = API();
     APIResponse response = await api.createDungeonAction(
       dungeonID,
       characterID,
