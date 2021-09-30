@@ -37,7 +37,7 @@ class CharacterRepository implements CharacterRepositoryInterface {
 
     CharacterRecord? record;
     String? responseBody = response.body;
-    if (responseBody != null) {
+    if (responseBody != null && responseBody.isNotEmpty) {
       Map<String, dynamic> decoded = jsonDecode(responseBody);
       if (decoded['data'] != null) {
         List<dynamic> data = decoded['data'];
@@ -68,7 +68,7 @@ class CharacterRepository implements CharacterRepositoryInterface {
 
     CharacterRecord? record;
     String? responseBody = response.body;
-    if (responseBody != null) {
+    if (responseBody != null && responseBody.isNotEmpty) {
       Map<String, dynamic> decoded = jsonDecode(responseBody);
       if (decoded['data'] != null) {
         List<dynamic> data = decoded['data'];

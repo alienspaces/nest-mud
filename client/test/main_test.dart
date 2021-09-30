@@ -23,7 +23,7 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MainApp(
       config: getConfig(),
-      repositories: getRepositories(),
+      repositories: getRepositories(mockAPI: true),
     ));
 
     // expect(find.text('Dungeon'), findsOneWidget);

@@ -32,7 +32,7 @@ class DungeonRepository implements DungeonRepositoryInterface {
 
     DungeonRecord? record;
     String? responseBody = response.body;
-    if (responseBody != null) {
+    if (responseBody != null && responseBody.isNotEmpty) {
       Map<String, dynamic> decoded = jsonDecode(responseBody);
       log.warning('Decoded response ${decoded}');
       record = DungeonRecord.fromJson(decoded);
@@ -53,7 +53,7 @@ class DungeonRepository implements DungeonRepositoryInterface {
 
     List<DungeonRecord> records = [];
     String? responseBody = response.body;
-    if (responseBody != null) {
+    if (responseBody != null && responseBody.isNotEmpty) {
       Map<String, dynamic> decoded = jsonDecode(responseBody);
       if (decoded['data'] != null) {
         List<dynamic> data = decoded['data'];

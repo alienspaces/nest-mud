@@ -5,7 +5,6 @@ import 'package:http/retry.dart';
 
 // Application
 import 'package:client/logger.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class APIResponse {
   String? body;
@@ -19,25 +18,25 @@ class APIResponse {
 
 class API {
   final Map<String, String> config;
-  late final String hostname;
-  late final String port;
+  late final String _hostname;
+  late final String _port;
 
   API({required this.config}) {
-    this.hostname = config['serverHost'].toString();
-    this.port = config['serverPort'].toString();
+    this._hostname = config['serverHost'].toString();
+    this._port = config['serverPort'].toString();
   }
 
   Future<APIResponse> test() async {
     final log = getLogger('API');
     final client = RetryClient(http.Client());
-    log.warning('Testing hostname ${this.hostname} port ${this.port}');
+    log.warning('Testing _hostname ${this._hostname} _port ${this._port}');
 
     http.Response? response;
     try {
       Uri uri = Uri(
         scheme: 'http',
-        host: this.hostname,
-        port: int.parse(this.port),
+        host: this._hostname,
+        port: int.parse(this._port),
       );
       response =
           await client.get(uri, headers: {'Content-Type': 'application/json; charset=utf-8'});
@@ -62,8 +61,8 @@ class API {
     try {
       Uri uri = Uri(
         scheme: 'http',
-        host: this.hostname,
-        port: int.parse(this.port),
+        host: this._hostname,
+        port: int.parse(this._port),
         path: '/api/v1/dungeons/${dungeonID}',
       );
       log.warning('URI ${uri}');
@@ -89,8 +88,8 @@ class API {
     try {
       Uri uri = Uri(
         scheme: 'http',
-        host: this.hostname,
-        port: int.parse(this.port),
+        host: this._hostname,
+        port: int.parse(this._port),
         path: '/api/v1/dungeons',
       );
       log.warning('URI ${uri}');
@@ -123,8 +122,8 @@ class API {
     try {
       Uri uri = Uri(
         scheme: 'http',
-        host: this.hostname,
-        port: int.parse(this.port),
+        host: this._hostname,
+        port: int.parse(this._port),
         path: '/api/v1/dungeons/${dungeonID}/characters',
       );
       log.warning('URI ${uri}');
@@ -167,8 +166,8 @@ class API {
     try {
       Uri uri = Uri(
         scheme: 'http',
-        host: this.hostname,
-        port: int.parse(this.port),
+        host: this._hostname,
+        port: int.parse(this._port),
         path: '/api/v1/dungeons/${dungeonID}/characters/${characterID}',
       );
       log.warning('URI ${uri}');
@@ -204,8 +203,8 @@ class API {
     try {
       Uri uri = Uri(
         scheme: 'http',
-        host: this.hostname,
-        port: int.parse(this.port),
+        host: this._hostname,
+        port: int.parse(this._port),
         path: '/api/v1/dungeons/${dungeonID}/characters/${characterID}/actions',
       );
       log.warning('URI ${uri}');
