@@ -1,9 +1,26 @@
 // Application
 import 'package:client/api/api.dart';
 import 'package:client/repository/repository.dart';
+import 'dart:io' show Platform;
 
 Map<String, String> getConfig() {
-  return {"serverHost": "localhost", "serverPort": "3000"};
+  Map<String, String> envVars = Platform.environment;
+
+  String? serverHost = envVars['APP_CLIENT_API_HOST'];
+  String? serverPort = envVars['APP_CLIENT_API_PORT'];
+
+  if (serverHost == null) {
+    throw Exception('Test setup failure, environment missing APP_CLIENT_API_HOST');
+  }
+
+  if (serverPort == null) {
+    throw Exception('Test setup failure, environment missing APP_CLIENT_API_PORT');
+  }
+
+  return {
+    "serverHost": envVars['APP_CLIENT_API_HOST'] ?? '',
+    "serverPort": envVars['APP_CLIENT_API_PORT'] ?? '',
+  };
 }
 
 class MockAPI implements API {
