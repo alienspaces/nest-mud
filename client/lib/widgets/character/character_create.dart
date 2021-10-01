@@ -187,85 +187,108 @@ class _CharacterCreateWidgetState extends State<CharacterCreateWidget> {
           ];
         }
 
-        if (state is CharacterStateInitial) {
+        if (state is CharacterStateInitial || state is CharacterStateCreateError) {
+          List<Widget> formWidgets = [
+            Container(
+              child: Text('Create Character', style: Theme.of(context).textTheme.headline3),
+            )
+          ];
+
+          if (state is CharacterStateCreateError) {
+            formWidgets.add(Container(
+              child: Text('${state.message}'),
+            ));
+          }
+
+          formWidgets.add(
+            Container(
+              height: fieldHeight,
+              width: 300,
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: TextFormField(
+                controller: characterNameController,
+                autofocus: true,
+                decoration: _fieldDecoration('Character Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter character name';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          );
+
+          formWidgets.add(
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: attributeRowWidgets(
+                  'Strength',
+                  strength,
+                  _decrementStrength,
+                  _incrementStrength,
+                ),
+              ),
+            ),
+          );
+
+          formWidgets.add(
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: attributeRowWidgets(
+                  'Dexterity',
+                  dexterity,
+                  _decrementDexterity,
+                  _incrementDexterity,
+                ),
+              ),
+            ),
+          );
+
+          formWidgets.add(
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: attributeRowWidgets(
+                  'Intelligence',
+                  intelligence,
+                  _decrementIntelligence,
+                  _incrementIntelligence,
+                ),
+              ),
+            ),
+          );
+
+          formWidgets.add(
+            Container(
+              height: fieldHeight,
+              width: 200,
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Validate returns true if the form is valid, or false otherwise.
+                  if (_formKey.currentState!.validate()) {
+                    _createCharacter();
+                  }
+                },
+                style: buttonStyle,
+                child: const Text('Create Character'),
+              ),
+            ),
+          );
+
           return Container(
             margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    child: Text('Create Character', style: Theme.of(context).textTheme.headline3),
-                  ),
-                  Container(
-                    height: fieldHeight,
-                    width: 300,
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: TextFormField(
-                      controller: characterNameController,
-                      autofocus: true,
-                      decoration: _fieldDecoration('Character Name'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter character name';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: attributeRowWidgets(
-                        'Strength',
-                        strength,
-                        _decrementStrength,
-                        _incrementStrength,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: attributeRowWidgets(
-                        'Dexterity',
-                        dexterity,
-                        _decrementDexterity,
-                        _incrementDexterity,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: attributeRowWidgets(
-                        'Intelligence',
-                        intelligence,
-                        _decrementIntelligence,
-                        _incrementIntelligence,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: fieldHeight,
-                    width: 200,
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          _createCharacter();
-                        }
-                      },
-                      style: buttonStyle,
-                      child: const Text('Create Character'),
-                    ),
-                  ),
-                ],
+                children: formWidgets,
               ),
             ),
           );

@@ -26,7 +26,7 @@ class DungeonRepository implements DungeonRepositoryInterface {
     APIResponse response = await api.getDungeon(dungeonID);
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      RepositoryException exception = resolveException(response.error!);
+      RepositoryException exception = resolveApiException(response.error!);
       throw exception;
     }
 
@@ -47,7 +47,7 @@ class DungeonRepository implements DungeonRepositoryInterface {
     APIResponse response = await api.getDungeons();
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      RepositoryException exception = resolveException(response.error!);
+      RepositoryException exception = resolveApiException(response.error!);
       throw exception;
     }
 

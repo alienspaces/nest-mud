@@ -21,6 +21,7 @@ class CharacterRepository implements CharacterRepositoryInterface {
 
   Future<CharacterRecord?> create(String dungeonID, CreateCharacterRecord createRecord) async {
     final log = getLogger('CharacterRepository');
+    log.warning('Creating character ${createRecord.name}');
 
     APIResponse response = await api.createCharacter(
       dungeonID,
@@ -29,9 +30,12 @@ class CharacterRepository implements CharacterRepositoryInterface {
       dexterity: createRecord.dexterity,
       intelligence: createRecord.intelligence,
     );
+    log.warning('APIResponse body ${response.body}');
+    log.warning('APIResponse error ${response.error}');
+
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      RepositoryException exception = resolveException(response.error!);
+      RepositoryException exception = resolveApiException(response.error!);
       throw exception;
     }
 
@@ -62,7 +66,7 @@ class CharacterRepository implements CharacterRepositoryInterface {
     );
     if (response.error != null) {
       log.warning('API responded with error ${response.error}');
-      RepositoryException exception = resolveException(response.error!);
+      RepositoryException exception = resolveApiException(response.error!);
       throw exception;
     }
 

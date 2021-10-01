@@ -31,7 +31,8 @@ class _CharacterContainerWidgetState extends State<CharacterContainerWidget> {
         log.info('listener...');
       },
       builder: (BuildContext context, CharacterState characterState) {
-        if (characterState is CharacterStateInitial) {
+        if (characterState is CharacterStateInitial ||
+            characterState is CharacterStateCreateError) {
           return Container(
             child: CharacterCreateWidget(
               callbacks: widget.callbacks,

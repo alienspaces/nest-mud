@@ -29,7 +29,7 @@ class DungeonActionRepository implements DungeonActionRepositoryInterface {
     );
     if (response.error != null) {
       log.warning('No records returned');
-      RepositoryException exception = resolveException(response.error!);
+      RepositoryException exception = resolveApiException(response.error!);
       throw exception;
     }
 

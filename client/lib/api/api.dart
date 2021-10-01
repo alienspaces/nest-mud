@@ -145,14 +145,20 @@ class API {
         },
         body: bodyData,
       );
-    } on http.ClientException catch (err) {
-      log.warning('Failed: ${err.message}');
-      return APIResponse(error: err.message);
+    } on Error catch (err) {
+      log.warning('Failed: ${err}');
+      return APIResponse(error: err.toString());
     } finally {
       client.close();
     }
 
     String responseBody = response.body;
+
+    if (response.statusCode != 201) {
+      log.warning('Failed: ${responseBody}');
+      return APIResponse(error: responseBody);
+    }
+
     log.warning('Response: ${responseBody}');
 
     return APIResponse(body: responseBody);

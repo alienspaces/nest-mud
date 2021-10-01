@@ -40,9 +40,19 @@ class CharacterStateSelected extends CharacterState {
 
 @immutable
 class CharacterStateError extends CharacterState {
-  final CreateCharacterRecord characterRecord;
+  final CharacterRecord characterRecord;
   final String message;
   const CharacterStateError({required this.characterRecord, required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+@immutable
+class CharacterStateCreateError extends CharacterState {
+  final CreateCharacterRecord characterRecord;
+  final String message;
+  const CharacterStateCreateError({required this.characterRecord, required this.message});
 
   @override
   List<Object> get props => [characterRecord, message];

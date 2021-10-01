@@ -34,12 +34,20 @@ class CharacterCubit extends Cubit<CharacterState> {
         MAX_ATTRIBUTES) {
       String message = 'New character attributes exceeds maximum allowed';
       log.warning(message);
-      emit(CharacterStateError(characterRecord: characterRecord, message: message));
+      emit(CharacterStateCreateError(characterRecord: characterRecord, message: message));
       return;
     }
 
-    CharacterRecord? createdCharacterRecord =
-        await repositories.characterRepository.create(dungeonID, characterRecord);
+    CharacterRecord? createdCharacterRecord;
+
+    try {
+      createdCharacterRecord =
+          await repositories.characterRepository.create(dungeonID, characterRecord);
+    } on RepositoryException catch (err) {
+      log.warning('Throwing character create error');
+      emit(CharacterStateCreateError(characterRecord: characterRecord, message: err.message));
+      return;
+    }
 
     if (createdCharacterRecord != null) {
       log.info('Created character ${createdCharacterRecord}');
