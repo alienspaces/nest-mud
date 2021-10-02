@@ -1,3 +1,4 @@
+import 'package:client/widgets/common/character.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,13 +28,7 @@ class _GameCharacterWidgetState extends State<GameCharacterWidget> {
           return Container(
             child: Column(
               children: <Widget>[
-                Text('Character'),
-                Text('Name: ${state.characterRecord.name}'),
-                Text('Strength: ${state.characterRecord.strength}'),
-                Text('Dexterity: ${state.characterRecord.dexterity}'),
-                Text('Intelligence: ${state.characterRecord.intelligence}'),
-                Text('Fatigue: ${state.characterRecord.fatigue}'),
-                Text('Health: ${state.characterRecord.health}'),
+                CharacterWidget(),
               ],
             ),
           );
