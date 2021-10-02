@@ -12,8 +12,8 @@ class DungeonActionCubit extends Cubit<DungeonActionState> {
   final Map<String, String> config;
   final RepositoryCollection repositories;
 
-  List<DungeonActionRecord>? dungeonRecords;
-  DungeonActionRecord? dungeonRecord;
+  List<DungeonActionRecord>? dungeonActionRecords;
+  DungeonActionRecord? dungeonActionRecord;
 
   DungeonActionCubit({required this.config, required this.repositories})
       : super(DungeonActionStateInitial()) {}
@@ -30,6 +30,7 @@ class DungeonActionCubit extends Cubit<DungeonActionState> {
     log.info('Created dungeon action ${createdDungeonActionRecord}');
 
     if (createdDungeonActionRecord != null) {
+      this.dungeonActionRecord = createdDungeonActionRecord;
       emit(DungeonActionStateCreated(dungeonActionRecord: createdDungeonActionRecord));
     }
   }

@@ -54,7 +54,7 @@ class CharacterWidget extends StatelessWidget {
                 Container(
                   child: Text(
                     '${state.characterRecord.name}',
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
                 Container(

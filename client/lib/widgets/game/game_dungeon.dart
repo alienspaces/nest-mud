@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Application packages
 import 'package:client/logger.dart';
 import 'package:client/cubit/dungeon_action/dungeon_action_cubit.dart';
-import 'package:client/widgets/game/game_dungeon_location_directions.dart';
+import 'package:client/widgets/game/game_dungeon_grid.dart';
 
 class GameDungeonWidget extends StatefulWidget {
   const GameDungeonWidget({Key? key}) : super(key: key);
@@ -28,13 +28,19 @@ class _GameDungeonWidgetState extends State<GameDungeonWidget> {
           return Container(
             child: Column(
               children: <Widget>[
-                Text('Dungeon'),
-                Text('Command: ${state.dungeonActionRecord?.action.command}'),
                 // Dungeon location description
-                Text('Name: ${state.dungeonActionRecord?.location.name}'),
-                Text('Description: ${state.dungeonActionRecord?.location.description}'),
+                Container(
+                  margin: EdgeInsets.fromLTRB(5, 10, 5, 5),
+                  child: Text('${state.dungeonActionRecord?.location.name}',
+                      style: Theme.of(context).textTheme.headline5),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(5, 5, 5, 10),
+                  child: Text('${state.dungeonActionRecord?.location.description}'),
+                ),
                 // Dungeon location directions
-                GameDungeonLocationDirectionsWidget(),
+                GameDungeonGridWidget(),
+                Text('Command: ${state.dungeonActionRecord?.action.command}'),
               ],
             ),
           );
