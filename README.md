@@ -7,6 +7,12 @@
 
 A M.U.D (multi user dungeon) with a back end API built with [`nestjs`](https://docs.nestjs.com/) and a front end UI built with [`Flutter`](https://flutter.dev/docs).
 
+❗ Project Complete ~ October 3rd 2021 ❗
+
+Only a small subset of features has been implemented to demonstrate as a proof of concept.
+
+Follow the next iteration in the [Go M.U.D](https://gitlab.com/alienspaces/nest-mud) repository.
+
 ## Server
 
 📝 _Look at what these scripts actually do before running them!_
@@ -31,28 +37,14 @@ cd server
 
 ### Start Client
 
+Generate client configuration code.
+
 ```bash
 cd client
 ./script/start
 ```
 
-## TODO
-
-- UI improvements round 1
-  - Character Play Screen
-  - Game screen
-- Enlarge dungeon
-- Add more dungeon objects
-- Add more dungeon monsters
-- UI improvements round 2
-  - Show dungeon objects and monsters
-- Complete 'look' action
-- UI improvements round 3
-  - Add look buttons
-- Run with `docker-compose up`
-- Update documentation to represent what is supported
-
-End of scope for this specific proof of concept
+Use your favourite Android project editor and emulator.
 
 ## Special Note
 

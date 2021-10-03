@@ -36,6 +36,8 @@ POST /api/v1/dungeons/{:dungeon_id}/characters
 
 **Update a character:**
 
+📝 _Unimplemented_
+
 - [Request Schema](server/src/controllers/dungeon-character/schema/update-dungeon-character.schema.json)
 - [Response Schema](server/src/controllers/dungeon-character/schema/dungeon-character.schema.json)
 
