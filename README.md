@@ -48,4 +48,4 @@ Use your favourite Android project editor and emulator.
 
 ## Special Note
 
-As I would much prefer to build the backend in [`Go`](https://golang.org/doc/tutorial/getting-started), I am only going to build limited funtionality into this version as a proof of concept and a means of learning something about [`nestjs`](https://docs.nestjs.com/) and [`TypeScript`](https://www.typescriptlang.org/docs/).
+As I would much prefer to build the backend in [`Go`](https://golang.org/doc/tutorial/getting-started), I chose to build limited funtionality into this version as a proof of concept and a means of learning something about [`nestjs`](https://docs.nestjs.com/) and [`TypeScript`](https://www.typescriptlang.org/docs/).
