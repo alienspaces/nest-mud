@@ -36,8 +36,8 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
     'down': 'D',
   };
 
-  // Move widget
-  Widget moveDirectionWidget(BuildContext context, DungeonActionRecord record, String direction) {
+  // Direction widget
+  Widget directionWidget(BuildContext context, DungeonActionRecord record, String direction) {
     if (record.location.directions.contains(direction)) {
       return Container(
         margin: EdgeInsets.all(2),
@@ -52,6 +52,7 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
               );
               return;
             }
+            // TODO: Select action prior to selecting the direction.
             _submitAction(context, 'move ${direction}');
           },
           child: Text('${directionLabelMap[direction]}'),
@@ -59,6 +60,13 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
       );
     }
     return emptyWidget('${directionLabelMap[direction]}');
+  }
+
+  // Object widget
+  Widget objectWidget(BuildContext context, DungeonActionRecord record, int idx) {
+    // TODO: Implement object actions
+
+    return emptyWidget('O${idx}');
   }
 
   // Empty widget
@@ -88,37 +96,40 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
       return [];
     }
 
+    // TODO: Objects, monsters and characters should be randomly scattered through the
+    // room but not change location with a widget rebuild..
+
     List<Widget Function()> dunegonGridMemberFunctions = [
       // Top Row
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'northwest'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'northwest'),
+      () => objectWidget(context, dungeonActionCubit.dungeonActionRecord!, 0),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'north'),
       () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'north'),
-      () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'northeast'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'northeast'),
       // Second Row
-      () => Container(),
-      () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'up'),
+      () => objectWidget(context, dungeonActionCubit.dungeonActionRecord!, 1),
+      () => objectWidget(context, dungeonActionCubit.dungeonActionRecord!, 2),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'up'),
       () => Container(),
       () => Container(),
       // Third Row
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'west'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'west'),
+      () => objectWidget(context, dungeonActionCubit.dungeonActionRecord!, 3),
       () => Container(),
       () => Container(),
-      () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'east'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'east'),
       // Fourth Row
-      () => Container(),
-      () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'down'),
+      () => objectWidget(context, dungeonActionCubit.dungeonActionRecord!, 4),
+      () => objectWidget(context, dungeonActionCubit.dungeonActionRecord!, 5),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'down'),
       () => Container(),
       () => Container(),
       // Bottom Row
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'southwest'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'southwest'),
       () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'south'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'south'),
       () => Container(),
-      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'southeast'),
+      () => directionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'southeast'),
     ];
 
     List<Widget> gridWidgets = [];
