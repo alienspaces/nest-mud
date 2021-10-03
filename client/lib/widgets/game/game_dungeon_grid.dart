@@ -32,35 +32,50 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
     'southwest': 'SW',
     'west': 'W',
     'northwest': 'NW',
+    'up': 'U',
+    'down': 'D',
   };
 
   // Move widget
-  Widget moveDirectionWidget(DungeonActionRecord record, String direction) {
+  Widget moveDirectionWidget(BuildContext context, DungeonActionRecord record, String direction) {
     if (record.location.directions.contains(direction)) {
-      return ElevatedButton(
-        onPressed: () {
-          final log = getLogger('GameDungeonGridWidget');
+      return Container(
+        margin: EdgeInsets.all(2),
+        child: ElevatedButton(
+          onPressed: () {
+            final log = getLogger('GameDungeonGridWidget');
 
-          final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
-          if (dungeonCubit.dungeonRecord == null) {
-            log.warning(
-              'onPressed - Dungeon cubit missing dungeon record, cannot initialise action',
-            );
-            return;
-          }
-          _submitAction(context, 'move ${direction}');
-        },
-        child: Text('${directionLabelMap[direction]}'),
+            final dungeonCubit = BlocProvider.of<DungeonCubit>(context);
+            if (dungeonCubit.dungeonRecord == null) {
+              log.warning(
+                'onPressed - Dungeon cubit missing dungeon record, cannot initialise action',
+              );
+              return;
+            }
+            _submitAction(context, 'move ${direction}');
+          },
+          child: Text('${directionLabelMap[direction]}'),
+        ),
       );
     }
-    return emptyWidget();
+    return emptyWidget('${directionLabelMap[direction]}');
   }
 
   // Empty widget
-  Widget emptyWidget() {
+  Widget emptyWidget(String label) {
     return Container(
       width: gridMemberWidth,
       height: gridMemberHeight,
+      alignment: Alignment.center,
+      margin: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        color: Color(0xFFD4D4D4),
+        border: Border.all(
+          color: Color(0xFFD4D4D4),
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Text(label),
     );
   }
 
@@ -75,35 +90,35 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
 
     List<Widget Function()> dunegonGridMemberFunctions = [
       // Top Row
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'northwest'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'northwest'),
       () => Container(),
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'north'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'north'),
       () => Container(),
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'northeast'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'northeast'),
       // Second Row
       () => Container(),
       () => Container(),
-      () => Container(),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'up'),
       () => Container(),
       () => Container(),
       // Third Row
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'west'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'west'),
       () => Container(),
       () => Container(),
       () => Container(),
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'east'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'east'),
       // Fourth Row
       () => Container(),
       () => Container(),
-      () => Container(),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'down'),
       () => Container(),
       () => Container(),
       // Bottom Row
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'southwest'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'southwest'),
       () => Container(),
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'south'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'south'),
       () => Container(),
-      () => moveDirectionWidget(dungeonActionCubit.dungeonActionRecord!, 'southeast'),
+      () => moveDirectionWidget(context, dungeonActionCubit.dungeonActionRecord!, 'southeast'),
     ];
 
     List<Widget> gridWidgets = [];
@@ -155,9 +170,9 @@ class _GameDungeonGridWidgetState extends State<GameDungeonGridWidget> {
               border: Border.all(
                 color: Color(0xFFDEDEDE),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.all(1),
             margin: EdgeInsets.all(5),
             width: gridMemberWidth * 5,
             height: gridMemberHeight * 5,
