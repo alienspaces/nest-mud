@@ -11,7 +11,7 @@ A M.U.D (multi user dungeon) with a back end API built with [`nestjs`](https://d
 
 Only a small subset of features has been implemented to demonstrate as a proof of concept.
 
-Follow the next iteration in the [Go M.U.D](https://gitlab.com/alienspaces/nest-mud) repository.
+Follow the next iteration in the [Go M.U.D](https://gitlab.com/alienspaces/go-mud) repository.
 
 ## Server
 
