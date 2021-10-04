@@ -44,7 +44,7 @@ cd client
 ./script/start
 ```
 
-Use your favourite Android project editor and emulator.
+Use your favourite Flutter project IDE and Android/iOS emulator.
 
 ## Special Note
 
